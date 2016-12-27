@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/electionmain_container"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal|top"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/electionmain_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="@string/electionRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/RegisterButton" />
+
+        <Button
+            android:text="@string/electionVote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ElectionButton" />
+
+        <Button
+            android:text="@string/electionHelp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/HelpButton" />
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+

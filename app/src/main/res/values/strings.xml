@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BlockVote</string>
+    <string name="FrontInstruction">Select an Election</string>
+    <string name="electionEntry">Election Entry</string>
+    <string name="electionEntry1">Brexit Referencdum</string>
+    <string name="selectedElectionKey">selectedElectionKey</string>
+    <string name="electionRegister">Register</string>
+    <string name="electionVote">Vote</string>
+    <string name="electionHelp">Help</string>
+</resources>
