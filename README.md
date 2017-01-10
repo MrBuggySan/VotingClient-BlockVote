@@ -27,3 +27,4 @@ This client will be used by voters to register and vote for an election. The bal
  - Read for the overview of the voting protocol: http://bytemaster.github.io/article/2014/12/21/Provably-Honest-Online-Elections/
 
 **Notes**
+- The draw.io file for the wireframes are available under the Wireframes folder. Don't forget to update the .png and the xml inthe directory after modifying. 
