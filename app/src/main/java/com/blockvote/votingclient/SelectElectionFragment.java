@@ -38,6 +38,7 @@ public class SelectElectionFragment extends Fragment {
         );
 
         //Rough list of available elections
+        //TODO: source the data from blockchain or a db?
         mElectionList.add(getString(R.string.electionEntry1));
         for(int i = 0; i < 10; i++){
             mElectionList.add("Election Placeholder");

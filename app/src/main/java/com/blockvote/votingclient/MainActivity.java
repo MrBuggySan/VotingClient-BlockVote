@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+
         LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container);
 
         if (savedInstanceState == null) {
@@ -24,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
             SelectElectionFragment selectElectionFragment = new SelectElectionFragment();
 
 
-            //TODO: Add the Fragment layout to the Activity Layout
             getSupportFragmentManager().beginTransaction().add(R.id.ElectionSelectionContainer, selectElectionFragment).commit();
             Log.d(LOG_TAG, "MainActivity onCreate");
         }else{
