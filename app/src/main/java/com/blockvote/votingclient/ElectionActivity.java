@@ -11,13 +11,13 @@ import android.util.Log;
  * Created by Beast Mode on 12/26/2016.
  */
 
-public class MainElectionActivity extends AppCompatActivity {
-    private final String LOG_TAG = MainElectionActivity.class.getSimpleName();
+public class ElectionActivity extends AppCompatActivity {
+    private final String LOG_TAG = ElectionActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_electionmain);
+        setContentView(R.layout.activity_election);
 
         //get the extra data from intent
         Intent intent = getIntent();
@@ -33,8 +33,7 @@ public class MainElectionActivity extends AppCompatActivity {
 
         Log.d(LOG_TAG, electionName + " selected");
 
-        //TODO: Call the corresponging fragment instead of only using the activity
-        //TODO: Make a fragment 
+        //TODO: Call the VoteButtonFragment
     }
 
 }

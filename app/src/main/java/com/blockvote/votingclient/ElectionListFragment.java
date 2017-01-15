@@ -19,8 +19,8 @@ import java.util.ArrayList;
  * Created by Beast Mode on 12/26/2016.
  */
 
-public class SelectElectionFragment extends Fragment {
-    private final String LOG_TAG= SelectElectionFragment.class.getSimpleName();
+public class ElectionListFragment extends Fragment {
+    private final String LOG_TAG= ElectionListFragment.class.getSimpleName();
     private ArrayAdapter<String> mElectionList;
 
     @Override
@@ -28,7 +28,7 @@ public class SelectElectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_selectelection, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_election_list, container, false);
 
         mElectionList = new ArrayAdapter<String>(
                 getActivity(),
@@ -38,7 +38,7 @@ public class SelectElectionFragment extends Fragment {
         );
 
         //Rough list of available elections
-        //TODO: source the data from blockchain or a db?
+        //TODO: get the election list from the server
         mElectionList.add(getString(R.string.electionEntry1));
         for(int i = 0; i < 10; i++){
             mElectionList.add("Election Placeholder");
@@ -47,7 +47,7 @@ public class SelectElectionFragment extends Fragment {
         ListView listView=(ListView) rootView.findViewById(R.id.listview_electionlist);
         listView.setAdapter(mElectionList);
 
-        //TODO: Add the event when election is clicked
+        //Add the event when election is clicked
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener(){
 
             @Override
@@ -64,10 +64,10 @@ public class SelectElectionFragment extends Fragment {
                     return;
                 }
 
-                //Starting the Election Activity
-                Intent intent = new Intent(adapterView.getContext(), MainElectionActivity.class);
+                //Starting the ElectionActivity
+                Intent intent = new Intent(adapterView.getContext(), ElectionActivity.class);
                 //Give the name of the election Selected
-                //TODO: Pass an election object instead of a String
+                //TODO: Pass an election object instead of a String, well I can use this String as a key to the DB
                 intent.putExtra(getString(R.string.selectedElectionKey), text);
                 startActivity(intent);
 
