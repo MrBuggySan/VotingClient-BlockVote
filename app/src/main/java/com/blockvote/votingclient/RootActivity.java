@@ -14,6 +14,7 @@ public class RootActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root);
 
+        //Note: AppCompatActivity enables the use of Toolbar. Actionbar is depracated.
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 

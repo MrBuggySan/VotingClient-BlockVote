@@ -1,6 +1,7 @@
 package com.blockvote.votingclient;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 /**
@@ -20,14 +28,7 @@ import android.view.ViewGroup;
  */
 public class SelectCandidateFragment extends Fragment {
     private final String LOG_TAG = SelectCandidateFragment.class.getSimpleName();
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    ArrayAdapter<String> mCandidateList;
 
     private OnFragmentInteractionListener mListener;
 
@@ -39,50 +40,72 @@ public class SelectCandidateFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment SelectCandidateFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SelectCandidateFragment newInstance(String param1, String param2) {
+    public static SelectCandidateFragment newInstance() {
         SelectCandidateFragment fragment = new SelectCandidateFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_select_candidate, container, false);
 
-        //TODO: get the list of candidates from the server 
+        //TODO: get the list of candidates from the server
+
+        //a hardcoded list of selections (this is only for testing purposes)
+        mCandidateList = new ArrayAdapter<String>(
+                getActivity(),
+                R.layout.listentry,
+                R.id.listEntry,
+                new ArrayList<String>()
+        );
+        mCandidateList.add("yes");
+        mCandidateList.add("no");
+        ListView listView=(ListView) rootView.findViewById(R.id.listview_candidatelist);
+        listView.setAdapter(mCandidateList);
+        //TODO: setup the button event when a candidate is pressed
+        //Add the event to call BallotConfirmationFragment when candidate is clicked
+        listView.setOnItemClickListener( new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
+                String choice=mCandidateList.getItem(i);
+                //TODO: ask the name of the voter (this is only for testing purposes)
+                View rootView = getView();
+                EditText firstText= (EditText) rootView.findViewById(R.id.firstNameText);
+                EditText lastText= (EditText) rootView.findViewById(R.id.lastNameText);
+
+                String firstName = firstText.getText().toString();
+                String lastName = lastText.getText().toString();
+
+                //TODO: get the timestamp
+
+                //TODO: have the root activity call the BallotConfirmationFragment
+                mListener.onOptionSelectInteraction(firstName, lastName, choice, "test hour");
+
+
+            }
+        });
+
+        //TODO: get the name of the user from the system, have an option to edit the values
+
+
+
 
 
 
         Log.d(LOG_TAG, "Fragment setup done");
 
         return rootView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -113,7 +136,6 @@ public class SelectCandidateFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onOptionSelectInteraction(String firstName, String lastName, String choice, String timestamp);
     }
 }

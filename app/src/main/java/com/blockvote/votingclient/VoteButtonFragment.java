@@ -19,14 +19,6 @@ import android.widget.Button;
  * create an instance of this fragment.
  */
 public class VoteButtonFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,27 +30,17 @@ public class VoteButtonFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment VoteButtonFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static VoteButtonFragment newInstance(String param1, String param2) {
+
+    public static VoteButtonFragment newInstance() {
         VoteButtonFragment fragment = new VoteButtonFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -71,22 +53,16 @@ public class VoteButtonFragment extends Fragment {
         final Button voteButton = (Button) rootView.findViewById(R.id.voteButton);
         voteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //TODO: have the ElectionActivity push this fragment to the back stack and then call SelectCandidateFragment.
-
-
-
+                if (mListener != null) {
+                    //TODO: have the ElectionActivity push this fragment to the back stack and then call SelectCandidateFragment.
+                    mListener.onVoteButtonInteraction();
+                }
             }
         });
 
         return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -116,7 +92,6 @@ public class VoteButtonFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onVoteButtonInteraction();
     }
 }

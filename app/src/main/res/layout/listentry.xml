@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/List_text_height"
-    android:text="@string/electionEntry"
-    android:id="@+id/textview_electionentry"
+    android:text="List Entry"
+    android:id="@+id/listEntry"
     android:gravity="center_vertical" />
 

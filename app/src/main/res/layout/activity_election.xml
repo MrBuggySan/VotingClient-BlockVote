@@ -17,31 +17,13 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Button
-            android:text="@string/electionRegister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/RegisterButton" />
-
-        <Button
-            android:text="@string/electionVote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ElectionButton" />
-
-        <Button
-            android:text="@string/electionHelp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/HelpButton" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/ElectionContainer">
 
 
+    </FrameLayout>
 </LinearLayout>
 
 

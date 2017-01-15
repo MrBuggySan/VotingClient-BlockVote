@@ -32,8 +32,8 @@ public class ElectionListFragment extends Fragment {
 
         mElectionList = new ArrayAdapter<String>(
                 getActivity(),
-                R.layout.electionentry,
-                R.id.textview_electionentry,
+                R.layout.listentry,
+                R.id.listEntry,
                 new ArrayList<String>()
         );
 
@@ -63,6 +63,8 @@ public class ElectionListFragment extends Fragment {
                     Toast.makeText(context, "Not available!", duration).show();
                     return;
                 }
+
+                //TODO: have the root activity call the ElectionActivity
 
                 //Starting the ElectionActivity
                 Intent intent = new Intent(adapterView.getContext(), ElectionActivity.class);
