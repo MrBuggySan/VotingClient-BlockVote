@@ -54,6 +54,9 @@ public class ElectionActivity extends AppCompatActivity
 
     }
 
+    /**
+     * VoteButtonFragment will call this function
+     */
     public void onVoteButtonInteraction(){
         //Setup the SelectCandidateFragment
         SelectCandidateFragment selectCandidateFragment = SelectCandidateFragment.newInstance();
@@ -66,15 +69,26 @@ public class ElectionActivity extends AppCompatActivity
         Log.d(LOG_TAG,"Opening SelectCandidateFragment ");
     }
 
+    /**
+     * SelectcandidateFragment will call this function
+     * @param firstName
+     * @param lastName
+     * @param choice
+     * @param timestamp
+     */
     public void onOptionSelectInteraction(String firstName,
                                           String lastName,
                                           String choice, String timestamp){
-        Log.d(LOG_TAG, "Opening BallotConfirmationFragment with " + firstName + " " + lastName
-         + " " + choice + " " + timestamp);
 
-        //TODO: place the SelecCandidateFragment to the backstack
-
-        //TODO: call the BallotConfirmationFragment
+        BallotConfirmationFragment ballotConfirmationFragment = BallotConfirmationFragment.newInstance(firstName,
+                lastName, choice, timestamp);
+        //Switch the SelectCandidateFragment with the BallotConfirmationFragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.ElectionContainer, ballotConfirmationFragment);
+        //add the transaction to the BackStack
+        transaction.addToBackStack("Transition to BallotConfirmationFragment");
+        transaction.commit();
+        Log.d(LOG_TAG,"Opening BallotConfirmationFragment ");
 
     }
 

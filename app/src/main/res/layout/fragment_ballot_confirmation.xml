@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:id="@+id/confirmation_container"
+    tools:context="com.blockvote.votingclient.BallotConfirmationFragment">
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirmation_firstname"
+        android:text="Show first name" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirmation_lastname"
+        android:text="Show last name" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirmation_choice"
+        android:text="Show choice" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirmation_blurb"
+        android:text="If you agree with the above data, please select YES" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:text="YES"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/confirmation_yes_button" />
+        <Button
+            android:text="NO"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/confirmation_no_button" />
+    </LinearLayout>
+
+</LinearLayout>
