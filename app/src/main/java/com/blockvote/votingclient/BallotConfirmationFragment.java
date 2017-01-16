@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
@@ -71,25 +73,45 @@ public class BallotConfirmationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_ballot_confirmation, container, false);
-        //TODO: modify the texts to reflect the data put in by the voter.
+        //Update the TextViews with the voter information
+        TextView textView_firstName = (TextView)rootView.findViewById(R.id.confirmation_firstname);
+        textView_firstName.setText(firstName);
+
+        TextView textView_lastName = (TextView)rootView.findViewById(R.id.confirmation_lastname);
+        textView_lastName.setText(lastName);
+
+        TextView textView_choice = (TextView)rootView.findViewById(R.id.confirmation_choice);
+        textView_choice.setText(choice);
+
+        TextView textView_timestamp = (TextView)rootView.findViewById(R.id.confirmation_timestamp);
+        textView_timestamp.setText(timestamp);
 
         //TODO: when YES, start the networking code to submit the data to the server
-        //TODO: Plan for possible delays from the server side when it is submitting data to the chaincode
+        //Plan for possible delays from the server side when it is submitting data to the chaincode
+        Button yesButton = (Button) rootView.findViewById(R.id.confirmation_yes_button);
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mListener != null) {
+                    //TODO: send the voter choice and metadata to the server
 
-        //TODO: when YES, submit the data to the server. A response of success or error must be met
-
+                    //TODO: have ElectionActivity call ReviewBallotFragment 
+                    mListener.onYesBallotConfirmation();
+                }
+            }
+        });
         //TODO: when NO, go back to the SelectCandidateFragment
+        Button noButton = (Button) rootView.findViewById(R.id.confirmation_no_button);
+        noButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onNoBallotConfirmation();
+                }
+            }
+        });
 
-        // Inflate the layout for this fragment
         return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -120,6 +142,7 @@ public class BallotConfirmationFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onYesBallotConfirmation();
+        void onNoBallotConfirmation();
     }
 }

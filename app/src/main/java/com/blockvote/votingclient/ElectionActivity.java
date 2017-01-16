@@ -14,7 +14,8 @@ import android.util.Log;
 
 public class ElectionActivity extends AppCompatActivity
         implements VoteButtonFragment.OnFragmentInteractionListener,
-        SelectCandidateFragment.OnFragmentInteractionListener {
+        SelectCandidateFragment.OnFragmentInteractionListener,
+        BallotConfirmationFragment.OnFragmentInteractionListener{
     private final String LOG_TAG = ElectionActivity.class.getSimpleName();
 
     @Override
@@ -90,6 +91,14 @@ public class ElectionActivity extends AppCompatActivity
         transaction.commit();
         Log.d(LOG_TAG,"Opening BallotConfirmationFragment ");
 
+    }
+
+    public void onYesBallotConfirmation(){
+        Log.d(LOG_TAG, "Voter confirms");
+    }
+
+    public void onNoBallotConfirmation(){
+        Log.d(LOG_TAG, "Voter does not confirm");
     }
 
 

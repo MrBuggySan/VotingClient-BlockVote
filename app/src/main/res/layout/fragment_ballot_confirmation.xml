@@ -29,6 +29,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/confirmation_timestamp"
+        android:text="Show time when voter clicks OK" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/confirmation_blurb"
         android:text="If you agree with the above data, please select YES" />
 

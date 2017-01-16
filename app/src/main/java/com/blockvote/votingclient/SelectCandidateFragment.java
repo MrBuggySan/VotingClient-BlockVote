@@ -68,8 +68,8 @@ public class SelectCandidateFragment extends Fragment {
                 R.id.listEntry,
                 new ArrayList<String>()
         );
-        mCandidateList.add("yes");
-        mCandidateList.add("no");
+        mCandidateList.add("Leave the European Union");
+        mCandidateList.add("Remain a member of the European Union");
         ListView listView=(ListView) rootView.findViewById(R.id.listview_candidatelist);
         listView.setAdapter(mCandidateList);
         //TODO: setup the button event when a candidate is pressed

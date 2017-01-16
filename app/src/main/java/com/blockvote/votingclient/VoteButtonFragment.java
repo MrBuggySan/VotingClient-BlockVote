@@ -54,7 +54,6 @@ public class VoteButtonFragment extends Fragment {
         voteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mListener != null) {
-                    //TODO: have the ElectionActivity push this fragment to the back stack and then call SelectCandidateFragment.
                     mListener.onVoteButtonInteraction();
                 }
             }
