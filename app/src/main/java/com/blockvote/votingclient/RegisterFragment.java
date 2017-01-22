@@ -36,7 +36,7 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_select_candidate, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_register, container, false);
         //TODO: get the name of the user from the system, have an option to edit the values
 
 

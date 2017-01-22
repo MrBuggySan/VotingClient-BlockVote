@@ -1,13 +1,38 @@
 package com.blockvote.votingclient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 
-public class RootActivity extends AppCompatActivity {
+public class RootActivity extends AppCompatActivity
+    implements ElectionListFragment.OnFragmentInteractionListener{
     private final String LOG_TAG = RootActivity.class.getSimpleName();
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_root_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.Option_Help:
+                //TODO: Start the HelpActivity
+                Log.d(LOG_TAG, "Help option selected");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,5 +57,14 @@ public class RootActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "savedInstanceState is not null");
         }
 
+    }
+
+    public void onElectionOptionClick(String electionName){
+        //Starting the ElectionActivity
+        Intent intent = new Intent(this, ElectionActivity.class);
+        //Give the name of the election Selected
+        //TODO: Pass an election object instead of a String, well I can use this String as a key to the DB
+        intent.putExtra(getString(R.string.selectedElectionKey), electionName);
+        startActivity(intent);
     }
 }

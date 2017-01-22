@@ -7,12 +7,17 @@
     <string name="electionRegister">Register</string>
     <string name="electionVote">Vote</string>
     <string name="electionHelp">Help</string>
+
+
+
+    <!--The current state of ElectionActivity-->
     <string name="ElectionActivityState">stateinfo</string>
+
+    <!--The possible states of ElectionActivity-->
     <string name="RegistrationState">Regis</string>
     <string name="RegistrationStatusState">RegisState</string>
     <string name="VoteButtonState">VotBut</string>
     <string name="ReviewBallotState">RevBalot</string>
-
 
     <!--Keys for SharedPreferences-->
     <string name="selectedElectionKey">selectedElectionKey</string>

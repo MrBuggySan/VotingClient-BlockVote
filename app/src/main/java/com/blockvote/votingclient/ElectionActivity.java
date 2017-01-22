@@ -9,6 +9,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -20,8 +23,35 @@ public class ElectionActivity extends AppCompatActivity
         BallotConfirmationFragment.OnFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
         RegistrationConfirmationFragment.OnFragmentInteractionListener{
+
+
     private final String LOG_TAG = ElectionActivity.class.getSimpleName();
-    private String stateKey = getString(R.string.ElectionActivityState);
+    private String stateKey ;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_election_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.Option_ClearData:
+                //TODO: clear the SharedPreferences data and then exit the ElectionActivity
+
+                Log.d(LOG_TAG, "Clear data option selected");
+                return true;
+            case R.id.Option_Help:
+                //TODO: Start the HelpActivity
+                Log.d(LOG_TAG, "Help option selected");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +63,7 @@ public class ElectionActivity extends AppCompatActivity
 
         String electionName=intent.getStringExtra(getString(R.string.selectedElectionKey));
         Log.d(LOG_TAG, electionName + " selected");
-        //Toolbar setuo
+        //Toolbar setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.electionmain_toolbar);
         setSupportActionBar(myToolbar);
         ActionBar myActionBar = (ActionBar) getSupportActionBar();
@@ -45,7 +75,7 @@ public class ElectionActivity extends AppCompatActivity
 
         //select the appropriate fragment to display according to the data from the DB, (for now I will use the simple SharedPreferences)
         SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
-        stateKey += electionName;
+        stateKey=  getString(R.string.ElectionActivityState)+ electionName;
         if (!dataStore.contains(stateKey)){
             //Init the state
             SharedPreferences.Editor editor = dataStore.edit();
@@ -58,30 +88,35 @@ public class ElectionActivity extends AppCompatActivity
             Log.e(LOG_TAG, "Could not find the current state of ElectionActivity");
             throw new RuntimeException(LOG_TAG + " could not find the state.");
         }
-
+        Log.d(LOG_TAG, currentState + " is the current state.");
         if (savedInstanceState == null) {
-            if(currentState.equals(R.string.RegistrationState)){
+            if(currentState.equals(getString(R.string.RegistrationState))){
                 RegisterFragment registerFragment = new RegisterFragment();
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, registerFragment).commit();
                 return;
             }
-            if(currentState.equals(R.string.RegistrationStatusState)){
-                RegistrationStatusFragment registrationStatusFragment = new RegistrationStatusFragment();
+            if(currentState.equals(getString(R.string.RegistrationStatusState))){
+                String voterNameKey = getString(R.string.voterNameKey);
+                String regSentKey = getString(R.string.regSentSucess);
+                String voterName = dataStore.getString(voterNameKey, "error");
+                boolean sentSuccesfully = dataStore.getBoolean(regSentKey, false);
+
+                RegistrationStatusFragment registrationStatusFragment = RegistrationStatusFragment.newInstance(voterName, sentSuccesfully);
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, registrationStatusFragment).commit();
                 return;
             }
-            if(currentState.equals(R.string.VoteButtonState)){
+            if(currentState.equals(getString(R.string.VoteButtonState))){
                 VoteButtonFragment voteButtonFragment = new VoteButtonFragment();
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, voteButtonFragment).commit();
                 return;
             }
-            if(currentState.equals(R.string.ReviewBallotState)){
+            if(currentState.equals(getString(R.string.ReviewBallotState))){
                 ReviewBallotFragment reviewBallotFragment = new ReviewBallotFragment();
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, reviewBallotFragment).commit();
                 return;
             }
             Log.e(LOG_TAG, "Could not start the appropriate fragment");
-            throw new RuntimeException(LOG_TAG + "fragment missing... ");
+            throw new RuntimeException(LOG_TAG + " fragment missing... ");
 
 
         }else{
@@ -178,14 +213,17 @@ public class ElectionActivity extends AppCompatActivity
         editor.putBoolean(regSentSucessKey, sentSuccesfully);
         editor.commit();
 
-        //TODO: Start the RegistrationStatusFragment
+        //Start the RegistrationStatusFragment
+
+
         RegistrationStatusFragment registrationStatusFragment = RegistrationStatusFragment.newInstance(
                 voterName, sentSuccesfully
         );
 
         FragmentManager fragmentManager= getSupportFragmentManager();
 
-        //Pop all of the previous transactions
+        //TODO:Pop all of the previous registration fragments
+
 
         //Switch the RegisterFragment with the RegistrationConfirmationFragment
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -194,10 +232,10 @@ public class ElectionActivity extends AppCompatActivity
         Log.d(LOG_TAG,"Opening registrationStatusFragment ");
 
 
-
     }
     public void onNoRegistrationInteraction(){
         //TODO: switch with RegisterFragment
     }
+
 
 }

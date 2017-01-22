@@ -56,7 +56,7 @@ public class RegistrationStatusFragment extends Fragment {
         TextView textView_message = (TextView)rootView.findViewById(R.id.reg_status_message);
         if(sentSuccesfully){
             //TODO: periodic check of the status of the registration
-
+            //TODO: have this periodic check happening in the background
             //Update the message
             textView_message.setText(voterName + " your registration request has been sent, please wait for its confirmation" +
                     "by our registrars");

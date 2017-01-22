@@ -39,7 +39,6 @@ public class RegistrationConfirmationFragment extends Fragment {
      * @param lastName Parameter 2.
      * @return A new instance of fragment RegistrationConfirmationFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static RegistrationConfirmationFragment newInstance(String firstName, String lastName) {
         RegistrationConfirmationFragment fragment = new RegistrationConfirmationFragment();
         Bundle args = new Bundle();
@@ -61,7 +60,7 @@ public class RegistrationConfirmationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_ballot_confirmation, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_registration_confirmation, container, false);
 
         //Update the TextViews with the voter information
         TextView textView_VoterName = (TextView)rootView.findViewById(R.id.reg_confirmation_votername);
@@ -125,7 +124,6 @@ public class RegistrationConfirmationFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onYesRegistrationInteraction(String voterName, boolean sentSuccessfully);
         void onNoRegistrationInteraction();
     }

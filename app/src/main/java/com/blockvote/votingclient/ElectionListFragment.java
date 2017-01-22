@@ -1,7 +1,6 @@
 package com.blockvote.votingclient;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,6 +22,11 @@ public class ElectionListFragment extends Fragment {
     private final String LOG_TAG= ElectionListFragment.class.getSimpleName();
     private ArrayAdapter<String> mElectionList;
 
+    private ElectionListFragment.OnFragmentInteractionListener mListener;
+
+    public ElectionListFragment(){
+
+    }
     @Override
     //Draw the UI elements on the screen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,10 +57,10 @@ public class ElectionListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
 
-                String text=mElectionList.getItem(i);
+                String electionName=mElectionList.getItem(i);
 
                 //Use toast for debugging
-                if(text.equals("Election Placeholder")){
+                if(electionName.equals("Election Placeholder")){
                     //Toast creates a temporary notification when an item in the ListView is clicked.
                     Context context = adapterView.getContext();
                     int duration = Toast.LENGTH_SHORT;
@@ -64,14 +68,9 @@ public class ElectionListFragment extends Fragment {
                     return;
                 }
 
-                //TODO: have the root activity call the ElectionActivity
+                //have the root activity call the ElectionActivity
+                mListener.onElectionOptionClick(electionName);
 
-                //Starting the ElectionActivity
-                Intent intent = new Intent(adapterView.getContext(), ElectionActivity.class);
-                //Give the name of the election Selected
-                //TODO: Pass an election object instead of a String, well I can use this String as a key to the DB
-                intent.putExtra(getString(R.string.selectedElectionKey), text);
-                startActivity(intent);
 
             }
         });
@@ -80,6 +79,27 @@ public class ElectionListFragment extends Fragment {
         Log.d(LOG_TAG,"Election Selection Fragment setup done");
 
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ElectionListFragment.OnFragmentInteractionListener) {
+            mListener = (ElectionListFragment.OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onElectionOptionClick(String electionName);
     }
 
 }
