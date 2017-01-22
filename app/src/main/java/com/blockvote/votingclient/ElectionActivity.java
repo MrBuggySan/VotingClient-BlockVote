@@ -87,14 +87,18 @@ public class ElectionActivity extends AppCompatActivity
         setSupportActionBar(myToolbar);
         ActionBar myActionBar = (ActionBar) getSupportActionBar();
         // Set the tool bar back button
-        myActionBar.setDisplayHomeAsUpEnabled(true);
+//        myActionBar.setDisplayHomeAsUpEnabled(true);
         myActionBar.setTitle(electionName);
 
-        //TODO: add a developer only reset button to reset the state. (This is for testing purposes only)
+
 
         //select the appropriate fragment to display according to the data from the DB, (for now I will use the simple SharedPreferences)
         SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
+        //define the keys for this particular election
         electionStateKey=  getString(R.string.ElectionActivityState)+ electionName;
+        regSentSucessKey = getString(R.string.regSentSucess)+ electionName;
+        voterKey = getString(R.string.voterNameKey)+ electionName;
+        
         if (!dataStore.contains(electionStateKey)){
             //Init the state
             SharedPreferences.Editor editor = dataStore.edit();
@@ -116,11 +120,10 @@ public class ElectionActivity extends AppCompatActivity
             }
             if(currentState.equals(getString(R.string.RegistrationStatusState))){
                 //grab the voters data from data store
-                String voterNameKey = getString(R.string.voterNameKey);
-                String regSentKey = getString(R.string.regSentSucess);
-                String voterName = dataStore.getString(voterNameKey, "error");
-                boolean sentSuccesfully = dataStore.getBoolean(regSentKey, false);
+                String voterName = dataStore.getString(voterKey, "error");
+                boolean sentSuccesfully = dataStore.getBoolean(regSentSucessKey, false);
 
+                Log.v(LOG_TAG, voterName + " has been retrieved from db.");
                 RegistrationStatusFragment registrationStatusFragment = RegistrationStatusFragment.newInstance(voterName, sentSuccesfully);
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, registrationStatusFragment).commit();
                 return;
@@ -220,7 +223,7 @@ public class ElectionActivity extends AppCompatActivity
     public void onYesRegistrationInteraction(String voterName, boolean sentSuccesfully ){
 
         //Save the voter name in DB, for now use SharedPreferences
-        voterKey = getString(R.string.voterNameKey)+ electionName;
+
         SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
         if (dataStore.contains(voterKey)){
             //SharedPrefences already contians a key
@@ -229,6 +232,8 @@ public class ElectionActivity extends AppCompatActivity
             throw new RuntimeException(LOG_TAG
                     + " must delete the voter name inside SharedPreferences before trying to add a new one");
         }
+
+        Log.d(LOG_TAG, voterName + " is being saved in db");
         SharedPreferences.Editor editor = dataStore.edit();
         editor.putString(voterKey, voterName);
 
@@ -236,7 +241,7 @@ public class ElectionActivity extends AppCompatActivity
         String newState = getString(R.string.RegistrationStatusState);
         editor.putString(electionStateKey, newState);
         //change the status of RegistrationStatusState
-        regSentSucessKey = getString(R.string.regSentSucess)+ electionName;
+
         editor.putBoolean(regSentSucessKey, sentSuccesfully);
         editor.commit();
 
@@ -264,7 +269,7 @@ public class ElectionActivity extends AppCompatActivity
         //switch with RegisterFragment
         FragmentManager fragmentManager= getSupportFragmentManager();
 
-        //Pop all of the previous registration fragments
+        //Pop the transaction to go back to RegisterFragment
         fragmentManager.popBackStack("Transition to RegistrationConfirmationFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Log.d(LOG_TAG,"Voter does not confirm registration request. ");
     }

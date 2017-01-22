@@ -64,7 +64,7 @@ public class RegistrationStatusFragment extends Fragment {
             Log.d(LOG_TAG, "The server has succesfully recieved the registration request");
         }else{
             //TODO: Show failure to send registration request
-
+            Log.d(LOG_TAG, "The server did not get the request, please try again.");
         }
 
         return rootView;
