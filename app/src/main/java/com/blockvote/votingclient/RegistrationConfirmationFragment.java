@@ -1,12 +1,13 @@
 package com.blockvote.votingclient;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
@@ -18,14 +19,11 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class RegistrationConfirmationFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String firstName;
+    private String lastName;
 
     private OnFragmentInteractionListener mListener;
 
@@ -37,16 +35,16 @@ public class RegistrationConfirmationFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param firstName Parameter 1.
+     * @param lastName Parameter 2.
      * @return A new instance of fragment RegistrationConfirmationFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegistrationConfirmationFragment newInstance(String param1, String param2) {
+    public static RegistrationConfirmationFragment newInstance(String firstName, String lastName) {
         RegistrationConfirmationFragment fragment = new RegistrationConfirmationFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, firstName);
+        args.putString(ARG_PARAM2, lastName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,24 +53,49 @@ public class RegistrationConfirmationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            firstName = getArguments().getString(ARG_PARAM1);
+            lastName = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_ballot_confirmation, container, false);
+
+        //Update the TextViews with the voter information
+        TextView textView_VoterName = (TextView)rootView.findViewById(R.id.reg_confirmation_votername);
+        textView_VoterName.setText(firstName + " " + lastName);
+
+        Button yesButton = (Button) rootView.findViewById(R.id.reg_confirmation_yes_button);
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mListener != null) {
+                    String voterName = firstName + " " + lastName;
+                    //TODO: start the networking code to submit the data to the server
+
+
+                    //TODO: setup the loading circle
+                    //TODO: Have the callback call onYesRegistrationInteraction to start the RegistrationStatusFragment
+                    mListener.onYesRegistrationInteraction(voterName,true);
+                }
+            }
+        });
+
+        //TODO: when NO, go back to the SelectCandidateFragment
+        Button noButton = (Button) rootView.findViewById(R.id.reg_confirmation_no_button);
+        noButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onNoRegistrationInteraction();
+                }
+            }
+        });
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_registration_confirmation, container, false);
+        return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -103,6 +126,7 @@ public class RegistrationConfirmationFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onYesRegistrationInteraction(String voterName, boolean sentSuccessfully);
+        void onNoRegistrationInteraction();
     }
 }

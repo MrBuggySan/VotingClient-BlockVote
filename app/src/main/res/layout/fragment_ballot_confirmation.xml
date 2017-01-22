@@ -6,20 +6,6 @@
     android:id="@+id/confirmation_container"
     tools:context="com.blockvote.votingclient.BallotConfirmationFragment">
 
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/confirmation_firstname"
-        android:text="Show first name" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/confirmation_lastname"
-        android:text="Show last name" />
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

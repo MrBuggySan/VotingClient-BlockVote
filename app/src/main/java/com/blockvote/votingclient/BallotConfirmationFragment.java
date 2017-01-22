@@ -1,7 +1,6 @@
 package com.blockvote.votingclient;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import com.blockvote.model.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
+import com.blockvote.model.SendDO;
+import com.blockvote.model.TestAPIinterface;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,12 +34,7 @@ public class BallotConfirmationFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String ARG_PARAM3 = "param3";
-    private static final String ARG_PARAM4 = "param4";
 
-    // TODO: Rename and change types of parameters
-    private String firstName;
-    private String lastName;
     private String choice;
     private String timestamp;
 
@@ -52,19 +46,15 @@ public class BallotConfirmationFragment extends Fragment {
 
     /**
      * Factory method to create a new instance.
-     * @param firstName
-     * @param lastName
      * @param choice
      * @param timestamp
      * @return
      */
-    public static BallotConfirmationFragment newInstance(String firstName, String lastName, String choice, String timestamp) {
+    public static BallotConfirmationFragment newInstance(String choice, String timestamp) {
         BallotConfirmationFragment fragment = new BallotConfirmationFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, firstName);
-        args.putString(ARG_PARAM2, lastName);
-        args.putString(ARG_PARAM3, choice);
-        args.putString(ARG_PARAM4, timestamp);
+        args.putString(ARG_PARAM1, choice);
+        args.putString(ARG_PARAM2, timestamp);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,10 +63,8 @@ public class BallotConfirmationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            firstName = getArguments().getString(ARG_PARAM1);
-            lastName = getArguments().getString(ARG_PARAM2);
-            choice = getArguments().getString(ARG_PARAM3);
-            timestamp = getArguments().getString(ARG_PARAM4);
+            choice = getArguments().getString(ARG_PARAM1);
+            timestamp = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -84,13 +72,7 @@ public class BallotConfirmationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_ballot_confirmation, container, false);
-        //Update the TextViews with the voter information
-        TextView textView_firstName = (TextView)rootView.findViewById(R.id.confirmation_firstname);
-        textView_firstName.setText(firstName);
-
-        TextView textView_lastName = (TextView)rootView.findViewById(R.id.confirmation_lastname);
-        textView_lastName.setText(lastName);
-
+        //Update the TextViews with the voter's choice
         TextView textView_choice = (TextView)rootView.findViewById(R.id.confirmation_choice);
         textView_choice.setText(choice);
 

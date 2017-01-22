@@ -11,32 +11,6 @@ android:id="@+id/fragment_selectcandidate_container"
 tools:context="com.blockvote.votingclient.SelectCandidateFragment">
 
 
-
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="First Name"
-            android:ems="10"
-            android:id="@+id/firstNameText" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Last Name"
-            android:ems="10"
-            android:id="@+id/lastNameText" />
-
-    </LinearLayout>
-
     <ListView
     android:layout_width="match_parent"
     android:layout_height="match_parent"

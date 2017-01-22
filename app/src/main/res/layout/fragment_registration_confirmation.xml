@@ -8,21 +8,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/reg_confirmation_firstname"
+        android:id="@+id/reg_confirmation_votername"
         android:text="Show first name" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/reg_confirmation_lastname"
-        android:text="Show last name" />
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/reg_confirmation_timestamp"
-        android:text="Show time when voter clicks OK" />
 
     <TextView
         android:layout_width="match_parent"

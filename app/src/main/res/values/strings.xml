@@ -3,7 +3,7 @@
     <string name="FrontInstruction">Select an Election</string>
     <string name="electionEntry">Election Entry</string>
     <string name="electionEntry1">UK\'s membership in the EU</string>
-    <string name="selectedElectionKey">selectedElectionKey</string>
+
     <string name="electionRegister">Register</string>
     <string name="electionVote">Vote</string>
     <string name="electionHelp">Help</string>
@@ -13,6 +13,9 @@
     <string name="VoteButtonState">VotBut</string>
     <string name="ReviewBallotState">RevBalot</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Keys for SharedPreferences-->
+    <string name="selectedElectionKey">selectedElectionKey</string>
+    <string name="voterNameKey">voterNameKey</string>
+    <string name="regSentSucess">regissesnt</string>
 </resources>

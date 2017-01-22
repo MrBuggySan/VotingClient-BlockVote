@@ -1,8 +1,6 @@
 package com.blockvote.votingclient;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -79,27 +75,16 @@ public class SelectCandidateFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
                 String choice=mCandidateList.getItem(i);
-                //TODO: ask the name of the voter (this is only for testing purposes)
-                View rootView = getView();
-                EditText firstText= (EditText) rootView.findViewById(R.id.firstNameText);
-                EditText lastText= (EditText) rootView.findViewById(R.id.lastNameText);
 
-                String firstName = firstText.getText().toString();
-                String lastName = lastText.getText().toString();
 
                 //TODO: get the timestamp
 
                 //TODO: have the root activity call the BallotConfirmationFragment
-                mListener.onOptionSelectInteraction(firstName, lastName, choice, "test hour");
+                mListener.onOptionSelectInteraction(choice, "test hour");
 
 
             }
         });
-
-        //TODO: get the name of the user from the system, have an option to edit the values
-
-
-
 
 
 
@@ -136,6 +121,6 @@ public class SelectCandidateFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onOptionSelectInteraction(String firstName, String lastName, String choice, String timestamp);
+        void onOptionSelectInteraction(String choice, String timestamp);
     }
 }
