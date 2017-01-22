@@ -185,6 +185,13 @@ public class ElectionActivity extends AppCompatActivity
     }
 
     public void onNoBallotConfirmation(){
+
+        //switch SelectCandidateFragment
+        FragmentManager fragmentManager= getSupportFragmentManager();
+
+        //Pop all of the previous registration fragments
+        fragmentManager.popBackStack("Transition to BallotConfirmationFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
         Log.d(LOG_TAG, "Voter does not confirm");
     }
 
@@ -199,7 +206,7 @@ public class ElectionActivity extends AppCompatActivity
         //add the transaction to the BackStack
         transaction.addToBackStack("Transition to RegistrationConfirmationFragment");
         transaction.commit();
-        Log.d(LOG_TAG,"Opening RegistrationConfirmationFragment ");
+        Log.d(LOG_TAG,"Opening RegistrationConfirmationFragment");
 
 
     }
@@ -236,8 +243,8 @@ public class ElectionActivity extends AppCompatActivity
 
         FragmentManager fragmentManager= getSupportFragmentManager();
 
-        //TODO:Pop all of the previous registration fragments
-
+        //Pop all of the previous registration fragments
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         //Switch the RegisterFragment with the RegistrationConfirmationFragment
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -248,7 +255,12 @@ public class ElectionActivity extends AppCompatActivity
 
     }
     public void onNoRegistrationInteraction(){
-        //TODO: switch with RegisterFragment
+        //switch with RegisterFragment
+        FragmentManager fragmentManager= getSupportFragmentManager();
+
+        //Pop all of the previous registration fragments
+        fragmentManager.popBackStack("Transition to RegistrationConfirmationFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Log.d(LOG_TAG,"Voter does not confirm registration request. ");
     }
 
 

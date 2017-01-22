@@ -81,7 +81,7 @@ public class RegistrationConfirmationFragment extends Fragment {
             }
         });
 
-        //TODO: when NO, go back to the SelectCandidateFragment
+        //TODO: when NO, go back to the RegisterFragment
         Button noButton = (Button) rootView.findViewById(R.id.reg_confirmation_no_button);
         noButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
