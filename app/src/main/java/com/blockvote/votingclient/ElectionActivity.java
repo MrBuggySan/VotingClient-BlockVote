@@ -1,5 +1,6 @@
 package com.blockvote.votingclient;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -40,7 +42,18 @@ public class ElectionActivity extends AppCompatActivity
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.Option_ClearData:
-                //TODO: clear the SharedPreferences data and then exit the ElectionActivity
+                //clear the SharedPreferences data
+                SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
+                SharedPreferences.Editor editor = dataStore.edit();
+                editor.clear();
+                editor.commit();
+
+                Context context = this;
+                int duration = Toast.LENGTH_LONG;
+                Toast.makeText(context, "Data cleared, press back on this activity" +
+                        " and start over.", duration).show();
+
+                //TODO: exit the ElectionActivity
 
                 Log.d(LOG_TAG, "Clear data option selected");
                 return true;
@@ -96,6 +109,7 @@ public class ElectionActivity extends AppCompatActivity
                 return;
             }
             if(currentState.equals(getString(R.string.RegistrationStatusState))){
+                //grab the voters data from data store
                 String voterNameKey = getString(R.string.voterNameKey);
                 String regSentKey = getString(R.string.regSentSucess);
                 String voterName = dataStore.getString(voterNameKey, "error");

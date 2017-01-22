@@ -25,7 +25,7 @@ public class RootActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.Option_Help:
+            case R.id.Option_rootHelp:
                 //TODO: Start the HelpActivity
                 Log.d(LOG_TAG, "Help option selected");
                 return true;
