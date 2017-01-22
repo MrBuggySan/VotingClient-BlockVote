@@ -10,9 +10,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import com.blockvote.model.ElectionListModel;
+import com.blockvote.networking.BlockVoteServerAPI;
+import com.blockvote.networking.BlockVoteServerInstance;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -32,52 +40,66 @@ public class ElectionListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_election_list, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_election_list, container, false);
 
-        mElectionList = new ArrayAdapter<String>(
-                getActivity(),
-                R.layout.listentry,
-                R.id.listEntry,
-                new ArrayList<String>()
-        );
+        //disable the electionlist
+        rootView.findViewById(R.id.listview_electionlist).setVisibility(View.GONE);
 
-        //Rough list of available elections
-        //TODO: get the election list from the server
-        mElectionList.add(getString(R.string.electionEntry1));
-        for(int i = 0; i < 10; i++){
-            mElectionList.add("Election Placeholder");
-        }
+        //TODO: the fragment must redownload the list even if its coming from the backstack.
 
-        ListView listView=(ListView) rootView.findViewById(R.id.listview_electionlist);
-        listView.setAdapter(mElectionList);
+        //get the election list from the server
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<ElectionListModel> call = apiService.getElectionList();
 
-        //Add the event when election is clicked
-        listView.setOnItemClickListener( new AdapterView.OnItemClickListener(){
+        call.enqueue(new Callback<ElectionListModel>() {
+            @Override
+            public void onResponse(Call<ElectionListModel> call, Response<ElectionListModel> response) {
+                int statusCode = response.code();
+                List<String> electionList = response.body().getResponse();
+
+
+                mElectionList = new ArrayAdapter<String>(
+                        getActivity(),
+                        R.layout.listentry,
+                        R.id.listEntry,
+                        new ArrayList<String>()
+                );
+
+                for(int i = 0; i < electionList.size(); i++){
+                    Log.d(LOG_TAG, electionList.get(i) + " available.");
+                    mElectionList.add(electionList.get(i));
+                }
+                //TODO: apply the results to the UI
+                View rootView_ = getView();
+                ListView listView=(ListView) rootView_.findViewById(R.id.listview_electionlist);
+                listView.setAdapter(mElectionList);
+
+                //disable the loading screen
+                rootView_.findViewById(R.id.electionlist_loadingPanel).setVisibility(View.GONE);
+
+                //Add the event when election is clicked
+                listView.setOnItemClickListener( new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
+                        String electionName=mElectionList.getItem(i);
+                        //have the root activity call the ElectionActivity
+                        mListener.onElectionOptionClick(electionName);
+                    }
+                });
+
+                //Show the election list
+                rootView.findViewById(R.id.listview_electionlist).setVisibility(View.VISIBLE);
+            }
 
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
-
-                String electionName=mElectionList.getItem(i);
-
-                //Use toast for debugging
-                if(electionName.equals("Election Placeholder")){
-                    //Toast creates a temporary notification when an item in the ListView is clicked.
-                    Context context = adapterView.getContext();
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast.makeText(context, "Not available!", duration).show();
-                    return;
-                }
-
-                //have the root activity call the ElectionActivity
-                mListener.onElectionOptionClick(electionName);
-
-
+            public void onFailure(Call<ElectionListModel> call, Throwable t) {
+                Log.e(LOG_TAG,"Downloading the election list has failed...");
+                throw new RuntimeException("Could not download the election list");
+                //TODO:Restart the connection
             }
         });
-
-
         Log.d(LOG_TAG,"Election Selection Fragment setup done");
-
         return rootView;
     }
 
