@@ -21,9 +21,11 @@ import android.widget.TextView;
 public class RegistrationConfirmationFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private String firstName;
     private String lastName;
+    private String districtName;
 
     private OnFragmentInteractionListener mListener;
 
@@ -39,11 +41,12 @@ public class RegistrationConfirmationFragment extends Fragment {
      * @param lastName Parameter 2.
      * @return A new instance of fragment RegistrationConfirmationFragment.
      */
-    public static RegistrationConfirmationFragment newInstance(String firstName, String lastName) {
+    public static RegistrationConfirmationFragment newInstance(String firstName, String lastName, String districtName) {
         RegistrationConfirmationFragment fragment = new RegistrationConfirmationFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, firstName);
         args.putString(ARG_PARAM2, lastName);
+        args.putString(ARG_PARAM3, districtName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,6 +57,7 @@ public class RegistrationConfirmationFragment extends Fragment {
         if (getArguments() != null) {
             firstName = getArguments().getString(ARG_PARAM1);
             lastName = getArguments().getString(ARG_PARAM2);
+            districtName = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -64,7 +68,7 @@ public class RegistrationConfirmationFragment extends Fragment {
 
         //Update the TextViews with the voter information
         TextView textView_VoterName = (TextView)rootView.findViewById(R.id.reg_confirmation_votername);
-        textView_VoterName.setText(firstName + " " + lastName);
+        textView_VoterName.setText(firstName + " " + lastName  +" from "+ districtName);
 
         Button yesButton = (Button) rootView.findViewById(R.id.reg_confirmation_yes_button);
         yesButton.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +85,7 @@ public class RegistrationConfirmationFragment extends Fragment {
             }
         });
 
-        //TODO: when NO, go back to the RegisterFragment
+        // when NO, go back to the RegisterFragment
         Button noButton = (Button) rootView.findViewById(R.id.reg_confirmation_no_button);
         noButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

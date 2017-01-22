@@ -5,6 +5,17 @@
     android:layout_height="match_parent"
     tools:context="com.blockvote.votingclient.RegisterFragment">
 
+    <RelativeLayout
+        android:id="@+id/registration_loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -15,19 +26,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:text="First Name"
             android:ems="10"
-            android:id="@+id/reg_firstNameText" />
+            android:id="@+id/reg_firstNameText"
+            android:hint="First Name" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:text="Last Name"
             android:ems="10"
-            android:id="@+id/reg_lastNameText" />
+            android:id="@+id/reg_lastNameText"
+            android:hint="Last Name" />
 
     </LinearLayout>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/register_districtspinner" />
 
     <Button
         android:text="Register"

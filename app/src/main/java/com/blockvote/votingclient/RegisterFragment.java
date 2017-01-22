@@ -3,11 +3,26 @@ package com.blockvote.votingclient;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.blockvote.model.FullElectionInfoModel;
+import com.blockvote.networking.BlockVoteServerAPI;
+import com.blockvote.networking.BlockVoteServerInstance;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -15,11 +30,10 @@ import android.widget.EditText;
  * Activities that contain this fragment must implement the
  * {@link RegisterFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RegisterFragment#newInstance} factory method to
- * create an instance of this fragment.
+
  */
 public class RegisterFragment extends Fragment {
-
+    private final String LOG_TAG = RegisterFragment.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
 
@@ -39,23 +53,87 @@ public class RegisterFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_register, container, false);
         //TODO: get the name of the user from the system, have an option to edit the values
 
+        //Hide the other views
+        rootView.findViewById(R.id.reg_firstNameText).setVisibility(View.GONE);
+        rootView.findViewById(R.id.reg_lastNameText).setVisibility(View.GONE);
+        rootView.findViewById(R.id.register_districtspinner).setVisibility(View.GONE);
+        rootView.findViewById(R.id.reg_register_button).setVisibility(View.GONE);
 
-        Button registerButton = (Button) rootView.findViewById(R.id.reg_register_button);
-        //Register button callback
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (mListener != null) {
-                    View rootView = getView();
-                    EditText firstText= (EditText) rootView.findViewById(R.id.reg_firstNameText);
-                    EditText lastText= (EditText) rootView.findViewById(R.id.reg_lastNameText);
+        //get the districts from the server
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<FullElectionInfoModel> call = apiService.getElectionInfo();
 
-                    String firstName = firstText.getText().toString();
-                    String lastName = lastText.getText().toString();
+        call.enqueue(new Callback<FullElectionInfoModel>() {
+            @Override
+            public void onResponse(Call<FullElectionInfoModel> call, Response<FullElectionInfoModel> response) {
+                int statusCode = response.code();
+                List<String> districtList = response.body().getElectionData().getDistricts();
+                //apply the results to the UI
+                View rootView_ = getView();
 
-                    mListener.onRegisterButtonInteraction(firstName, lastName);
+                //Setup the spinner
+                Spinner spinner = (Spinner) rootView_.findViewById(R.id.register_districtspinner);
+                ArrayAdapter<String> mDistrictList = new ArrayAdapter<String>(
+                        getActivity(),
+                        R.layout.listentry,
+                        R.id.listEntry,
+                        new ArrayList<String>()
+                );
+
+                for(int i = 0; i < districtList.size(); i++){
+                    Log.d(LOG_TAG, districtList.get(i) + " available.");
+                    mDistrictList.add(districtList.get(i));
                 }
+                spinner.setAdapter(mDistrictList);
+
+
+                //Setup the button
+                Button registerButton = (Button) rootView_.findViewById(R.id.reg_register_button);
+                //Register button callback
+                registerButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        if (mListener != null) {
+                            View rootView = getView();
+                            EditText firstText= (EditText) rootView.findViewById(R.id.reg_firstNameText);
+                            EditText lastText= (EditText) rootView.findViewById(R.id.reg_lastNameText);
+
+                            String firstName = firstText.getText().toString();
+                            String lastName = lastText.getText().toString();
+                            if(firstName.equals("") || lastName.equals("")){
+                                Context context = getContext();
+                                int duration = Toast.LENGTH_SHORT;
+                                Toast.makeText(context, "Please enter your name", duration).show();
+
+                                return;
+                            }
+                            Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+                            String districtName = districtSpinner.getSelectedItem().toString();
+
+                            mListener.onRegisterButtonInteraction(firstName, lastName, districtName);
+                        }
+                    }
+                });
+
+                //disable the loading screen
+                rootView_.findViewById(R.id.registration_loadingPanel).setVisibility(View.GONE);
+
+                //Show the Views again
+                rootView_.findViewById(R.id.reg_firstNameText).setVisibility(View.VISIBLE);
+                rootView_.findViewById(R.id.reg_lastNameText).setVisibility(View.VISIBLE);
+                rootView_.findViewById(R.id.reg_register_button).setVisibility(View.VISIBLE);
+                rootView_.findViewById(R.id.register_districtspinner).setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<FullElectionInfoModel> call, Throwable t) {
+                Log.e(LOG_TAG,"Downloading the election list has failed...");
+                throw new RuntimeException("Could not download the election list");
+                //TODO:Restart the connection if failure
             }
         });
+
+
 
         return rootView;
     }
@@ -89,6 +167,6 @@ public class RegisterFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onRegisterButtonInteraction(String firstName, String lastName);
+        void onRegisterButtonInteraction(String firstName, String lastName, String districtName);
     }
 }

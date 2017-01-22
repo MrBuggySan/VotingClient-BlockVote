@@ -70,7 +70,7 @@ public class ElectionListFragment extends Fragment {
                     Log.d(LOG_TAG, electionList.get(i) + " available.");
                     mElectionList.add(electionList.get(i));
                 }
-                //TODO: apply the results to the UI
+                //apply the results to the UI
                 View rootView_ = getView();
                 ListView listView=(ListView) rootView_.findViewById(R.id.listview_electionlist);
                 listView.setAdapter(mElectionList);
@@ -96,7 +96,7 @@ public class ElectionListFragment extends Fragment {
             public void onFailure(Call<ElectionListModel> call, Throwable t) {
                 Log.e(LOG_TAG,"Downloading the election list has failed...");
                 throw new RuntimeException("Could not download the election list");
-                //TODO:Restart the connection
+                //TODO:Restart the connection if failure
             }
         });
         Log.d(LOG_TAG,"Election Selection Fragment setup done");

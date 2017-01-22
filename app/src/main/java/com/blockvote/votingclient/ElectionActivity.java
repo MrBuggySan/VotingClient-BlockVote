@@ -28,7 +28,10 @@ public class ElectionActivity extends AppCompatActivity
 
 
     private final String LOG_TAG = ElectionActivity.class.getSimpleName();
-    private String stateKey ;
+    private String electionStateKey ;
+    private String voterKey;
+    private String regSentSucessKey;
+    private String electionName;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -45,7 +48,10 @@ public class ElectionActivity extends AppCompatActivity
                 //clear the SharedPreferences data
                 SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
                 SharedPreferences.Editor editor = dataStore.edit();
-                editor.clear();
+                //only delete the data associated for this election
+                editor.remove(voterKey);
+                editor.remove(regSentSucessKey);
+                editor.remove(electionStateKey);
                 editor.commit();
 
                 Context context = this;
@@ -74,7 +80,7 @@ public class ElectionActivity extends AppCompatActivity
         //get the extra data from intent
         Intent intent = getIntent();
 
-        String electionName=intent.getStringExtra(getString(R.string.selectedElectionKey));
+        electionName=intent.getStringExtra(getString(R.string.selectedElectionKey));
         Log.d(LOG_TAG, electionName + " selected");
         //Toolbar setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.electionmain_toolbar);
@@ -88,15 +94,15 @@ public class ElectionActivity extends AppCompatActivity
 
         //select the appropriate fragment to display according to the data from the DB, (for now I will use the simple SharedPreferences)
         SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
-        stateKey=  getString(R.string.ElectionActivityState)+ electionName;
-        if (!dataStore.contains(stateKey)){
+        electionStateKey=  getString(R.string.ElectionActivityState)+ electionName;
+        if (!dataStore.contains(electionStateKey)){
             //Init the state
             SharedPreferences.Editor editor = dataStore.edit();
-            editor.putString(stateKey, getString(R.string.RegistrationState));
+            editor.putString(electionStateKey, getString(R.string.RegistrationState));
             editor.commit();
         }
         //get the current state
-        String currentState =dataStore.getString(stateKey, "error");
+        String currentState =dataStore.getString(electionStateKey, "error");
         if(currentState.equals("error")){
             Log.e(LOG_TAG, "Could not find the current state of ElectionActivity");
             throw new RuntimeException(LOG_TAG + " could not find the state.");
@@ -195,9 +201,9 @@ public class ElectionActivity extends AppCompatActivity
         Log.d(LOG_TAG, "Voter does not confirm");
     }
 
-    public void onRegisterButtonInteraction(String firstName, String lastName){
+    public void onRegisterButtonInteraction(String firstName, String lastName, String districtName){
         RegistrationConfirmationFragment registrationConfirmationFragment = RegistrationConfirmationFragment.newInstance(
-                firstName, lastName
+                firstName, lastName, districtName
         );
 
         //Switch the RegisterFragment with the RegistrationConfirmationFragment
@@ -214,7 +220,7 @@ public class ElectionActivity extends AppCompatActivity
     public void onYesRegistrationInteraction(String voterName, boolean sentSuccesfully ){
 
         //Save the voter name in DB, for now use SharedPreferences
-        String voterKey = getString(R.string.voterNameKey);
+        voterKey = getString(R.string.voterNameKey)+ electionName;
         SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
         if (dataStore.contains(voterKey)){
             //SharedPrefences already contians a key
@@ -228,9 +234,9 @@ public class ElectionActivity extends AppCompatActivity
 
         //change the state of ElectionActivity to RegistrationStatusState
         String newState = getString(R.string.RegistrationStatusState);
-        editor.putString(stateKey, newState);
+        editor.putString(electionStateKey, newState);
         //change the status of RegistrationStatusState
-        String regSentSucessKey = getString(R.string.regSentSucess);
+        regSentSucessKey = getString(R.string.regSentSucess)+ electionName;
         editor.putBoolean(regSentSucessKey, sentSuccesfully);
         editor.commit();
 
