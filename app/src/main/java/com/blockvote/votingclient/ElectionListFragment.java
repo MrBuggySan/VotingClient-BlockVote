@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.blockvote.model.ElectionListModel;
+import com.blockvote.model.MODEL_ElectionList;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
 
@@ -50,11 +50,11 @@ public class ElectionListFragment extends Fragment {
         //get the election list from the server
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-        Call<ElectionListModel> call = apiService.getElectionList();
+        Call<MODEL_ElectionList> call = apiService.getElectionList();
 
-        call.enqueue(new Callback<ElectionListModel>() {
+        call.enqueue(new Callback<MODEL_ElectionList>() {
             @Override
-            public void onResponse(Call<ElectionListModel> call, Response<ElectionListModel> response) {
+            public void onResponse(Call<MODEL_ElectionList> call, Response<MODEL_ElectionList> response) {
                 int statusCode = response.code();
                 List<String> electionList = response.body().getResponse();
 
@@ -93,7 +93,7 @@ public class ElectionListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ElectionListModel> call, Throwable t) {
+            public void onFailure(Call<MODEL_ElectionList> call, Throwable t) {
                 Log.e(LOG_TAG,"Downloading the election list has failed...");
                 throw new RuntimeException("Could not download the election list");
                 //TODO:Restart the connection if failure

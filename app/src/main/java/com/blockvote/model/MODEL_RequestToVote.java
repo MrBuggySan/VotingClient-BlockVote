@@ -1,24 +1,32 @@
 package com.blockvote.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Beast Mode on 1/21/2017.
+ * Created by andreibuiza on 23/01/17.
  */
 
-public class ElectionListModel {
+public class MODEL_RequestToVote {
 
-    private List<String> response = null;
+    private String response;
+    private ErrorResponseModel error;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public List<String> getResponse() {
+    public String getResponse() {
         return response;
     }
 
-    public void setResponse(List<String> response) {
+    public void setResponse(String response) {
         this.response = response;
+    }
+
+    public ErrorResponseModel getError() {
+        return error;
+    }
+
+    public void setError(ErrorResponseModel error) {
+        this.error = error;
     }
 
     public Map<String, Object> getAdditionalProperties() {
@@ -28,4 +36,5 @@ public class ElectionListModel {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
+
 }

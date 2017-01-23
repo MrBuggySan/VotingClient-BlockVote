@@ -13,10 +13,10 @@ import android.widget.TextView;
 public class RegistrationStatusFragment extends Fragment {
     private final String LOG_TAG = RegistrationStatusFragment.class.getSimpleName();
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
 
     private String voterName;
-    private boolean sentSuccesfully;
+
 
     public RegistrationStatusFragment() {
         // Required empty public constructor
@@ -27,14 +27,14 @@ public class RegistrationStatusFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+
      * @return A new instance of fragment RegistrationStatusFragment.
      */
-    public static RegistrationStatusFragment newInstance(String param1, boolean param2) {
+    public static RegistrationStatusFragment newInstance(String param1) {
         RegistrationStatusFragment fragment = new RegistrationStatusFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putBoolean(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,7 +44,7 @@ public class RegistrationStatusFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             voterName = getArguments().getString(ARG_PARAM1);
-            sentSuccesfully = getArguments().getBoolean(ARG_PARAM2);
+
         }
     }
 
@@ -54,18 +54,13 @@ public class RegistrationStatusFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_registration_status, container, false);
         TextView textView_message = (TextView)rootView.findViewById(R.id.reg_status_message);
-        if(sentSuccesfully){
-            //TODO: periodic check of the status of the registration
-            //TODO: have this periodic check happening in the background
-            //Update the message
-            textView_message.setText(voterName + " your registration request has been sent, please wait for its confirmation" +
-                    "by our registrars");
+        //TODO: periodic check of the status of the registration
+        //TODO: have this periodic check happening in the background
+        //Update the message
+        textView_message.setText(voterName + " your registration request has been sent, please wait for its confirmation" +
+                "by our registrars");
 
-            Log.d(LOG_TAG, "The server has succesfully recieved the registration request");
-        }else{
-            //TODO: Show failure to send registration request
-            Log.d(LOG_TAG, "The server did not get the request, please try again.");
-        }
+        Log.d(LOG_TAG, "The server has succesfully recieved the registration request");
 
         return rootView;
     }

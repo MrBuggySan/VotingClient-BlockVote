@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Beast Mode on 1/21/2017.
+ * Created by andreibuiza on 23/01/17.
  */
 
-public class FullElectionInfoModel {
+public class ElectionInfo_Response   {
     private String id;
     private String rev;
-    private ElectionData electionData;
+    private ElectionInfo_ElectionData electionData;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public String getId() {
@@ -29,11 +29,11 @@ public class FullElectionInfoModel {
         this.rev = rev;
     }
 
-    public ElectionData getElectionData() {
+    public ElectionInfo_ElectionData getElectionData() {
         return electionData;
     }
 
-    public void setElectionData(ElectionData electionData) {
+    public void setElectionData(ElectionInfo_ElectionData electionData) {
         this.electionData = electionData;
     }
 

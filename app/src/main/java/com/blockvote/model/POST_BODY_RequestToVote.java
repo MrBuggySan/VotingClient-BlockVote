@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by andreibuiza on 22/01/17.
  */
 
-public class POSTRequestToVoteBody {
+public class POST_BODY_RequestToVote {
     @SerializedName("username")
     @Expose
     String username;
@@ -17,9 +17,9 @@ public class POSTRequestToVoteBody {
     String voter;
 
 
-    public POSTRequestToVoteBody(String registrarUserName, String voterName){
-        this.username = username;
-        this.voter = voter;
+    public POST_BODY_RequestToVote(String registrarUserName, String voterName   ){
+        this.username = registrarUserName;
+        this.voter = voterName;
 
     }
 

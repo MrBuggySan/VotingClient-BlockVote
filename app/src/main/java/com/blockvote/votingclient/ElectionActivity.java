@@ -30,7 +30,6 @@ public class ElectionActivity extends AppCompatActivity
     private final String LOG_TAG = ElectionActivity.class.getSimpleName();
     private String electionStateKey ;
     private String voterKey;
-    private String regSentSucessKey;
     private String electionName;
 
     @Override
@@ -50,7 +49,7 @@ public class ElectionActivity extends AppCompatActivity
                 SharedPreferences.Editor editor = dataStore.edit();
                 //only delete the data associated for this election
                 editor.remove(voterKey);
-                editor.remove(regSentSucessKey);
+
                 editor.remove(electionStateKey);
                 editor.commit();
 
@@ -96,7 +95,7 @@ public class ElectionActivity extends AppCompatActivity
         SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
         //define the keys for this particular election
         electionStateKey=  getString(R.string.ElectionActivityState)+ electionName;
-        regSentSucessKey = getString(R.string.regSentSucess)+ electionName;
+
         voterKey = getString(R.string.voterNameKey)+ electionName;
 
         if (!dataStore.contains(electionStateKey)){
@@ -121,10 +120,10 @@ public class ElectionActivity extends AppCompatActivity
             if(currentState.equals(getString(R.string.RegistrationStatusState))){
                 //grab the voters data from data store
                 String voterName = dataStore.getString(voterKey, "error");
-                boolean sentSuccesfully = dataStore.getBoolean(regSentSucessKey, false);
+
 
                 Log.v(LOG_TAG, voterName + " has been retrieved from db.");
-                RegistrationStatusFragment registrationStatusFragment = RegistrationStatusFragment.newInstance(voterName, sentSuccesfully);
+                RegistrationStatusFragment registrationStatusFragment = RegistrationStatusFragment.newInstance(voterName);
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, registrationStatusFragment).commit();
                 return;
             }
@@ -220,7 +219,7 @@ public class ElectionActivity extends AppCompatActivity
 
     }
 
-    public void onYesRegistrationInteraction(String voterName, boolean sentSuccesfully ){
+    public void onYesRegistrationInteraction(String voterName){
 
         //Save the voter name in DB, for now use SharedPreferences
 
@@ -240,16 +239,14 @@ public class ElectionActivity extends AppCompatActivity
         //change the state of ElectionActivity to RegistrationStatusState
         String newState = getString(R.string.RegistrationStatusState);
         editor.putString(electionStateKey, newState);
-        //change the status of RegistrationStatusState
 
-        editor.putBoolean(regSentSucessKey, sentSuccesfully);
         editor.commit();
 
         //Start the RegistrationStatusFragment
 
 
         RegistrationStatusFragment registrationStatusFragment = RegistrationStatusFragment.newInstance(
-                voterName, sentSuccesfully
+                voterName
         );
 
         FragmentManager fragmentManager= getSupportFragmentManager();

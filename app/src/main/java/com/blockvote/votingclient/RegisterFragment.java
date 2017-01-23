@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.blockvote.model.FullElectionInfoModel;
+import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
 
@@ -63,13 +63,13 @@ public class RegisterFragment extends Fragment {
             //get the districts from the server
             BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
             BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-            Call<FullElectionInfoModel> call = apiService.getElectionInfo();
+            Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
 
-            call.enqueue(new Callback<FullElectionInfoModel>() {
+            call.enqueue(new Callback<MODEL_ElectionInfo>() {
                 @Override
-                public void onResponse(Call<FullElectionInfoModel> call, Response<FullElectionInfoModel> response) {
+                public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
                     int statusCode = response.code();
-                    List<String> districtList = response.body().getElectionData().getDistricts();
+                    List<String> districtList = response.body().getResponse().getElectionData().getDistricts();
                     //apply the results to the UI
                     View rootView_ = getView();
                     if(rootView_ != null){
@@ -132,7 +132,7 @@ public class RegisterFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<FullElectionInfoModel> call, Throwable t) {
+                public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
                     Log.e(LOG_TAG, "Downloading the election list has failed...");
                     throw new RuntimeException("Could not download the election list");
                     //TODO:Restart the connection if failure

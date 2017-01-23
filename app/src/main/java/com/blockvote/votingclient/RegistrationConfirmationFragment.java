@@ -9,9 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.blockvote.model.ElectionListModel;
-import com.blockvote.model.POSTRequestToVoteBody;
+import com.blockvote.model.POST_BODY_RequestToVote;
+import com.blockvote.model.MODEL_RequestToVote;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
 
@@ -81,38 +82,60 @@ public class RegistrationConfirmationFragment extends Fragment {
         TextView textView_VoterName = (TextView)rootView.findViewById(R.id.reg_confirmation_votername);
         textView_VoterName.setText(firstName + " " + lastName  +" from "+ districtName);
 
+        //disable loading circle
+        rootView.findViewById(R.id.reg_confirmation_loadingPanel).setVisibility(View.GONE);
+
         Button yesButton = (Button) rootView.findViewById(R.id.reg_confirmation_yes_button);
         yesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mListener != null) {
-                    String voterName = firstName + " " + lastName;
+                    final String voterName = firstName + " " + lastName;
                     String registrarName = "tommy";
 
                     //send the request of the voter to the server
                     BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
                     BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-                    Call<> call = apiService.sendRegistrationRequest(new POSTRequestToVoteBody(registrarName, voterName));
+                    Call<MODEL_RequestToVote> call = apiService.sendRegistrationRequest(new POST_BODY_RequestToVote(registrarName, voterName));
 
-                    call.enqueue(new Callback<>() {
+                    call.enqueue(new Callback<MODEL_RequestToVote>() {
                         @Override
-                        public void onResponse(Call<> call, Response<> response) {
+                        public void onResponse(Call<MODEL_RequestToVote> call, Response<MODEL_RequestToVote> response) {
+
+                            MODEL_RequestToVote ServerResponse = response.body();
+                            if(ServerResponse.getError() != null){
+                                //Handle the error
+                                String msg = ServerResponse.getError().getMessage();
+                                Log.e(LOG_TAG, voterName + " " + msg);
+
+                                Context context = getContext();
+                                int duration = Toast.LENGTH_SHORT;
+                                Toast.makeText(context, msg, duration).show();
+                                return;
+                            }
+                            //TODO: do something with the response?
+                            Log.v(LOG_TAG, voterName + " has succesfully sent the registration request.");
+                            mListener.onYesRegistrationInteraction(voterName);
 
 
-
-
-                            //TODO: Have the callback call onYesRegistrationInteraction to start the RegistrationStatusFragment
-                            mListener.onYesRegistrationInteraction(firstName + " " + lastName,true);
                         }
 
                         @Override
-                        public void onFailure(Call<> call, Throwable t) {
-                            Log.e(LOG_TAG, "Failed to send the registration request.");
+                        public void onFailure(Call<MODEL_RequestToVote> call, Throwable t) {
+                            String msg = "Failed to send the registration request due to network errors";
+                            Log.e(LOG_TAG, msg);
                             Log.e(LOG_TAG, t.getMessage());
+                            Context context = getContext();
+                            int duration = Toast.LENGTH_SHORT;
+                            Toast.makeText(context, msg, duration).show();
 
                         }
                     });
-                    //TODO: setup the loading circle
+                    View rootView_ = getView();
+                    //enable the loading circle
+                    rootView_.findViewById(R.id.reg_confirmation_loadingPanel).setVisibility(View.VISIBLE);
 
+                    //disable the rest
+                    rootView_.findViewById(R.id.reg_confirmation_screen).setVisibility(View.GONE);
 
                 }
             }
@@ -161,7 +184,7 @@ public class RegistrationConfirmationFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onYesRegistrationInteraction(String voterName, boolean sentSuccessfully);
+        void onYesRegistrationInteraction(String voterName);
         void onNoRegistrationInteraction();
     }
 }

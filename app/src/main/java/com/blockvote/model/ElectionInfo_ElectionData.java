@@ -8,7 +8,7 @@ import java.util.Map;
  * Created by Beast Mode on 1/21/2017.
  */
 
-public class ElectionData {
+public class ElectionInfo_ElectionData {
     private String chaincodeID;
     private List<String> districts = null;
     private List<String> answers = null;
