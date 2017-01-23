@@ -1,13 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.blockvote.votingclient.RegistrationStatusFragment">
+<android.support.v4.widget.SwipeRefreshLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/reg_status_swiperefresh"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/reg_status_message" />
+        tools:context="com.blockvote.votingclient.RegistrationStatusFragment">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/reg_status_message" />
+
+
+
+
+    </FrameLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

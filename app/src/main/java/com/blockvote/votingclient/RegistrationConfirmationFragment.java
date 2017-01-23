@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blockvote.model.POST_BODY_RequestToVote;
+import com.blockvote.model.POST_BODY_RegistrationRequest;
 import com.blockvote.model.MODEL_RequestToVote;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
@@ -90,12 +90,12 @@ public class RegistrationConfirmationFragment extends Fragment {
             public void onClick(View v) {
                 if (mListener != null) {
                     final String voterName = firstName + " " + lastName;
-                    String registrarName = "tommy";
+                    String registrarName = getString(R.string.regigstrarName);
 
                     //send the request of the voter to the server
                     BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
                     BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-                    Call<MODEL_RequestToVote> call = apiService.sendRegistrationRequest(new POST_BODY_RequestToVote(registrarName, voterName));
+                    Call<MODEL_RequestToVote> call = apiService.sendRegistrationRequest(new POST_BODY_RegistrationRequest(registrarName, voterName));
 
                     call.enqueue(new Callback<MODEL_RequestToVote>() {
                         @Override

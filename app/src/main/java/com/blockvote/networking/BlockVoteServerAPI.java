@@ -2,7 +2,8 @@ package com.blockvote.networking;
 
 import com.blockvote.model.MODEL_ElectionList;
 import com.blockvote.model.MODEL_ElectionInfo;
-import com.blockvote.model.POST_BODY_RequestToVote;
+import com.blockvote.model.MODEL_UserAuthorizationStatus;
+import com.blockvote.model.POST_BODY_RegistrationRequest;
 import com.blockvote.model.MODEL_RequestToVote;
 
 
@@ -23,10 +24,14 @@ public interface BlockVoteServerAPI {
     Call<MODEL_ElectionList> getElectionList();
 
     @Headers({"Accept: application/json"})
-        @GET("getElectionInfo/")
+    @GET("getElectionInfo/")
     Call<MODEL_ElectionInfo> getElectionInfo();
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST("requestToVote/")
-    Call<MODEL_RequestToVote> sendRegistrationRequest(@Body POST_BODY_RequestToVote postRequestToVoteBody);
+    Call<MODEL_RequestToVote> sendRegistrationRequest(@Body POST_BODY_RegistrationRequest body);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @POST("UserAuthorizationStatus/")
+    Call<MODEL_UserAuthorizationStatus> statusRegistrationRequest(@Body POST_BODY_RegistrationRequest body);
 }
