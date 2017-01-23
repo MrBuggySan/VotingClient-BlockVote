@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.model.POST_BODY_RegistrationRequest;
 import com.blockvote.model.MODEL_RequestToVote;
 import com.blockvote.networking.BlockVoteServerAPI;
@@ -106,10 +107,7 @@ public class RegistrationConfirmationFragment extends Fragment {
                                 //Handle the error
                                 String msg = ServerResponse.getError().getMessage();
                                 Log.e(LOG_TAG, voterName + " " + msg);
-
-                                Context context = getContext();
-                                int duration = Toast.LENGTH_SHORT;
-                                Toast.makeText(context, msg, duration).show();
+                                ToastWrapper.initiateToast(getContext(), msg);
                                 return;
                             }
                             //TODO: do something with the response?
@@ -124,9 +122,7 @@ public class RegistrationConfirmationFragment extends Fragment {
                             String msg = "Failed to send the registration request due to network errors";
                             Log.e(LOG_TAG, msg);
                             Log.e(LOG_TAG, t.getMessage());
-                            Context context = getContext();
-                            int duration = Toast.LENGTH_SHORT;
-                            Toast.makeText(context, msg, duration).show();
+                            ToastWrapper.initiateToast(getContext(), msg);
 
                         }
                     });

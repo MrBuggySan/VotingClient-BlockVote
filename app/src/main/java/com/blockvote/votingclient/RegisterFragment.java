@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
@@ -105,9 +106,7 @@ public class RegisterFragment extends Fragment {
                                     String firstName = firstText.getText().toString();
                                     String lastName = lastText.getText().toString();
                                     if (firstName.equals("") || lastName.equals("")) {
-                                        Context context = getContext();
-                                        int duration = Toast.LENGTH_SHORT;
-                                        Toast.makeText(context, "Please enter your name", duration).show();
+                                        ToastWrapper.initiateToast(getContext(), "Please enter your name");
 
                                         return;
                                     }

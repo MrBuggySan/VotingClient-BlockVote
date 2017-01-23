@@ -15,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.blockvote.auxillary.ToastWrapper;
+
 /**
  * Created by Beast Mode on 12/26/2016.
  */
@@ -53,12 +55,10 @@ public class ElectionActivity extends AppCompatActivity
                 editor.remove(electionStateKey);
                 editor.commit();
 
-                Context context = this;
-                int duration = Toast.LENGTH_LONG;
-                Toast.makeText(context, "Data cleared, press back on this activity" +
-                        " and start over.", duration).show();
+                ToastWrapper.initiateToast(this, "Data cleared, press back on this activity" +
+                        " and start over.");
 
-                //TODO: exit the ElectionActivity
+                //TODO: exit the ElectionActivity after deleting the data
 
                 Log.d(LOG_TAG, "Clear data option selected");
                 return true;
