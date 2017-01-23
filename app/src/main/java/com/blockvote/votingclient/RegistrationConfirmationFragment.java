@@ -3,11 +3,21 @@ package com.blockvote.votingclient;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.blockvote.model.ElectionListModel;
+import com.blockvote.model.POSTRequestToVoteBody;
+import com.blockvote.networking.BlockVoteServerAPI;
+import com.blockvote.networking.BlockVoteServerInstance;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -19,6 +29,7 @@ import android.widget.TextView;
  * create an instance of this fragment.
  */
 public class RegistrationConfirmationFragment extends Fragment {
+    private final String LOG_TAG = RegistrationConfirmationFragment.class.getSimpleName();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
@@ -75,12 +86,34 @@ public class RegistrationConfirmationFragment extends Fragment {
             public void onClick(View v) {
                 if (mListener != null) {
                     String voterName = firstName + " " + lastName;
-                    //TODO: start the networking code to submit the data to the server
+                    String registrarName = "tommy";
+
+                    //send the request of the voter to the server
+                    BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+                    BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+                    Call<> call = apiService.sendRegistrationRequest(new POSTRequestToVoteBody(registrarName, voterName));
+
+                    call.enqueue(new Callback<>() {
+                        @Override
+                        public void onResponse(Call<> call, Response<> response) {
 
 
+
+
+                            //TODO: Have the callback call onYesRegistrationInteraction to start the RegistrationStatusFragment
+                            mListener.onYesRegistrationInteraction(firstName + " " + lastName,true);
+                        }
+
+                        @Override
+                        public void onFailure(Call<> call, Throwable t) {
+                            Log.e(LOG_TAG, "Failed to send the registration request.");
+                            Log.e(LOG_TAG, t.getMessage());
+
+                        }
+                    });
                     //TODO: setup the loading circle
-                    //TODO: Have the callback call onYesRegistrationInteraction to start the RegistrationStatusFragment
-                    mListener.onYesRegistrationInteraction(voterName,true);
+
+
                 }
             }
         });

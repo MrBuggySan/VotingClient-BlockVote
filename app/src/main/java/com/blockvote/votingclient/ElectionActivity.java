@@ -98,7 +98,7 @@ public class ElectionActivity extends AppCompatActivity
         electionStateKey=  getString(R.string.ElectionActivityState)+ electionName;
         regSentSucessKey = getString(R.string.regSentSucess)+ electionName;
         voterKey = getString(R.string.voterNameKey)+ electionName;
-        
+
         if (!dataStore.contains(electionStateKey)){
             //Init the state
             SharedPreferences.Editor editor = dataStore.edit();

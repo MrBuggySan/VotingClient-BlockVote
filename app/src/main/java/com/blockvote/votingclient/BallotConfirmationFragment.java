@@ -10,8 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.blockvote.model.SendDO;
-import com.blockvote.model.TestAPIinterface;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,33 +86,33 @@ public class BallotConfirmationFragment extends Fragment {
                 if (mListener != null) {
                     //TODO: send the voter choice and metadata to the server
                     // Trailing slash is needed
-                    String BASE_URL = "https://MrBuggyNodeTester.mybluemix.net/";
-
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl(BASE_URL)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build();
-
-                    TestAPIinterface apiService =
-                            retrofit.create(TestAPIinterface.class);
-
-                    //The Gson converter will automatically be converted to a JSON string
-                    Call<SendDO> call = apiService.getHello(new SendDO("I like Android"));
-//                    Call<SendDO> call = apiService.getHello();
-
-                    call.enqueue(new Callback<SendDO>() {
-                        @Override
-                        public void onResponse(Call<SendDO> call, Response<SendDO> response) {
-                            int statusCode = response.code();
-                            String results =  response.body().getTestString();
-                            Log.d(LOG_TAG, "Let our response be: "+ results);
-                        }
-
-                        @Override
-                        public void onFailure(Call<SendDO> call, Throwable t) {
-                            // Log error here since request failed
-                        }
-                    });
+//                    String BASE_URL = "https://MrBuggyNodeTester.mybluemix.net/";
+//
+//                    Retrofit retrofit = new Retrofit.Builder()
+//                            .baseUrl(BASE_URL)
+//                            .addConverterFactory(GsonConverterFactory.create())
+//                            .build();
+//
+//                    TestAPIinterface apiService =
+//                            retrofit.create(TestAPIinterface.class);
+//
+//                    //The Gson converter will automatically be converted to a JSON string
+//                    Call<SendDO> call = apiService.getHello(new SendDO("I like Android"));
+////                    Call<SendDO> call = apiService.getHello();
+//
+//                    call.enqueue(new Callback<SendDO>() {
+//                        @Override
+//                        public void onResponse(Call<SendDO> call, Response<SendDO> response) {
+//                            int statusCode = response.code();
+//                            String results =  response.body().getTestString();
+//                            Log.d(LOG_TAG, "Let our response be: "+ results);
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<SendDO> call, Throwable t) {
+//                            // Log error here since request failed
+//                        }
+//                    });
 
                     //TODO: have ElectionActivity call ReviewBallotFragment
                     mListener.onYesBallotConfirmation();
