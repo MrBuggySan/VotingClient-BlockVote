@@ -22,5 +22,5 @@
     <!--Keys for SharedPreferences-->
     <string name="selectedElectionKey">selectedElectionKey</string>
     <string name="voterNameKey">voterNameKey</string>
-    <string name="regSentSucess">regissesnt</string>
+    <string name="optionsKey">options</string>
 </resources>

@@ -26,27 +26,32 @@ public class SelectCandidateFragment extends Fragment {
     private final String LOG_TAG = SelectCandidateFragment.class.getSimpleName();
     ArrayAdapter<String> mCandidateList;
 
+    private String[] optionList;
+
     private OnFragmentInteractionListener mListener;
+
+    private static final String ARG_PARAM1 = "param1";
 
     public SelectCandidateFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SelectCandidateFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SelectCandidateFragment newInstance() {
+    public static SelectCandidateFragment newInstance(String[] optionList) {
         SelectCandidateFragment fragment = new SelectCandidateFragment();
+        Bundle args = new Bundle();
+        args.putStringArray(ARG_PARAM1,optionList);
+        fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            optionList = getArguments().getStringArray(ARG_PARAM1);
+        }
+
     }
 
     @Override
@@ -54,21 +59,18 @@ public class SelectCandidateFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_select_candidate, container, false);
-
-        //TODO: get the list of candidates from the server
-
-        //a hardcoded list of selections (this is only for testing purposes)
         mCandidateList = new ArrayAdapter<String>(
                 getActivity(),
                 R.layout.listentry,
                 R.id.listEntry,
                 new ArrayList<String>()
         );
-        mCandidateList.add("Leave the European Union");
-        mCandidateList.add("Remain a member of the European Union");
+        for(int i = 0 ; i < optionList.length ; i++){
+            mCandidateList.add(optionList[i]);
+        }
         ListView listView=(ListView) rootView.findViewById(R.id.listview_candidatelist);
         listView.setAdapter(mCandidateList);
-        //TODO: setup the button event when a candidate is pressed
+        //setup the button event when a candidate is pressed
         //Add the event to call BallotConfirmationFragment when candidate is clicked
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener(){
 

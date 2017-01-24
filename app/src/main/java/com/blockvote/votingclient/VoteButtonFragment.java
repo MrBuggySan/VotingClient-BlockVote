@@ -1,13 +1,16 @@
 package com.blockvote.votingclient;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**
@@ -19,28 +22,42 @@ import android.widget.Button;
  * create an instance of this fragment.
  */
 public class VoteButtonFragment extends Fragment {
+    private final String LOG_TAG = VoteButtonFragment.class.getSimpleName();
+
+    private static final String ARG_PARAM1 = "param1";
 
     private OnFragmentInteractionListener mListener;
+
+    private String[] optionList;
 
     public VoteButtonFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment VoteButtonFragment.
-     */
 
-    public static VoteButtonFragment newInstance() {
+    public static VoteButtonFragment newInstance(Set<String> option_) {
+        String[] optionArray = new String[option_.size()];
+        Iterator<String> iter = option_.iterator();
+        byte i = 0;
+        while(iter.hasNext()){
+            optionArray[i] = iter.next();
+
+            iter.remove();
+            i++;
+        }
+        Bundle args = new Bundle();
+        args.putStringArray(ARG_PARAM1,optionArray);
         VoteButtonFragment fragment = new VoteButtonFragment();
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            optionList = getArguments().getStringArray(ARG_PARAM1);
+        }
     }
 
     @Override
@@ -49,12 +66,14 @@ public class VoteButtonFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_vote_button, container, false);
 
-
+        for(int i = 0 ; i < optionList.length; i ++){
+            Log.v(LOG_TAG, "Option: " + optionList[i]);
+        }
         final Button voteButton = (Button) rootView.findViewById(R.id.voteButton);
         voteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onVoteButtonInteraction();
+                    mListener.onVoteButtonInteraction(optionList);
                 }
             }
         });
@@ -91,6 +110,6 @@ public class VoteButtonFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onVoteButtonInteraction();
+        void onVoteButtonInteraction(String[] optionList);
     }
 }
