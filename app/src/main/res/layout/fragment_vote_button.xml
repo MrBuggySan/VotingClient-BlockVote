@@ -10,10 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/voteBut_blurb" />
+
         <Button
             android:text="Vote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/voteButton" />
+
+
     </LinearLayout>
 </FrameLayout>

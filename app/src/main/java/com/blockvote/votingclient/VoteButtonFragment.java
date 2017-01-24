@@ -3,11 +3,11 @@ package com.blockvote.votingclient;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -25,17 +25,19 @@ public class VoteButtonFragment extends Fragment {
     private final String LOG_TAG = VoteButtonFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     private OnFragmentInteractionListener mListener;
 
     private String[] optionList;
+    private String voterName;
 
     public VoteButtonFragment() {
         // Required empty public constructor
     }
 
 
-    public static VoteButtonFragment newInstance(Set<String> option_) {
+    public static VoteButtonFragment newInstance(Set<String> option_, String voterName_) {
         String[] optionArray = new String[option_.size()];
         Iterator<String> iter = option_.iterator();
         byte i = 0;
@@ -48,6 +50,7 @@ public class VoteButtonFragment extends Fragment {
         Bundle args = new Bundle();
         args.putStringArray(ARG_PARAM1,optionArray);
         VoteButtonFragment fragment = new VoteButtonFragment();
+        args.putString(ARG_PARAM2,voterName_);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,6 +60,7 @@ public class VoteButtonFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             optionList = getArguments().getStringArray(ARG_PARAM1);
+            voterName = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -66,9 +70,8 @@ public class VoteButtonFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_vote_button, container, false);
 
-        for(int i = 0 ; i < optionList.length; i ++){
-            Log.v(LOG_TAG, "Option: " + optionList[i]);
-        }
+        TextView blurb = (TextView)rootView.findViewById(R.id.voteBut_blurb);
+        blurb.setText(voterName +", you can now vote.");
         final Button voteButton = (Button) rootView.findViewById(R.id.voteButton);
         voteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

@@ -3,11 +3,22 @@ package com.blockvote.votingclient;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.model.MODEL_UserAuthorizationStatus;
+import com.blockvote.model.POST_BODY_writeVote;
+import com.blockvote.networking.BlockVoteServerAPI;
+import com.blockvote.networking.BlockVoteServerInstance;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -23,8 +34,10 @@ public class BallotConfirmationFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private String choice;
+    private String voterName;
     private String timestamp;
 
     private OnFragmentInteractionListener mListener;
@@ -39,11 +52,12 @@ public class BallotConfirmationFragment extends Fragment {
      * @param timestamp
      * @return
      */
-    public static BallotConfirmationFragment newInstance(String choice, String timestamp) {
+    public static BallotConfirmationFragment newInstance(String choice, String timestamp, String voterName) {
         BallotConfirmationFragment fragment = new BallotConfirmationFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, choice);
         args.putString(ARG_PARAM2, timestamp);
+        args.putString(ARG_PARAM3, voterName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,6 +68,7 @@ public class BallotConfirmationFragment extends Fragment {
         if (getArguments() != null) {
             choice = getArguments().getString(ARG_PARAM1);
             timestamp = getArguments().getString(ARG_PARAM2);
+            voterName = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -65,47 +80,61 @@ public class BallotConfirmationFragment extends Fragment {
         TextView textView_choice = (TextView)rootView.findViewById(R.id.confirmation_choice);
         textView_choice.setText(choice);
 
-        TextView textView_timestamp = (TextView)rootView.findViewById(R.id.confirmation_timestamp);
-        textView_timestamp.setText(timestamp);
+//        TextView textView_timestamp = (TextView)rootView.findViewById(R.id.confirmation_timestamp);
+//        textView_timestamp.setText(timestamp);
+
+        //disable loading circle
+        rootView.findViewById(R.id.ballot_confirmation_loadingPanel).setVisibility(View.GONE);
 
         //TODO: when YES, start the networking code to submit the data to the server
-        //Plan for possible delays from the server side when it is submitting data to the chaincode
         Button yesButton = (Button) rootView.findViewById(R.id.confirmation_yes_button);
         yesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mListener != null) {
-                    //TODO: send the voter choice and metadata to the server
-                    // Trailing slash is needed
-//                    String BASE_URL = "https://MrBuggyNodeTester.mybluemix.net/";
-//
-//                    Retrofit retrofit = new Retrofit.Builder()
-//                            .baseUrl(BASE_URL)
-//                            .addConverterFactory(GsonConverterFactory.create())
-//                            .build();
-//
-//                    TestAPIinterface apiService =
-//                            retrofit.create(TestAPIinterface.class);
-//
-//                    //The Gson converter will automatically be converted to a JSON string
-//                    Call<SendDO> call = apiService.getHello(new SendDO("I like Android"));
-////                    Call<SendDO> call = apiService.getHello();
-//
-//                    call.enqueue(new Callback<SendDO>() {
-//                        @Override
-//                        public void onResponse(Call<SendDO> call, Response<SendDO> response) {
-//                            int statusCode = response.code();
-//                            String results =  response.body().getTestString();
-//                            Log.d(LOG_TAG, "Let our response be: "+ results);
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<SendDO> call, Throwable t) {
-//                            // Log error here since request failed
-//                        }
-//                    });
 
-                    //TODO: have ElectionActivity call ReviewBallotFragment
-                    mListener.onYesBallotConfirmation();
+                    String registrarName = getString(R.string.regigstrarName);
+
+                    //send the request of the voter to the server
+                    BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+                    BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+                    //TODO: hard coded district for now. I'm too lazy to save the data from the registrationFragment
+                    Call<MODEL_UserAuthorizationStatus> call = apiService.writeVote(new POST_BODY_writeVote(registrarName, voterName, choice, "edinburgh"));
+
+                    call.enqueue(new Callback<MODEL_UserAuthorizationStatus>() {
+                        @Override
+                        public void onResponse(Call<MODEL_UserAuthorizationStatus> call, Response<MODEL_UserAuthorizationStatus> response) {
+
+                            MODEL_UserAuthorizationStatus ServerResponse = response.body();
+                            if(ServerResponse.getError() != null){
+                                //Handle the error
+                                ToastWrapper.initiateToast(getContext(), "Server has recieved your vote, " +
+                                        "but something wierd happened.");
+                                return;
+                            }
+                            Log.v(LOG_TAG, voterName + " has succesfully voted.");
+                            ToastWrapper.initiateToast(getContext(), voterName + " has succesfully voted.");
+                            //TODO: have ElectionActivity call ReviewBallotFragment
+                            mListener.onYesBallotConfirmation();
+
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<MODEL_UserAuthorizationStatus> call, Throwable t) {
+                            String msg = "Failed to send the ballot due to network errors";
+                            Log.e(LOG_TAG, msg);
+                            Log.e(LOG_TAG, t.getMessage());
+                            ToastWrapper.initiateToast(getContext(), msg);
+
+                        }
+                    });
+                    View rootView_ = getView();
+                    //enable the loading circle
+                    rootView_.findViewById(R.id.ballot_confirmation_loadingPanel).setVisibility(View.VISIBLE);
+
+                    //disable the rest
+                    rootView_.findViewById(R.id.ballot_confirm_screen).setVisibility(View.GONE);
+
                 }
             }
         });

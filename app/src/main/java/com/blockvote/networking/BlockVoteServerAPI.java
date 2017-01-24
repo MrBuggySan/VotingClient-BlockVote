@@ -5,6 +5,7 @@ import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.model.MODEL_UserAuthorizationStatus;
 import com.blockvote.model.POST_BODY_RegistrationRequest;
 import com.blockvote.model.MODEL_RequestToVote;
+import com.blockvote.model.POST_BODY_writeVote;
 
 
 import retrofit2.Call;
@@ -34,4 +35,8 @@ public interface BlockVoteServerAPI {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST("UserAuthorizationStatus/")
     Call<MODEL_UserAuthorizationStatus> statusRegistrationRequest(@Body POST_BODY_RegistrationRequest body);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @POST("writeVote/")
+    Call<MODEL_UserAuthorizationStatus> writeVote(@Body POST_BODY_writeVote body);
 }

@@ -5,39 +5,65 @@
     android:layout_height="match_parent"
     android:id="@+id/confirmation_container"
     tools:context="com.blockvote.votingclient.BallotConfirmationFragment">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/confirmation_choice"
-        android:text="Show choice" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/confirmation_timestamp"
-        android:text="Show time when voter clicks OK" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/confirmation_blurb"
-        android:text="If you agree with the above data, please select YES" />
-
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:text="YES"
-            android:layout_width="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="58dp"
+        android:id="@+id/ballot_confirm_screen">
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/confirmation_yes_button" />
-        <Button
-            android:text="NO"
-            android:layout_width="wrap_content"
+            android:id="@+id/confirmation_choice"
+            android:text="Show choice" />
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/confirmation_no_button" />
+            android:id="@+id/confirmation_timestamp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/confirmation_blurb"
+            android:text="If this is truly your choice then press YES" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:text="YES"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/confirmation_yes_button" />
+            <Button
+                android:text="NO"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/confirmation_no_button" />
+        </LinearLayout>
+
     </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/ballot_confirmation_loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:id="@+id/progressBar" />
+
+
+
+    </RelativeLayout>
 
 </LinearLayout>

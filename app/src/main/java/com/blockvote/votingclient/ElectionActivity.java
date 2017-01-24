@@ -137,8 +137,14 @@ public class ElectionActivity extends AppCompatActivity
                     ToastWrapper.initiateToast(this, "failure to retrieve election options.");
                 }
 
+                String voterName = dataStore.getString(voterKey, null);
 
-                VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(optionsSet);
+                if(optionsSet == null){
+                    Log.e(LOG_TAG, "failure to retrieve voter's name");
+                    ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
+                }
+
+                VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(optionsSet, voterName);
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, voteButtonFragment).commit();
                 return;
             }
@@ -186,8 +192,13 @@ public class ElectionActivity extends AppCompatActivity
      */
     public void onOptionSelectInteraction(String choice, String timestamp){
         //TODO: get the firstName and lastName from sharedPreferences
-
-        BallotConfirmationFragment ballotConfirmationFragment = BallotConfirmationFragment.newInstance(choice, timestamp);
+        SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
+        String voterName = dataStore.getString(voterKey, null);
+        if(voterName == null){
+            Log.e(LOG_TAG, "failure to retrieve voter's name.");
+            ToastWrapper.initiateToast(this, "failure to retrieve voter's name.");
+        }
+        BallotConfirmationFragment ballotConfirmationFragment = BallotConfirmationFragment.newInstance(choice, timestamp, voterName);
         //Switch the SelectCandidateFragment with the BallotConfirmationFragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.ElectionContainer, ballotConfirmationFragment);
@@ -303,8 +314,14 @@ public class ElectionActivity extends AppCompatActivity
         editor.putString(electionStateKey, newState);
         editor.commit();
 
+        String voterName= dataStore.getString(voterKey, null);
 
-        VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(optionsSet);
+        if(optionsSet == null){
+            Log.e(LOG_TAG, "failure to retrieve voter's name");
+            ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
+        }
+
+        VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(optionsSet, voterName);
 
         FragmentManager fragmentManager= getSupportFragmentManager();
 
