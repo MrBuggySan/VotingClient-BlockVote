@@ -26,6 +26,7 @@ public class RegistrationStatusFragment extends Fragment {
     private final String LOG_TAG = RegistrationStatusFragment.class.getSimpleName();
     private static final String ARG_PARAM1 = "param1";
 
+    private RegistrationStatusFragment.OnFragmentInteractionListener mListener;
 
     private String voterName;
     private String registrarName;
@@ -100,7 +101,7 @@ public class RegistrationStatusFragment extends Fragment {
                             ToastWrapper.initiateToast(getContext(), voterName + " is now allowed to vote.");
 
                             //TODO: call the VoteButtonFragment
-
+                            mListener.onVoterAuthorized();
                             return;
                         }
                         //voter cannot vote yet
@@ -142,5 +143,27 @@ public class RegistrationStatusFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof RegistrationStatusFragment.OnFragmentInteractionListener) {
+            mListener = (RegistrationStatusFragment.OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
+
+    public interface OnFragmentInteractionListener {
+        void onVoterAuthorized();
+    }
 
 }

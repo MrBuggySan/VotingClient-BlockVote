@@ -26,7 +26,8 @@ public class ElectionActivity extends AppCompatActivity
         SelectCandidateFragment.OnFragmentInteractionListener,
         BallotConfirmationFragment.OnFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
-        RegistrationConfirmationFragment.OnFragmentInteractionListener{
+        RegistrationConfirmationFragment.OnFragmentInteractionListener,
+        RegistrationStatusFragment.OnFragmentInteractionListener{
 
 
     private final String LOG_TAG = ElectionActivity.class.getSimpleName();
@@ -244,7 +245,6 @@ public class ElectionActivity extends AppCompatActivity
 
         //Start the RegistrationStatusFragment
 
-
         RegistrationStatusFragment registrationStatusFragment = RegistrationStatusFragment.newInstance(
                 voterName
         );
@@ -254,7 +254,7 @@ public class ElectionActivity extends AppCompatActivity
         //Pop all of the previous registration fragments
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        //Switch the RegisterFragment with the RegistrationConfirmationFragment
+        //Switch the RegistrationConfirmationFragment with the registrationStatusFragment
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.ElectionContainer, registrationStatusFragment);
         transaction.commit();
@@ -271,5 +271,18 @@ public class ElectionActivity extends AppCompatActivity
         Log.d(LOG_TAG,"Voter does not confirm registration request. ");
     }
 
+    public void onVoterAuthorized(){
+        VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance();
+
+        FragmentManager fragmentManager= getSupportFragmentManager();
+
+        //TODO: RegistrationStatusFragment and VoterButton are not switching properly
+
+        //Switch the registrationStatusFragment with the voteButtonFragment
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.ElectionContainer, voteButtonFragment);
+        transaction.commit();
+        Log.d(LOG_TAG,"Opening voteButtonFragment ");
+    }
 
 }

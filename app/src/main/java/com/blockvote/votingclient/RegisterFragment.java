@@ -70,6 +70,12 @@ public class RegisterFragment extends Fragment {
                 @Override
                 public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
                     int statusCode = response.code();
+
+                    //TODO: convert the options list to a Set so it can be saved in sharedPreferences
+                    List<String> electionOptions = response.body().getResponse().getElectionData().getAnswers();
+
+
+                    //TODO: This response is GET, next time it will be a POST so that i can query for specific election
                     List<String> districtList = response.body().getResponse().getElectionData().getDistricts();
                     //apply the results to the UI
                     View rootView_ = getView();
@@ -113,6 +119,7 @@ public class RegisterFragment extends Fragment {
                                     Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
                                     String districtName = districtSpinner.getSelectedItem().toString();
 
+                                    //TODO:
                                     mListener.onRegisterButtonInteraction(firstName, lastName, districtName);
                                 }
                             }
