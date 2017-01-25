@@ -4,10 +4,33 @@
     android:layout_height="match_parent"
     tools:context="com.blockvote.votingclient.ReviewBallotFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Options for website or to see submitted ballot" />
+        android:layout_height="match_parent">
+
+        <!-- TODO: Update blank fragment layout -->
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/review_textblurb"
+            android:text="Options for website or to see submitted ballot" />
+
+        <Button
+            android:text="Show Results"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Review_show_results_button" />
+
+        <Button
+            android:text="View Ballot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Review_show_ballot_button" />
+
+    </LinearLayout>
 
 </FrameLayout>

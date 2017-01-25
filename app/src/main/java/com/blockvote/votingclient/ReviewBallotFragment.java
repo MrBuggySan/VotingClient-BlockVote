@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.blockvote.auxillary.ToastWrapper;
 
 
 /**
@@ -18,35 +22,20 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class ReviewBallotFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private String voterName;
     private OnFragmentInteractionListener mListener;
 
     public ReviewBallotFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ReviewBallotFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ReviewBallotFragment newInstance(String param1, String param2) {
+
+    public static ReviewBallotFragment newInstance(String voterName_) {
         ReviewBallotFragment fragment = new ReviewBallotFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, voterName_);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,8 +44,7 @@ public class ReviewBallotFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            voterName = getArguments().getString(ARG_PARAM1);
         }
     }
 
@@ -64,15 +52,33 @@ public class ReviewBallotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_review_ballot, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_review_ballot, container, false);
+
+        TextView textView = (TextView) rootView.findViewById(R.id.review_textblurb);
+        textView.setText(voterName + ", you have succesfully voted. You can now view the results of the election and review the ballot you submitted");
+
+
+        //TODO: setup buttons for viewing the results and reviewing the voter's ballot.
+        Button reviewBallotButton = (Button) rootView.findViewById(R.id.Review_show_ballot_button);
+        reviewBallotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ToastWrapper.initiateToast(getContext(), "Showing your ballot for review is still being worked on.");
+            }
+        });
+
+        Button showResultsButton = (Button) rootView.findViewById(R.id.Review_show_results_button);
+        showResultsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ToastWrapper.initiateToast(getContext(), "Showing you the results is still being worked on.");
+            }
+        });
+
+
+        return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -91,18 +97,8 @@ public class ReviewBallotFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onReviewBallotButtonPress();
+        void onReviewResultsButtonPress();
     }
 }

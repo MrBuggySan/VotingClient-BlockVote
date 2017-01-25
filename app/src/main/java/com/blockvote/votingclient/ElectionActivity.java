@@ -27,7 +27,8 @@ public class ElectionActivity extends AppCompatActivity
         BallotConfirmationFragment.OnFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
         RegistrationConfirmationFragment.OnFragmentInteractionListener,
-        RegistrationStatusFragment.OnFragmentInteractionListener{
+        RegistrationStatusFragment.OnFragmentInteractionListener,
+        ReviewBallotFragment.OnFragmentInteractionListener{
 
 
     private final String LOG_TAG = ElectionActivity.class.getSimpleName();
@@ -149,7 +150,15 @@ public class ElectionActivity extends AppCompatActivity
                 return;
             }
             if(currentState.equals(getString(R.string.ReviewBallotState))){
-                ReviewBallotFragment reviewBallotFragment = new ReviewBallotFragment();
+
+                String voterName= dataStore.getString(voterKey, null);
+
+                if(voterName == null){
+                    Log.e(LOG_TAG, "failure to retrieve voter's name");
+                    ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
+                }
+
+                ReviewBallotFragment reviewBallotFragment = ReviewBallotFragment.newInstance(voterName);
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, reviewBallotFragment).commit();
                 return;
             }
@@ -210,6 +219,31 @@ public class ElectionActivity extends AppCompatActivity
     }
 
     public void onYesBallotConfirmation(){
+        //change the state of ElectionActivity to ReviewBallotState
+        SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = dataStore.edit();
+        String newState = getString(R.string.ReviewBallotState);
+        editor.putString(electionStateKey, newState);
+        editor.commit();
+
+        String voterName= dataStore.getString(voterKey, null);
+
+        if(voterName == null){
+            Log.e(LOG_TAG, "failure to retrieve voter's name");
+            ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
+        }
+
+        ReviewBallotFragment reviewBallotFragment = ReviewBallotFragment.newInstance(voterName);
+
+        FragmentManager fragmentManager= getSupportFragmentManager();
+
+
+        //Switch the BallotConfirmationFragment with the reviewBallotFragment
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.ElectionContainer, reviewBallotFragment);
+        transaction.commit();
+        Log.d(LOG_TAG,"Opening reviewBallotFragment ");
+
         Log.d(LOG_TAG, "Voter confirms his vote");
     }
 
@@ -316,7 +350,7 @@ public class ElectionActivity extends AppCompatActivity
 
         String voterName= dataStore.getString(voterKey, null);
 
-        if(optionsSet == null){
+        if(voterName == null){
             Log.e(LOG_TAG, "failure to retrieve voter's name");
             ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
         }
@@ -332,6 +366,13 @@ public class ElectionActivity extends AppCompatActivity
         transaction.replace(R.id.ElectionContainer, voteButtonFragment);
         transaction.commit();
         Log.d(LOG_TAG,"Opening voteButtonFragment ");
+    }
+
+    public void onReviewBallotButtonPress(){
+
+    }
+    public void onReviewResultsButtonPress(){
+
     }
 
 }
