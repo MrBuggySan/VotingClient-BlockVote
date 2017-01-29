@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.blockvote.votingclient.R;
+
 
 /**
  * A simple {@link Fragment} subclass.

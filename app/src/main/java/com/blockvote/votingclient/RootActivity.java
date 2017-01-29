@@ -1,4 +1,4 @@
-package com.blockvote.activity;
+package com.blockvote.votingclient;
 
 import android.content.Intent;
 import android.os.Bundle;

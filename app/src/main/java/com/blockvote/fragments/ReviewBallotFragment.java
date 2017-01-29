@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.votingclient.R;
 
 
 /**

@@ -16,6 +16,7 @@ import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
+import com.blockvote.votingclient.R;
 
 import java.util.ArrayList;
 import java.util.List;

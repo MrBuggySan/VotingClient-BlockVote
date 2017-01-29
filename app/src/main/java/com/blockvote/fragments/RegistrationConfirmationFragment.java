@@ -11,10 +11,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.model.POST_BODY_RegistrationRequest;
 import com.blockvote.model.MODEL_RequestToVote;
+import com.blockvote.model.POST_BODY_RegistrationRequest;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
+import com.blockvote.votingclient.R;
 
 import retrofit2.Call;
 import retrofit2.Callback;

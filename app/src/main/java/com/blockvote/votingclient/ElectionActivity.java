@@ -1,4 +1,4 @@
-package com.blockvote.activity;
+package com.blockvote.votingclient;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +15,6 @@ import android.view.MenuItem;
 
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.fragments.BallotConfirmationFragment;
-import com.blockvote.fragments.R;
 import com.blockvote.fragments.RegisterFragment;
 import com.blockvote.fragments.RegistrationConfirmationFragment;
 import com.blockvote.fragments.RegistrationStatusFragment;

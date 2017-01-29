@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.blockvote.model.MODEL_ElectionList;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
+import com.blockvote.votingclient.R;
 
 import java.util.ArrayList;
 import java.util.List;
