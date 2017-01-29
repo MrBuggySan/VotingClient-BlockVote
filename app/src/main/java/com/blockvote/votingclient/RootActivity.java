@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.blockvote.fragments.ElectionListFragment;
+import com.blockvote.fragments.TesterFragment;
 
 public class RootActivity extends AppCompatActivity
     implements ElectionListFragment.OnFragmentInteractionListener {
@@ -31,6 +32,13 @@ public class RootActivity extends AppCompatActivity
                 //TODO: Start the HelpActivity
                 Log.d(LOG_TAG, "Help option selected");
                 return true;
+            case R.id.Option_BeamTest:
+                //Start the HelpActivity
+                Log.d(LOG_TAG, "Beam Test selected");
+                Intent intent = new Intent(this, BeamTestActivity.class);
+                startActivity(intent);
+
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -49,11 +57,13 @@ public class RootActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
 
+            TesterFragment testerFragment = new TesterFragment();
+
             //Create the Election selection fragment
             ElectionListFragment selectElectionFragment = new ElectionListFragment();
 
 
-            getSupportFragmentManager().beginTransaction().add(R.id.ElectionSelectionContainer, selectElectionFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.ElectionSelectionContainer, testerFragment).commit();
             Log.d(LOG_TAG, "RootActivity onCreate");
         }else{
             Log.d(LOG_TAG, "savedInstanceState is not null");
