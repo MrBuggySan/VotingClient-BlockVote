@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.blockvote.fragments.ElectionListFragment;
+import com.blockvote.fragments.R;
 
 public class RootActivity extends AppCompatActivity
     implements ElectionListFragment.OnFragmentInteractionListener {
@@ -30,6 +31,13 @@ public class RootActivity extends AppCompatActivity
             case R.id.Option_rootHelp:
                 //TODO: Start the HelpActivity
                 Log.d(LOG_TAG, "Help option selected");
+                return true;
+            case R.id.Option_BeamTest:
+                //Start the HelpActivity
+                Log.d(LOG_TAG, "Beam Test selected");
+                Intent intent = new Intent(this, BeamTestActivity.class);
+                startActivity(intent);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

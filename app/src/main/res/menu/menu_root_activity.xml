@@ -7,6 +7,12 @@
 
         app:showAsAction="never"
         />
+    <item
+        android:id="@+id/Option_BeamTest"
+        android:title="Beam Test"
+
+        app:showAsAction="never"
+        />
 
 
 </menu>
