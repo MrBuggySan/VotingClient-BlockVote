@@ -12,15 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
-        <activity android:name="com.blockvote.fragments.com.blockvote.activity.RootActivity">
+        <activity android:name="com.blockvote.activity.RootActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.blockvote.fragments.com.blockvote.activity.ElectionActivity"
-            android:parentActivityName="com.blockvote.fragments.com.blockvote.activity.RootActivity">
+        <activity android:name="com.blockvote.activity.ElectionActivity"
+            android:parentActivityName="com.blockvote.activity.RootActivity">
 
         </activity>
 
