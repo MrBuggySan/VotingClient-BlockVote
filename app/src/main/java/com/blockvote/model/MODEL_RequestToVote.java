@@ -9,15 +9,15 @@ import java.util.Map;
 
 public class MODEL_RequestToVote {
 
-    private String response;
+    private RequestToVote_response response;
     private ErrorResponseModel error;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public String getResponse() {
+    public RequestToVote_response getResponse() {
         return response;
     }
 
-    public void setResponse(String response) {
+    public void setResponse(RequestToVote_response response) {
         this.response = response;
     }
 

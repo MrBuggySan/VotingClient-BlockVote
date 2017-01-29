@@ -36,8 +36,6 @@ public class SelectCandidateFragment extends Fragment {
     private final String LOG_TAG = SelectCandidateFragment.class.getSimpleName();
     ArrayAdapter<String> mCandidateList;
 
-    private String[] optionList;
-
     private OnFragmentInteractionListener mListener;
 
     private static final String ARG_PARAM1 = "param1";
@@ -46,23 +44,13 @@ public class SelectCandidateFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SelectCandidateFragment newInstance(String[] optionList) {
+    public static SelectCandidateFragment newInstance() {
         SelectCandidateFragment fragment = new SelectCandidateFragment();
-        Bundle args = new Bundle();
-        args.putStringArray(ARG_PARAM1,optionList);
-        fragment.setArguments(args);
+
 
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            optionList = getArguments().getStringArray(ARG_PARAM1);
-        }
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,7 +75,8 @@ public class SelectCandidateFragment extends Fragment {
                         new ArrayList<String>()
                 );
 
-                List<String> electionOptions = response.body().getResponse().getElectionData().getAnswers();
+                List<String> electionOptions = response.body().getResponse().getElectionData().getVoteOptions();
+                mCandidateList.add(electionOptions.get(2));
                 mCandidateList.add(electionOptions.get(1));
                 mCandidateList.add(electionOptions.get(0));
 
@@ -108,7 +97,8 @@ public class SelectCandidateFragment extends Fragment {
 
             @Override
             public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
-                Log.e(LOG_TAG, "Downloading the election options has failed...");
+                Log.e(LOG_TAG, "Downloading th" +
+                        "e election options has failed...");
                 ToastWrapper.initiateToast(getContext(), "Downloading the election options has failed...");
                 //TODO:Restart the connection if failure
             }

@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class ElectionInfo_Response   {
     private String id;
-    private String rev;
+
     private ElectionInfo_ElectionData electionData;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -21,13 +21,6 @@ public class ElectionInfo_Response   {
         this.id = id;
     }
 
-    public String getRev() {
-        return rev;
-    }
-
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
 
     public ElectionInfo_ElectionData getElectionData() {
         return electionData;

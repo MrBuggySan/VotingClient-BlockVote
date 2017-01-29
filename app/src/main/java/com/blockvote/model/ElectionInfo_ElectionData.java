@@ -9,18 +9,9 @@ import java.util.Map;
  */
 
 public class ElectionInfo_ElectionData {
-    private String chaincodeID;
     private List<String> districts = null;
-    private List<String> answers = null;
+    private List<String> voteOptions = null;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    public String getChaincodeID() {
-        return chaincodeID;
-    }
-
-    public void setChaincodeID(String chaincodeID) {
-        this.chaincodeID = chaincodeID;
-    }
 
     public List<String> getDistricts() {
         return districts;
@@ -30,12 +21,12 @@ public class ElectionInfo_ElectionData {
         this.districts = districts;
     }
 
-    public List<String> getAnswers() {
-        return answers;
+    public List<String> getVoteOptions() {
+        return voteOptions;
     }
 
-    public void setAnswers(List<String> answers) {
-        this.answers = answers;
+    public void setVoteOptions(List<String> voteOptions) {
+        this.voteOptions = voteOptions;
     }
 
     public Map<String, Object> getAdditionalProperties() {

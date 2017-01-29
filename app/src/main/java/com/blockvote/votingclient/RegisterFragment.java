@@ -18,10 +18,7 @@ import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,15 +70,6 @@ public class RegisterFragment extends Fragment {
                 public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
                     int statusCode = response.code();
 
-                    //TODO: convert the options list to a Set so it can be saved in sharedPreferences
-                    List<String> electionOptions = response.body().getResponse().getElectionData().getAnswers();
-                    Iterator<String> iter = electionOptions.iterator();
-                    final Set<String> optionSet = new TreeSet<String>();
-                    while(iter.hasNext()){
-                        optionSet.add(iter.next());
-                        iter.remove();
-                    }
-
                     //TODO: This response is GET, next time it will be a POST so that i can query for specific election
                     List<String> districtList = response.body().getResponse().getElectionData().getDistricts();
                     //apply the results to the UI
@@ -127,7 +115,7 @@ public class RegisterFragment extends Fragment {
                                     String districtName = districtSpinner.getSelectedItem().toString();
 
                                     //TODO:
-                                    mListener.onRegisterButtonInteraction(firstName, lastName, districtName, optionSet);
+                                    mListener.onRegisterButtonInteraction(firstName, lastName, districtName);
                                 }
                             }
                         });
@@ -186,6 +174,6 @@ public class RegisterFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onRegisterButtonInteraction(String firstName, String lastName, String districtName, Set<String> options);
+        void onRegisterButtonInteraction(String firstName, String lastName, String districtName);
     }
 }

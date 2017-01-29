@@ -38,5 +38,5 @@ public interface BlockVoteServerAPI {
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST("writeVote/")
-    Call<MODEL_UserAuthorizationStatus> writeVote(@Body POST_BODY_writeVote body);
+    Call<MODEL_RequestToVote> writeVote(@Body POST_BODY_writeVote body);
 }

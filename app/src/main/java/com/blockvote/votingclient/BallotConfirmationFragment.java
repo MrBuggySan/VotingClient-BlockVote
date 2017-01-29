@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.model.MODEL_UserAuthorizationStatus;
+import com.blockvote.model.MODEL_RequestToVote;
 import com.blockvote.model.POST_BODY_writeVote;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
@@ -98,13 +98,13 @@ public class BallotConfirmationFragment extends Fragment {
                     BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
                     BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
                     //TODO: hard coded district for now. I'm too lazy to save the data from the registrationFragment
-                    Call<MODEL_UserAuthorizationStatus> call = apiService.writeVote(new POST_BODY_writeVote(registrarName, voterName, choice, "edinburgh"));
+                    Call<MODEL_RequestToVote> call = apiService.writeVote(new POST_BODY_writeVote(registrarName, voterName, choice, "edinburgh"));
 
-                    call.enqueue(new Callback<MODEL_UserAuthorizationStatus>() {
+                    call.enqueue(new Callback<MODEL_RequestToVote>() {
                         @Override
-                        public void onResponse(Call<MODEL_UserAuthorizationStatus> call, Response<MODEL_UserAuthorizationStatus> response) {
+                        public void onResponse(Call<MODEL_RequestToVote> call, Response<MODEL_RequestToVote> response) {
 
-                            MODEL_UserAuthorizationStatus ServerResponse = response.body();
+                            MODEL_RequestToVote ServerResponse = response.body();
                             if(ServerResponse.getError() != null){
                                 //Handle the error
                                 ToastWrapper.initiateToast(getContext(), "Server has recieved your vote, " +
@@ -120,7 +120,7 @@ public class BallotConfirmationFragment extends Fragment {
                         }
 
                         @Override
-                        public void onFailure(Call<MODEL_UserAuthorizationStatus> call, Throwable t) {
+                        public void onFailure(Call<MODEL_RequestToVote> call, Throwable t) {
                             String msg = "Failed to send the ballot due to network errors";
                             Log.e(LOG_TAG, msg);
                             Log.e(LOG_TAG, t.getMessage());
