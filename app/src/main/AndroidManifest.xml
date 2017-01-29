@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.blockvote.votingclient">
+    package="com.blockvote.fragments">
 
     <!-- This is needed to use the network -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,15 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
-        <activity android:name=".RootActivity">
+        <activity android:name="com.blockvote.fragments.com.blockvote.activity.RootActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ElectionActivity"
-            android:parentActivityName=".RootActivity">
+        <activity android:name="com.blockvote.fragments.com.blockvote.activity.ElectionActivity"
+            android:parentActivityName="com.blockvote.fragments.com.blockvote.activity.RootActivity">
 
         </activity>
 

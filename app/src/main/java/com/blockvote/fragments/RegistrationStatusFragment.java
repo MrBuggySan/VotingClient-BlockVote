@@ -1,4 +1,4 @@
-package com.blockvote.votingclient;
+package com.blockvote.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.model.MODEL_RequestToVote;
 import com.blockvote.model.MODEL_UserAuthorizationStatus;
 import com.blockvote.model.POST_BODY_RegistrationRequest;
 import com.blockvote.networking.BlockVoteServerAPI;

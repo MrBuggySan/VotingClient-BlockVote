@@ -1,4 +1,4 @@
-package com.blockvote.votingclient;
+package com.blockvote.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +14,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.fragments.BallotConfirmationFragment;
+import com.blockvote.fragments.R;
+import com.blockvote.fragments.RegisterFragment;
+import com.blockvote.fragments.RegistrationConfirmationFragment;
+import com.blockvote.fragments.RegistrationStatusFragment;
+import com.blockvote.fragments.ReviewBallotFragment;
+import com.blockvote.fragments.SelectCandidateFragment;
+import com.blockvote.fragments.VoteButtonFragment;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -26,7 +34,7 @@ public class ElectionActivity extends AppCompatActivity
         RegisterFragment.OnFragmentInteractionListener,
         RegistrationConfirmationFragment.OnFragmentInteractionListener,
         RegistrationStatusFragment.OnFragmentInteractionListener,
-        ReviewBallotFragment.OnFragmentInteractionListener{
+        ReviewBallotFragment.OnFragmentInteractionListener {
 
 
     private final String LOG_TAG = ElectionActivity.class.getSimpleName();

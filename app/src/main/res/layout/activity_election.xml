@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal|top"
-    tools:context=".ElectionActivity"
+    tools:context="com.blockvote.activity.ElectionActivity"
     >
 
     <android.support.v7.widget.Toolbar

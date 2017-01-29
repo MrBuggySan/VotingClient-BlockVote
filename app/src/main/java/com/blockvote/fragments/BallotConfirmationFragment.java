@@ -1,4 +1,4 @@
-package com.blockvote.votingclient;
+package com.blockvote.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,11 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.model.POST_BODY_RegistrationRequest;
 import com.blockvote.model.MODEL_RequestToVote;
+import com.blockvote.model.POST_BODY_writeVote;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
 
@@ -25,41 +24,40 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RegistrationConfirmationFragment.OnFragmentInteractionListener} interface
+ * {@link BallotConfirmationFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RegistrationConfirmationFragment#newInstance} factory method to
+ * Use the {@link BallotConfirmationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegistrationConfirmationFragment extends Fragment {
-    private final String LOG_TAG = RegistrationConfirmationFragment.class.getSimpleName();
+public class BallotConfirmationFragment extends Fragment {
+    private final String LOG_TAG = BallotConfirmationFragment.class.getSimpleName();
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
 
-    private String firstName;
-    private String lastName;
-    private String districtName;
+    private String choice;
+    private String voterName;
+    private String timestamp;
 
     private OnFragmentInteractionListener mListener;
 
-    public RegistrationConfirmationFragment() {
+    public BallotConfirmationFragment() {
         // Required empty public constructor
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param firstName Parameter 1.
-     * @param lastName Parameter 2.
-     * @return A new instance of fragment RegistrationConfirmationFragment.
+     * Factory method to create a new instance.
+     * @param choice
+     * @param timestamp
+     * @return
      */
-    public static RegistrationConfirmationFragment newInstance(String firstName, String lastName, String districtName) {
-        RegistrationConfirmationFragment fragment = new RegistrationConfirmationFragment();
+    public static BallotConfirmationFragment newInstance(String choice, String timestamp, String voterName) {
+        BallotConfirmationFragment fragment = new BallotConfirmationFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, firstName);
-        args.putString(ARG_PARAM2, lastName);
-        args.putString(ARG_PARAM3, districtName);
+        args.putString(ARG_PARAM1, choice);
+        args.putString(ARG_PARAM2, timestamp);
+        args.putString(ARG_PARAM3, voterName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,35 +66,39 @@ public class RegistrationConfirmationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            firstName = getArguments().getString(ARG_PARAM1);
-            lastName = getArguments().getString(ARG_PARAM2);
-            districtName = getArguments().getString(ARG_PARAM3);
+            choice = getArguments().getString(ARG_PARAM1);
+            timestamp = getArguments().getString(ARG_PARAM2);
+            voterName = getArguments().getString(ARG_PARAM3);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_registration_confirmation, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_ballot_confirmation, container, false);
+        //Update the TextViews with the voter's choice
+        TextView textView_choice = (TextView)rootView.findViewById(R.id.confirmation_choice);
+        textView_choice.setText(choice);
 
-        //Update the TextViews with the voter information
-        TextView textView_VoterName = (TextView)rootView.findViewById(R.id.reg_confirmation_votername);
-        textView_VoterName.setText(firstName + " " + lastName  +" from "+ districtName);
+//        TextView textView_timestamp = (TextView)rootView.findViewById(R.id.confirmation_timestamp);
+//        textView_timestamp.setText(timestamp);
 
         //disable loading circle
-        rootView.findViewById(R.id.reg_confirmation_loadingPanel).setVisibility(View.GONE);
+        rootView.findViewById(R.id.ballot_confirmation_loadingPanel).setVisibility(View.GONE);
 
-        Button yesButton = (Button) rootView.findViewById(R.id.reg_confirmation_yes_button);
+        //TODO: when YES, start the networking code to submit the data to the server
+        Button yesButton = (Button) rootView.findViewById(R.id.confirmation_yes_button);
         yesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mListener != null) {
-                    final String voterName = firstName + " " + lastName;
+
                     String registrarName = getString(R.string.regigstrarName);
 
                     //send the request of the voter to the server
                     BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
                     BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-                    Call<MODEL_RequestToVote> call = apiService.sendRegistrationRequest(new POST_BODY_RegistrationRequest(registrarName, voterName));
+                    //TODO: hard coded district for now. I'm too lazy to save the data from the registrationFragment
+                    Call<MODEL_RequestToVote> call = apiService.writeVote(new POST_BODY_writeVote(registrarName, voterName, choice, "edinburgh"));
 
                     call.enqueue(new Callback<MODEL_RequestToVote>() {
                         @Override
@@ -105,21 +107,21 @@ public class RegistrationConfirmationFragment extends Fragment {
                             MODEL_RequestToVote ServerResponse = response.body();
                             if(ServerResponse.getError() != null){
                                 //Handle the error
-                                String msg = ServerResponse.getError().getMessage();
-                                Log.e(LOG_TAG, voterName + " " + msg);
-                                ToastWrapper.initiateToast(getContext(), msg);
+                                ToastWrapper.initiateToast(getContext(), "Server has recieved your vote, " +
+                                        "but something wierd happened.");
                                 return;
                             }
-                            //TODO: do something with the response?
-                            Log.v(LOG_TAG, voterName + " has succesfully sent the registration request.");
-                            mListener.onYesRegistrationInteraction(voterName);
+                            Log.v(LOG_TAG, voterName + " has succesfully voted.");
+                            ToastWrapper.initiateToast(getContext(), voterName + " has succesfully voted.");
+                            //TODO: have ElectionActivity call ReviewBallotFragment
+                            mListener.onYesBallotConfirmation();
 
 
                         }
 
                         @Override
                         public void onFailure(Call<MODEL_RequestToVote> call, Throwable t) {
-                            String msg = "Failed to send the registration request due to network errors";
+                            String msg = "Failed to send the ballot due to network errors";
                             Log.e(LOG_TAG, msg);
                             Log.e(LOG_TAG, t.getMessage());
                             ToastWrapper.initiateToast(getContext(), msg);
@@ -128,26 +130,24 @@ public class RegistrationConfirmationFragment extends Fragment {
                     });
                     View rootView_ = getView();
                     //enable the loading circle
-                    rootView_.findViewById(R.id.reg_confirmation_loadingPanel).setVisibility(View.VISIBLE);
+                    rootView_.findViewById(R.id.ballot_confirmation_loadingPanel).setVisibility(View.VISIBLE);
 
                     //disable the rest
-                    rootView_.findViewById(R.id.reg_confirmation_screen).setVisibility(View.GONE);
+                    rootView_.findViewById(R.id.ballot_confirm_screen).setVisibility(View.GONE);
 
                 }
             }
         });
-
-        // when NO, go back to the RegisterFragment
-        Button noButton = (Button) rootView.findViewById(R.id.reg_confirmation_no_button);
+        //TODO: when NO, go back to the SelectCandidateFragment
+        Button noButton = (Button) rootView.findViewById(R.id.confirmation_no_button);
         noButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onNoRegistrationInteraction();
+                    mListener.onNoBallotConfirmation();
                 }
             }
         });
 
-        // Inflate the layout for this fragment
         return rootView;
     }
 
@@ -180,7 +180,8 @@ public class RegistrationConfirmationFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onYesRegistrationInteraction(String voterName);
-        void onNoRegistrationInteraction();
+        // TODO: Update argument type and name
+        void onYesBallotConfirmation();
+        void onNoBallotConfirmation();
     }
 }

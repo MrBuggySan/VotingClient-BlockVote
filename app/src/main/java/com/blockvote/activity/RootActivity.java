@@ -1,4 +1,4 @@
-package com.blockvote.votingclient;
+package com.blockvote.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.blockvote.fragments.ElectionListFragment;
+
 public class RootActivity extends AppCompatActivity
-    implements ElectionListFragment.OnFragmentInteractionListener{
+    implements ElectionListFragment.OnFragmentInteractionListener {
     private final String LOG_TAG = RootActivity.class.getSimpleName();
 
     @Override

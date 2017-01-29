@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal|top"
     android:tag="standard"
-    tools:context=".RootActivity">
+    tools:context="com.blockvote.activity.RootActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"

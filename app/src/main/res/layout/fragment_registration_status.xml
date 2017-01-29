@@ -8,7 +8,7 @@ android:layout_height="match_parent">
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.blockvote.votingclient.RegistrationStatusFragment">
+        tools:context="com.blockvote.fragments.RegistrationStatusFragment">
 
         <TextView
             android:layout_width="match_parent"
