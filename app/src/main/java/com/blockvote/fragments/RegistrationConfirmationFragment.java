@@ -90,48 +90,7 @@ public class RegistrationConfirmationFragment extends Fragment {
         yesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mListener != null) {
-                    final String voterName = firstName + " " + lastName;
-                    String registrarName = getString(R.string.regigstrarName);
-
-                    //send the request of the voter to the server
-                    BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
-                    BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-                    Call<MODEL_RequestToVote> call = apiService.sendRegistrationRequest(new POST_BODY_RegistrationRequest(registrarName, voterName));
-
-                    call.enqueue(new Callback<MODEL_RequestToVote>() {
-                        @Override
-                        public void onResponse(Call<MODEL_RequestToVote> call, Response<MODEL_RequestToVote> response) {
-
-                            MODEL_RequestToVote ServerResponse = response.body();
-                            if(ServerResponse.getError() != null){
-                                //Handle the error
-                                String msg = ServerResponse.getError().getMessage();
-                                Log.e(LOG_TAG, voterName + " " + msg);
-                                ToastWrapper.initiateToast(getContext(), msg);
-                                return;
-                            }
-                            //TODO: do something with the response?
-                            Log.v(LOG_TAG, voterName + " has succesfully sent the registration request.");
-                            mListener.onYesRegistrationInteraction(voterName);
-
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<MODEL_RequestToVote> call, Throwable t) {
-                            String msg = "Failed to send the registration request due to network errors";
-                            Log.e(LOG_TAG, msg);
-                            Log.e(LOG_TAG, t.getMessage());
-                            ToastWrapper.initiateToast(getContext(), msg);
-
-                        }
-                    });
-                    View rootView_ = getView();
-                    //enable the loading circle
-                    rootView_.findViewById(R.id.reg_confirmation_loadingPanel).setVisibility(View.VISIBLE);
-
-                    //disable the rest
-                    rootView_.findViewById(R.id.reg_confirmation_screen).setVisibility(View.GONE);
+                    onYesButtonClick();
 
                 }
             }
@@ -182,5 +141,50 @@ public class RegistrationConfirmationFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onYesRegistrationInteraction(String voterName);
         void onNoRegistrationInteraction();
+    }
+
+    public void onYesButtonClick(){
+        final String voterName = firstName + " " + lastName;
+        String registrarName = getString(R.string.regigstrarName);
+
+        //send the request of the voter to the server
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<MODEL_RequestToVote> call = apiService.sendRegistrationRequest(new POST_BODY_RegistrationRequest(registrarName, voterName));
+
+        call.enqueue(new Callback<MODEL_RequestToVote>() {
+            @Override
+            public void onResponse(Call<MODEL_RequestToVote> call, Response<MODEL_RequestToVote> response) {
+
+                MODEL_RequestToVote ServerResponse = response.body();
+                if(ServerResponse.getError() != null){
+                    //Handle the error
+                    String msg = ServerResponse.getError().getMessage();
+                    Log.e(LOG_TAG, voterName + " " + msg);
+                    ToastWrapper.initiateToast(getContext(), msg);
+                    return;
+                }
+                //TODO: do something with the response?
+                Log.v(LOG_TAG, voterName + " has succesfully sent the registration request.");
+                mListener.onYesRegistrationInteraction(voterName);
+
+
+            }
+
+            @Override
+            public void onFailure(Call<MODEL_RequestToVote> call, Throwable t) {
+                String msg = "Failed to send the registration request due to network errors";
+                Log.e(LOG_TAG, msg);
+                Log.e(LOG_TAG, t.getMessage());
+                ToastWrapper.initiateToast(getContext(), msg);
+
+            }
+        });
+        View rootView_ = getView();
+        //enable the loading circle
+        rootView_.findViewById(R.id.reg_confirmation_loadingPanel).setVisibility(View.VISIBLE);
+
+        //disable the rest
+        rootView_.findViewById(R.id.reg_confirmation_screen).setVisibility(View.GONE);
     }
 }

@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class RegistrationStatusFragment extends Fragment {
+public class RegistrationStatusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private final String LOG_TAG = RegistrationStatusFragment.class.getSimpleName();
     private static final String ARG_PARAM1 = "param1";
 
@@ -69,67 +69,7 @@ public class RegistrationStatusFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_registration_status, container, false);
         registrarName = getString(R.string.regigstrarName);
         final SwipeRefreshLayout myRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.reg_status_swiperefresh);
-        myRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                //ask for the status of the voter
-                BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
-                BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-                Call<MODEL_UserAuthorizationStatus> call = apiService.statusRegistrationRequest(new POST_BODY_RegistrationRequest(registrarName, voterName));
-
-                call.enqueue(new Callback<MODEL_UserAuthorizationStatus>() {
-                    @Override
-                    public void onResponse(Call<MODEL_UserAuthorizationStatus> call, Response<MODEL_UserAuthorizationStatus> response) {
-                        //end the refresh animation
-                        myRefresh.setRefreshing(false);
-
-                        MODEL_UserAuthorizationStatus serverResponse = response.body();
-
-                        //server error occured
-                        if(serverResponse.getError() != null){
-
-                            Log.e(LOG_TAG, voterName + " authorization status request error ");
-                            ToastWrapper.initiateToast(getContext(), voterName + "request sent but there were errors");
-
-                            return;
-                        }
-                        Log.v(LOG_TAG, voterName + " has succesfully sent the authorization status request.");
-                        //voter can now vote
-                        if(serverResponse.getResponse().equals("yes")){
-                            Log.v(LOG_TAG, voterName + " is now allowed to vote.");
-                            ToastWrapper.initiateToast(getContext(), voterName + " is now allowed to vote.");
-
-                            //TODO: call the VoteButtonFragment
-                            mListener.onVoterAuthorized();
-                            return;
-                        }
-                        //voter cannot vote yet
-                        if(serverResponse.getResponse().equals("no")){
-                            Log.v(LOG_TAG, voterName + " is not authorized to vote yet.");
-                            //stay in the RegistrationStatusFragment
-                            ToastWrapper.initiateToast(getContext(), "You are not allowed to vote yet.");
-                            return;
-                        }
-
-                        Log.e(LOG_TAG, voterName + " response other than yes/no from server ");
-                        ToastWrapper.initiateToast(getContext(), voterName + ", a response other than yes/no from server has been received." +
-                                " What do we do?");
-                        return;
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<MODEL_UserAuthorizationStatus> call, Throwable t) {
-                        String msg = "Failed to send the authorization status request to the server due to network errors";
-                        Log.e(LOG_TAG, msg);
-                        Log.e(LOG_TAG, t.getMessage());
-                        ToastWrapper.initiateToast(getContext(), voterName + ", " + msg);
-
-                    }
-                });
-            }
-        });
+        myRefresh.setOnRefreshListener(this);
 
 
         TextView textView_message = (TextView)rootView.findViewById(R.id.reg_status_message);
@@ -164,6 +104,67 @@ public class RegistrationStatusFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onVoterAuthorized();
+    }
+
+    @Override
+    public void onRefresh() {
+
+        //ask for the status of the voter
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<MODEL_UserAuthorizationStatus> call = apiService.statusRegistrationRequest(new POST_BODY_RegistrationRequest(registrarName, voterName));
+
+        call.enqueue(new Callback<MODEL_UserAuthorizationStatus>() {
+            @Override
+            public void onResponse(Call<MODEL_UserAuthorizationStatus> call, Response<MODEL_UserAuthorizationStatus> response) {
+                final SwipeRefreshLayout myRefresh = (SwipeRefreshLayout) getView().findViewById(R.id.reg_status_swiperefresh);
+                //end the refresh animation
+                myRefresh.setRefreshing(false);
+
+                MODEL_UserAuthorizationStatus serverResponse = response.body();
+
+                //server error occured
+                if(serverResponse.getError() != null){
+
+                    Log.e(LOG_TAG, voterName + " authorization status request error ");
+                    ToastWrapper.initiateToast(getContext(), voterName + "request sent but there were errors");
+
+                    return;
+                }
+                Log.v(LOG_TAG, voterName + " has succesfully sent the authorization status request.");
+                //voter can now vote
+                if(serverResponse.getResponse().equals("yes")){
+                    Log.v(LOG_TAG, voterName + " is now allowed to vote.");
+                    ToastWrapper.initiateToast(getContext(), voterName + " is now allowed to vote.");
+
+                    //TODO: call the VoteButtonFragment
+                    mListener.onVoterAuthorized();
+                    return;
+                }
+                //voter cannot vote yet
+                if(serverResponse.getResponse().equals("no")){
+                    Log.v(LOG_TAG, voterName + " is not authorized to vote yet.");
+                    //stay in the RegistrationStatusFragment
+                    ToastWrapper.initiateToast(getContext(), "You are not allowed to vote yet.");
+                    return;
+                }
+
+                Log.e(LOG_TAG, voterName + " response other than yes/no from server ");
+                ToastWrapper.initiateToast(getContext(), voterName + ", a response other than yes/no from server has been received." +
+                        " What do we do?");
+                return;
+
+            }
+
+            @Override
+            public void onFailure(Call<MODEL_UserAuthorizationStatus> call, Throwable t) {
+                String msg = "Failed to send the authorization status request to the server due to network errors";
+                Log.e(LOG_TAG, msg);
+                Log.e(LOG_TAG, t.getMessage());
+                ToastWrapper.initiateToast(getContext(), voterName + ", " + msg);
+
+            }
+        });
     }
 
 }

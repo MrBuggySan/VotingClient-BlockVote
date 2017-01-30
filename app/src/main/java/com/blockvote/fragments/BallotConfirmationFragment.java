@@ -32,7 +32,7 @@ import retrofit2.Response;
  * Use the {@link BallotConfirmationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BallotConfirmationFragment extends Fragment {
+public class BallotConfirmationFragment extends Fragment{
     private final String LOG_TAG = BallotConfirmationFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
@@ -94,50 +94,7 @@ public class BallotConfirmationFragment extends Fragment {
         yesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mListener != null) {
-
-                    String registrarName = getString(R.string.regigstrarName);
-
-                    //send the request of the voter to the server
-                    BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
-                    BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-                    //TODO: hard coded district for now. I'm too lazy to save the data from the registrationFragment
-                    Call<MODEL_RequestToVote> call = apiService.writeVote(new POST_BODY_writeVote(registrarName, voterName, choice, "edinburgh"));
-
-                    call.enqueue(new Callback<MODEL_RequestToVote>() {
-                        @Override
-                        public void onResponse(Call<MODEL_RequestToVote> call, Response<MODEL_RequestToVote> response) {
-
-                            MODEL_RequestToVote ServerResponse = response.body();
-                            if(ServerResponse.getError() != null){
-                                //Handle the error
-                                ToastWrapper.initiateToast(getContext(), "Server has recieved your vote, " +
-                                        "but something wierd happened.");
-                                return;
-                            }
-                            Log.v(LOG_TAG, voterName + " has succesfully voted.");
-                            ToastWrapper.initiateToast(getContext(), voterName + " has succesfully voted.");
-                            //TODO: have ElectionActivity call ReviewBallotFragment
-                            mListener.onYesBallotConfirmation();
-
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<MODEL_RequestToVote> call, Throwable t) {
-                            String msg = "Failed to send the ballot due to network errors";
-                            Log.e(LOG_TAG, msg);
-                            Log.e(LOG_TAG, t.getMessage());
-                            ToastWrapper.initiateToast(getContext(), msg);
-
-                        }
-                    });
-                    View rootView_ = getView();
-                    //enable the loading circle
-                    rootView_.findViewById(R.id.ballot_confirmation_loadingPanel).setVisibility(View.VISIBLE);
-
-                    //disable the rest
-                    rootView_.findViewById(R.id.ballot_confirm_screen).setVisibility(View.GONE);
-
+                    yesButtonClick();
                 }
             }
         });
@@ -186,5 +143,51 @@ public class BallotConfirmationFragment extends Fragment {
         // TODO: Update argument type and name
         void onYesBallotConfirmation();
         void onNoBallotConfirmation();
+    }
+
+    public void yesButtonClick(){
+        String registrarName = getString(R.string.regigstrarName);
+
+        //send the request of the voter to the server
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        //TODO: hard coded district for now. I'm too lazy to save the data from the registrationFragment
+        Call<MODEL_RequestToVote> call = apiService.writeVote(new POST_BODY_writeVote(registrarName, voterName, choice, "edinburgh"));
+
+        call.enqueue(new Callback<MODEL_RequestToVote>() {
+            @Override
+            public void onResponse(Call<MODEL_RequestToVote> call, Response<MODEL_RequestToVote> response) {
+
+                MODEL_RequestToVote ServerResponse = response.body();
+                if(ServerResponse.getError() != null){
+                    //Handle the error
+                    ToastWrapper.initiateToast(getContext(), "Server has recieved your vote, " +
+                            "but something wierd happened.");
+                    return;
+                }
+                Log.v(LOG_TAG, voterName + " has succesfully voted.");
+                ToastWrapper.initiateToast(getContext(), voterName + " has succesfully voted.");
+                //TODO: have ElectionActivity call ReviewBallotFragment
+                mListener.onYesBallotConfirmation();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<MODEL_RequestToVote> call, Throwable t) {
+                String msg = "Failed to send the ballot due to network errors";
+                Log.e(LOG_TAG, msg);
+                Log.e(LOG_TAG, t.getMessage());
+                ToastWrapper.initiateToast(getContext(), msg);
+
+            }
+        });
+        View rootView_ = getView();
+        //enable the loading circle
+        rootView_.findViewById(R.id.ballot_confirmation_loadingPanel).setVisibility(View.VISIBLE);
+
+        //disable the rest
+        rootView_.findViewById(R.id.ballot_confirm_screen).setVisibility(View.GONE);
+
     }
 }
