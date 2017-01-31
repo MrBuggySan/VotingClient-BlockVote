@@ -25,7 +25,7 @@ public class GenerateQRActivity extends AppCompatActivity {
     private EditText editText;
     private String EditTextValue ;
     private Thread thread ;
-    private final static int QRcodeWidth = 500 ;
+    private final static int QRcodeWidth = 1000 ;
     private Bitmap bitmap ;
 
     GenerateQRActivity generateQRActivity;
@@ -48,6 +48,7 @@ public class GenerateQRActivity extends AppCompatActivity {
                 EditTextValue = editText.getText().toString();
 
                 try {
+                    //TODO: Do this processing using AsyncTask
                     bitmap = TextToImageEncode(EditTextValue);
 
                     imageView.setImageBitmap(bitmap);
@@ -92,7 +93,7 @@ public class GenerateQRActivity extends AppCompatActivity {
         }
         Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
 
-        bitmap.setPixels(pixels, 0, 500, 0, 0, bitMatrixWidth, bitMatrixHeight);
+        bitmap.setPixels(pixels, 0, bitMatrixWidth, 0, 0, bitMatrixWidth, bitMatrixHeight);
         return bitmap;
     }
 }
