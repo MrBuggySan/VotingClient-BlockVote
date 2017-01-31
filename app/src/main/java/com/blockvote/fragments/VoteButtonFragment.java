@@ -1,4 +1,4 @@
-package com.blockvote.votingclient;
+package com.blockvote.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Iterator;
-import java.util.Set;
+import com.blockvote.votingclient.R;
 
 
 /**
@@ -29,7 +28,6 @@ public class VoteButtonFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private String[] optionList;
     private String voterName;
 
     public VoteButtonFragment() {
@@ -37,18 +35,8 @@ public class VoteButtonFragment extends Fragment {
     }
 
 
-    public static VoteButtonFragment newInstance(Set<String> option_, String voterName_) {
-        String[] optionArray = new String[option_.size()];
-        Iterator<String> iter = option_.iterator();
-        byte i = 0;
-        while(iter.hasNext()){
-            optionArray[i] = iter.next();
-
-            iter.remove();
-            i++;
-        }
+    public static VoteButtonFragment newInstance(String voterName_) {
         Bundle args = new Bundle();
-        args.putStringArray(ARG_PARAM1,optionArray);
         VoteButtonFragment fragment = new VoteButtonFragment();
         args.putString(ARG_PARAM2,voterName_);
         fragment.setArguments(args);
@@ -59,7 +47,6 @@ public class VoteButtonFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            optionList = getArguments().getStringArray(ARG_PARAM1);
             voterName = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -76,7 +63,7 @@ public class VoteButtonFragment extends Fragment {
         voteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onVoteButtonInteraction(optionList);
+                    mListener.onVoteButtonInteraction();
                 }
             }
         });
@@ -113,6 +100,6 @@ public class VoteButtonFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onVoteButtonInteraction(String[] optionList);
+        void onVoteButtonInteraction();
     }
 }

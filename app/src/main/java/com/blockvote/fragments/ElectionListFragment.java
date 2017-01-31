@@ -1,4 +1,4 @@
-package com.blockvote.votingclient;
+package com.blockvote.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.blockvote.model.MODEL_ElectionList;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
+import com.blockvote.votingclient.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +46,34 @@ public class ElectionListFragment extends Fragment {
         //disable the electionlist
         rootView.findViewById(R.id.listview_electionlist).setVisibility(View.GONE);
 
-        //TODO: the fragment must redownload the list even if its coming from the backstack.
+        getElectionList();
 
+        Log.d(LOG_TAG,"Election Selection Fragment setup done");
+        return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ElectionListFragment.OnFragmentInteractionListener) {
+            mListener = (ElectionListFragment.OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onElectionOptionClick(String electionName);
+    }
+
+    public void getElectionList(){
         //get the election list from the server
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
@@ -89,7 +116,8 @@ public class ElectionListFragment extends Fragment {
                 });
 
                 //Show the election list
-                rootView.findViewById(R.id.listview_electionlist).setVisibility(View.VISIBLE);
+                rootView_ = getView();
+                rootView_.findViewById(R.id.listview_electionlist).setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -99,29 +127,5 @@ public class ElectionListFragment extends Fragment {
                 //TODO:Restart the connection if failure
             }
         });
-        Log.d(LOG_TAG,"Election Selection Fragment setup done");
-        return rootView;
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof ElectionListFragment.OnFragmentInteractionListener) {
-            mListener = (ElectionListFragment.OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onElectionOptionClick(String electionName);
-    }
-
 }

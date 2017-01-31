@@ -1,4 +1,4 @@
-package com.blockvote.votingclient;
+package com.blockvote.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
+import com.blockvote.votingclient.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +37,6 @@ public class SelectCandidateFragment extends Fragment {
     private final String LOG_TAG = SelectCandidateFragment.class.getSimpleName();
     ArrayAdapter<String> mCandidateList;
 
-    private String[] optionList;
-
     private OnFragmentInteractionListener mListener;
 
     private static final String ARG_PARAM1 = "param1";
@@ -46,23 +45,13 @@ public class SelectCandidateFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SelectCandidateFragment newInstance(String[] optionList) {
+    public static SelectCandidateFragment newInstance() {
         SelectCandidateFragment fragment = new SelectCandidateFragment();
-        Bundle args = new Bundle();
-        args.putStringArray(ARG_PARAM1,optionList);
-        fragment.setArguments(args);
+
 
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            optionList = getArguments().getStringArray(ARG_PARAM1);
-        }
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,48 +60,7 @@ public class SelectCandidateFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_select_candidate, container, false);
 
         //get the options from the server
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
-        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-        Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
-
-        call.enqueue(new Callback<MODEL_ElectionInfo>() {
-            @Override
-            public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
-                int statusCode = response.code();
-
-                mCandidateList = new ArrayAdapter<String>(
-                        getActivity(),
-                        R.layout.listentry,
-                        R.id.listEntry,
-                        new ArrayList<String>()
-                );
-
-                List<String> electionOptions = response.body().getResponse().getElectionData().getAnswers();
-                mCandidateList.add(electionOptions.get(1));
-                mCandidateList.add(electionOptions.get(0));
-
-                ListView listView=(ListView) getView().findViewById(R.id.listview_candidatelist);
-                listView.setAdapter(mCandidateList);
-                //setup the button event when a candidate is pressed
-                //Add the event to call BallotConfirmationFragment when candidate is clicked
-                listView.setOnItemClickListener( new AdapterView.OnItemClickListener(){
-
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
-                        String choice=mCandidateList.getItem(i);
-                        //TODO: get the timestamp
-                        mListener.onOptionSelectInteraction(choice, "test hour");
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
-                Log.e(LOG_TAG, "Downloading the election options has failed...");
-                ToastWrapper.initiateToast(getContext(), "Downloading the election options has failed...");
-                //TODO:Restart the connection if failure
-            }
-        });
+        getBallotOptions();
 
 
 
@@ -152,5 +100,53 @@ public class SelectCandidateFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onOptionSelectInteraction(String choice, String timestamp);
+    }
+
+    public void getBallotOptions(){
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
+
+        call.enqueue(new Callback<MODEL_ElectionInfo>() {
+            @Override
+            public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
+                int statusCode = response.code();
+
+                mCandidateList = new ArrayAdapter<String>(
+                        getActivity(),
+                        R.layout.listentry,
+                        R.id.listEntry,
+                        new ArrayList<String>()
+                );
+
+                List<String> electionOptions = response.body().getResponse().getElectionData().getVoteOptions();
+                mCandidateList.add(electionOptions.get(2));
+                mCandidateList.add(electionOptions.get(1));
+                mCandidateList.add(electionOptions.get(0));
+
+                ListView listView=(ListView) getView().findViewById(R.id.listview_candidatelist);
+                listView.setAdapter(mCandidateList);
+                //setup the button event when a candidate is pressed
+                //Add the event to call BallotConfirmationFragment when candidate is clicked
+                listView.setOnItemClickListener( new AdapterView.OnItemClickListener(){
+
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
+                        String choice=mCandidateList.getItem(i);
+                        //TODO: get the timestamp
+                        mListener.onOptionSelectInteraction(choice, "test hour");
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
+                Log.e(LOG_TAG, "Downloading th" +
+                        "e election options has failed...");
+                ToastWrapper.initiateToast(getContext(), "Downloading the election options has failed...");
+                //TODO:Restart the connection if failure
+            }
+        });
+
     }
 }

@@ -10,8 +10,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.blockvote.fragments.ElectionListFragment;
+import com.blockvote.fragments.TesterFragment;
+
 public class RootActivity extends AppCompatActivity
-    implements ElectionListFragment.OnFragmentInteractionListener{
+    implements ElectionListFragment.OnFragmentInteractionListener {
     private final String LOG_TAG = RootActivity.class.getSimpleName();
 
     @Override
@@ -29,6 +32,28 @@ public class RootActivity extends AppCompatActivity
                 //TODO: Start the HelpActivity
                 Log.d(LOG_TAG, "Help option selected");
                 return true;
+            case R.id.Option_BeamTest:
+                //Start the HelpActivity
+                Log.d(LOG_TAG, "Beam Test selected");
+                Intent intent = new Intent(this, BeamTestActivity.class);
+                startActivity(intent);
+
+                return true;
+            case R.id.Option_GenerateQR:
+                //Start the HelpActivity
+                Log.d(LOG_TAG, "Generate QR selected");
+                Intent intent1 = new Intent(this, GenerateQRActivity.class);
+                startActivity(intent1);
+
+                return true;
+            case R.id.Option_ReadQR:
+                //Start the HelpActivity
+                Log.d(LOG_TAG, "Read QR selected");
+                Intent intent2 = new Intent(this, ReadQRActivity.class);
+                startActivity(intent2);
+
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -47,11 +72,13 @@ public class RootActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
 
+            TesterFragment testerFragment = new TesterFragment();
+
             //Create the Election selection fragment
             ElectionListFragment selectElectionFragment = new ElectionListFragment();
 
 
-            getSupportFragmentManager().beginTransaction().add(R.id.ElectionSelectionContainer, selectElectionFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.ElectionSelectionContainer, testerFragment).commit();
             Log.d(LOG_TAG, "RootActivity onCreate");
         }else{
             Log.d(LOG_TAG, "savedInstanceState is not null");

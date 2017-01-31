@@ -3,4 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303f9f</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="QRDarkColor">#0D1522</color>
+    <color name="QRWhite">#f7f3f3</color>
 </resources>

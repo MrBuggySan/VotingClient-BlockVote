@@ -14,8 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.blockvote.auxillary.ToastWrapper;
-
-import java.util.Set;
+import com.blockvote.fragments.BallotConfirmationFragment;
+import com.blockvote.fragments.RegisterFragment;
+import com.blockvote.fragments.RegistrationConfirmationFragment;
+import com.blockvote.fragments.RegistrationStatusFragment;
+import com.blockvote.fragments.ReviewBallotFragment;
+import com.blockvote.fragments.SelectCandidateFragment;
+import com.blockvote.fragments.VoteButtonFragment;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -28,7 +33,7 @@ public class ElectionActivity extends AppCompatActivity
         RegisterFragment.OnFragmentInteractionListener,
         RegistrationConfirmationFragment.OnFragmentInteractionListener,
         RegistrationStatusFragment.OnFragmentInteractionListener,
-        ReviewBallotFragment.OnFragmentInteractionListener{
+        ReviewBallotFragment.OnFragmentInteractionListener {
 
 
     private final String LOG_TAG = ElectionActivity.class.getSimpleName();
@@ -36,7 +41,12 @@ public class ElectionActivity extends AppCompatActivity
     private String voterKey;
     private String optionsKey;
     private String electionName;
+
     private RegistrationStatusFragment registrationStatusFragment;
+
+    private SharedPreferences dataStore;
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -51,7 +61,6 @@ public class ElectionActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.Option_ClearData:
                 //clear the SharedPreferences data
-                SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
                 SharedPreferences.Editor editor = dataStore.edit();
                 //only delete the data associated for this election
                 editor.remove(voterKey);
@@ -94,7 +103,7 @@ public class ElectionActivity extends AppCompatActivity
 
 
         //select the appropriate fragment to display according to the data from the DB, (for now I will use the simple SharedPreferences)
-        SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
+        dataStore = getPreferences(MODE_PRIVATE);
 
         //define the keys for this particular election
         electionStateKey=  getString(R.string.ElectionActivityState)+ electionName;
@@ -131,21 +140,15 @@ public class ElectionActivity extends AppCompatActivity
                 return;
             }
             if(currentState.equals(getString(R.string.VoteButtonState))){
-                //grab the options from data store
-                Set<String> optionsSet =dataStore.getStringSet(optionsKey, null);
-                if(optionsSet == null){
-                    Log.e(LOG_TAG, "failure to retrieve election options.");
-                    ToastWrapper.initiateToast(this, "failure to retrieve election options.");
-                }
 
                 String voterName = dataStore.getString(voterKey, null);
 
-                if(optionsSet == null){
+                if(voterName == null){
                     Log.e(LOG_TAG, "failure to retrieve voter's name");
                     ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
                 }
 
-                VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(optionsSet, voterName);
+                VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(voterName);
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, voteButtonFragment).commit();
                 return;
             }
@@ -181,9 +184,9 @@ public class ElectionActivity extends AppCompatActivity
      * VoteButtonFragment will be switched to the SelectcandidateFragment
      * VoteButtonFragment will call this function
      */
-    public void onVoteButtonInteraction(String[] optionList){
+    public void onVoteButtonInteraction(){
         //Setup the SelectCandidateFragment
-        SelectCandidateFragment selectCandidateFragment = SelectCandidateFragment.newInstance(optionList);
+        SelectCandidateFragment selectCandidateFragment = SelectCandidateFragment.newInstance();
         //Switch the VoteButtonFragment with the SelectCandidateFragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.ElectionContainer, selectCandidateFragment);
@@ -220,7 +223,7 @@ public class ElectionActivity extends AppCompatActivity
 
     public void onYesBallotConfirmation(){
         //change the state of ElectionActivity to ReviewBallotState
-        SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
+
         SharedPreferences.Editor editor = dataStore.edit();
         String newState = getString(R.string.ReviewBallotState);
         editor.putString(electionStateKey, newState);
@@ -258,7 +261,7 @@ public class ElectionActivity extends AppCompatActivity
         Log.d(LOG_TAG, "Voter does not confirm");
     }
 
-    public void onRegisterButtonInteraction(String firstName, String lastName, String districtName, Set<String> options){
+    public void onRegisterButtonInteraction(String firstName, String lastName, String districtName){
         RegistrationConfirmationFragment registrationConfirmationFragment = RegistrationConfirmationFragment.newInstance(
                 firstName, lastName, districtName
         );
@@ -271,9 +274,9 @@ public class ElectionActivity extends AppCompatActivity
         transaction.commit();
         Log.d(LOG_TAG,"Opening RegistrationConfirmationFragment");
 
-        SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
+
         SharedPreferences.Editor editor = dataStore.edit();
-        editor.putStringSet(optionsKey, options);
+
 
         //change the state of ElectionActivity to RegistrationStatusState
         String newState = getString(R.string.RegistrationStatusState);
@@ -287,8 +290,6 @@ public class ElectionActivity extends AppCompatActivity
     public void onYesRegistrationInteraction(String voterName){
 
         //Save the voter name in DB, for now use SharedPreferences
-
-        SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
         if (dataStore.contains(voterKey)){
             //SharedPrefences already contians a key
             String voterNameError = dataStore.getString(voterKey, "noName");
@@ -334,14 +335,6 @@ public class ElectionActivity extends AppCompatActivity
     }
 
     public void onVoterAuthorized(){
-        //grab the options from data store
-        SharedPreferences dataStore = getPreferences(MODE_PRIVATE);
-        Set<String> optionsSet =dataStore.getStringSet(optionsKey, null);
-        if(optionsSet == null){
-            Log.e(LOG_TAG, "failure to retrieve election options.");
-            ToastWrapper.initiateToast(this, "failure to retrieve election options.");
-        }
-
         //change the state of ElectionActivity to VoteButtonFragment
         SharedPreferences.Editor editor = dataStore.edit();
         String newState = getString(R.string.VoteButtonState);
@@ -355,7 +348,7 @@ public class ElectionActivity extends AppCompatActivity
             ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
         }
 
-        VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(optionsSet, voterName);
+        VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(voterName);
 
         FragmentManager fragmentManager= getSupportFragmentManager();
 
@@ -379,5 +372,4 @@ public class ElectionActivity extends AppCompatActivity
     public void onReviewResultsButtonPress(){
 
     }
-
 }

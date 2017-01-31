@@ -1,7 +1,6 @@
-package com.blockvote.votingclient;
+package com.blockvote.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.votingclient.R;
 
 
 /**

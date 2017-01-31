@@ -1,4 +1,4 @@
-package com.blockvote.votingclient;
+package com.blockvote.fragments;
 
 import org.junit.Test;
 

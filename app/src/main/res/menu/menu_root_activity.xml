@@ -7,6 +7,26 @@
 
         app:showAsAction="never"
         />
+    <item
+        android:id="@+id/Option_BeamTest"
+        android:title="Beam Test"
+
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/Option_GenerateQR"
+        android:title="Generate QR"
+
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/Option_ReadQR"
+        android:title="Read QR"
+
+        app:showAsAction="never"
+        />
 
 
 </menu>
