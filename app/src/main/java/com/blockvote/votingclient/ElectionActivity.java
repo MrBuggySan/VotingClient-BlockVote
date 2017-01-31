@@ -36,7 +36,7 @@ public class ElectionActivity extends AppCompatActivity
     private String voterKey;
     private String optionsKey;
     private String electionName;
-
+    private RegistrationStatusFragment registrationStatusFragment;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -307,7 +307,7 @@ public class ElectionActivity extends AppCompatActivity
         editor.commit();
 
         //Start the RegistrationStatusFragment
-        RegistrationStatusFragment registrationStatusFragment = RegistrationStatusFragment.newInstance(
+        registrationStatusFragment = RegistrationStatusFragment.newInstance(
                 voterName
         );
 
@@ -361,8 +361,13 @@ public class ElectionActivity extends AppCompatActivity
 
         //TODO: RegistrationStatusFragment and VoterButton are not switching properly
 
+
+
         //Switch the registrationStatusFragment with the voteButtonFragment
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+        // delete registrationStatusFragment
+        Log.v(LOG_TAG, "attempting to delete registrationStatusFragment");
+        transaction.remove(registrationStatusFragment);
         transaction.replace(R.id.ElectionContainer, voteButtonFragment);
         transaction.commit();
         Log.d(LOG_TAG,"Opening voteButtonFragment ");
