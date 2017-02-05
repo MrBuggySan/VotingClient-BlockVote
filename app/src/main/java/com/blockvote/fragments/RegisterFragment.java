@@ -130,7 +130,7 @@ public class RegisterFragment extends Fragment {
                         mDistrictList.add(districtList.get(i));
                     }
 
-                    //Setup the spinner
+                    //Setup the spinner showing the different districts available
                     Spinner spinner = (Spinner) rootView_.findViewById(R.id.register_districtspinner);
                     spinner.setAdapter(mDistrictList);
 
