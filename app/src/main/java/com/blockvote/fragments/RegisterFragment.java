@@ -155,7 +155,7 @@ public class RegisterFragment extends Fragment {
                                 Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
                                 String districtName = districtSpinner.getSelectedItem().toString();
 
-                                //TODO:
+
                                 mListener.onRegisterButtonInteraction(firstName, lastName, districtName);
                             }
                         }
@@ -175,7 +175,7 @@ public class RegisterFragment extends Fragment {
 
             @Override
             public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
-                Log.e(LOG_TAG, "Downloading the election list has failed...");
+                Log.e(LOG_TAG, "Downloading the district list has failed...");
                 throw new RuntimeException("Could not download the election list");
                 //TODO:Restart the connection if failure
             }

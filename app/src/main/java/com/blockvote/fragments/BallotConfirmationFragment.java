@@ -89,7 +89,7 @@ public class BallotConfirmationFragment extends Fragment{
         //disable loading circle
         rootView.findViewById(R.id.ballot_confirmation_loadingPanel).setVisibility(View.GONE);
 
-        //TODO: when YES, start the networking code to submit the data to the server
+        //when YES, start the networking code to submit the data to the server
         Button yesButton = (Button) rootView.findViewById(R.id.confirmation_yes_button);
         yesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -98,7 +98,7 @@ public class BallotConfirmationFragment extends Fragment{
                 }
             }
         });
-        //TODO: when NO, go back to the SelectCandidateFragment
+        //when NO, go back to the SelectCandidateFragment
         Button noButton = (Button) rootView.findViewById(R.id.confirmation_no_button);
         noButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -140,7 +140,6 @@ public class BallotConfirmationFragment extends Fragment{
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onYesBallotConfirmation();
         void onNoBallotConfirmation();
     }
@@ -151,7 +150,7 @@ public class BallotConfirmationFragment extends Fragment{
         //send the request of the voter to the server
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-        //TODO: hard coded district for now. I'm too lazy to save the data from the registrationFragment
+        //TODO: send the district info with the ballot
         Call<MODEL_RequestToVote> call = apiService.writeVote(new POST_BODY_writeVote(registrarName, voterName, choice, "edinburgh"));
 
         call.enqueue(new Callback<MODEL_RequestToVote>() {
@@ -167,7 +166,7 @@ public class BallotConfirmationFragment extends Fragment{
                 }
                 Log.v(LOG_TAG, voterName + " has succesfully voted.");
                 ToastWrapper.initiateToast(getContext(), voterName + " has succesfully voted.");
-                //TODO: have ElectionActivity call ReviewBallotFragment
+
                 mListener.onYesBallotConfirmation();
 
 

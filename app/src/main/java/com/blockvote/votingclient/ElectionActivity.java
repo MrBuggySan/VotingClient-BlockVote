@@ -22,6 +22,8 @@ import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.fragments.SelectCandidateFragment;
 import com.blockvote.fragments.VoteButtonFragment;
 
+import static com.blockvote.votingclient.R.string.voterNameKey;
+
 /**
  * Created by Beast Mode on 12/26/2016.
  */
@@ -31,18 +33,15 @@ public class ElectionActivity extends AppCompatActivity
         SelectCandidateFragment.OnFragmentInteractionListener,
         BallotConfirmationFragment.OnFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
-        RegistrationConfirmationFragment.OnFragmentInteractionListener,
-        RegistrationStatusFragment.OnFragmentInteractionListener,
         ReviewBallotFragment.OnFragmentInteractionListener {
 
 
     private final String LOG_TAG = ElectionActivity.class.getSimpleName();
     private String electionStateKey ;
-    private String voterKey;
-    private String optionsKey;
+    private String voterNameKey;
+    private String districtKey;
     private String electionName;
 
-    private RegistrationStatusFragment registrationStatusFragment;
 
     private SharedPreferences dataStore;
 
@@ -70,9 +69,6 @@ public class ElectionActivity extends AppCompatActivity
 
                 ToastWrapper.initiateToast(this, "Data cleared, press back on this activity" +
                         " and start over.");
-
-                //TODO: exit the ElectionActivity after deleting the data
-
                 Log.d(LOG_TAG, "Clear data option selected");
                 return true;
             case R.id.Option_Help:
@@ -89,11 +85,8 @@ public class ElectionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_election);
 
-        //get the extra data from intent
-        Intent intent = getIntent();
+        //TODO:get the election name from the server
 
-        electionName=intent.getStringExtra(getString(R.string.selectedElectionKey));
-        Log.d(LOG_TAG, electionName + " selected");
         //Toolbar setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.electionmain_toolbar);
         setSupportActionBar(myToolbar);
@@ -101,14 +94,12 @@ public class ElectionActivity extends AppCompatActivity
         myActionBar.setTitle(electionName);
 
 
-
-        //select the appropriate fragment to display according to the data from the DB, (for now I will use the simple SharedPreferences)
         dataStore = getPreferences(MODE_PRIVATE);
 
         //define the keys for this particular election
         electionStateKey=  getString(R.string.ElectionActivityState)+ electionName;
-        voterKey = getString(R.string.voterNameKey)+ electionName;
-        optionsKey = getString(R.string.optionsKey) + electionName;
+        voterNameKey = getString(voterNameKey)+ electionName;
+        districtKey = getString(R.string.districtKey) + electionName;
 
         if (!dataStore.contains(electionStateKey)){
             //Init the state
