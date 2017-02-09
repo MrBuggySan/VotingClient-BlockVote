@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.auxillary.simpleDialog;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
@@ -29,16 +30,16 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RegisterFragment.OnFragmentInteractionListener} interface
+ * {@link DistrictListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
 
  */
-public class RegisterFragment extends Fragment {
-    private final String LOG_TAG = RegisterFragment.class.getSimpleName();
+public class DistrictListFragment extends Fragment {
+    private final String LOG_TAG = DistrictListFragment.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
 
-    public RegisterFragment() {
+    public DistrictListFragment() {
         // Required empty public constructor
     }
 
@@ -52,19 +53,25 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_register, container, false);
-        if(rootView !=null){
-            //TODO: get the name of the user from the system, have an option to edit the values
 
-            //Hide the other views
-            rootView.findViewById(R.id.reg_firstNameText).setVisibility(View.GONE);
-            rootView.findViewById(R.id.reg_lastNameText).setVisibility(View.GONE);
-            rootView.findViewById(R.id.register_districtspinner).setVisibility(View.GONE);
-            rootView.findViewById(R.id.reg_register_button).setVisibility(View.GONE);
+        //TODO: setup the popup so it only shows up the very first time the user opens the app
+        //idea: have a don't show this again popup.
+        //create a dialog
+        new simpleDialog(getContext(), R.string.dialog_title_DLFrag, R.string.dialog_message_DLFrag);
 
-            //get the districts from the server
-            getElectionInfo();
+        //TODO: get the name of the user from the system, have an option to edit the values
 
-        }
+
+        //Hide the other views
+        rootView.findViewById(R.id.reg_firstNameText).setVisibility(View.GONE);
+        rootView.findViewById(R.id.reg_lastNameText).setVisibility(View.GONE);
+        rootView.findViewById(R.id.register_districtspinner).setVisibility(View.GONE);
+        rootView.findViewById(R.id.reg_register_button).setVisibility(View.GONE);
+
+        //get the districts from the server
+//        getElectionInfo();
+
+
 
         return rootView;
     }
@@ -101,6 +108,25 @@ public class RegisterFragment extends Fragment {
         void onRegisterButtonInteraction(String firstName, String lastName, String districtName);
     }
 
+    public void displayDistrictsonSpinner(List<String> districtList){
+        ArrayAdapter<String> mDistrictList = new ArrayAdapter<String>(
+                getActivity(),
+                R.layout.listentry,
+                R.id.listEntry,
+                new ArrayList<String>()
+        );
+
+        for (int i = 0; i < districtList.size(); i++) {
+            Log.d(LOG_TAG, districtList.get(i) + " available.");
+            mDistrictList.add(districtList.get(i));
+        }
+
+        //Setup the spinner showing the different districts available
+        Spinner spinner = (Spinner) getView().findViewById(R.id.register_districtspinner);
+        spinner.setAdapter(mDistrictList);
+
+    }
+
     public void getElectionInfo(){
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
@@ -116,24 +142,9 @@ public class RegisterFragment extends Fragment {
                 //apply the results to the UI
                 View rootView_ = getView();
                 if(rootView_ != null){
-                    Log.v(LOG_TAG, "RegisterFragment marker.");
+                    Log.v(LOG_TAG, "DistrictListFragment marker.");
 
-                    ArrayAdapter<String> mDistrictList = new ArrayAdapter<String>(
-                            getActivity(),
-                            R.layout.listentry,
-                            R.id.listEntry,
-                            new ArrayList<String>()
-                    );
-
-                    for (int i = 0; i < districtList.size(); i++) {
-                        Log.d(LOG_TAG, districtList.get(i) + " available.");
-                        mDistrictList.add(districtList.get(i));
-                    }
-
-                    //Setup the spinner showing the different districts available
-                    Spinner spinner = (Spinner) rootView_.findViewById(R.id.register_districtspinner);
-                    spinner.setAdapter(mDistrictList);
-
+                    displayDistrictsonSpinner(districtList);
 
                     //Setup the button
                     Button registerButton = (Button) rootView_.findViewById(R.id.reg_register_button);

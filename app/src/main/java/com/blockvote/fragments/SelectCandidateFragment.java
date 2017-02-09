@@ -99,7 +99,7 @@ public class SelectCandidateFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onOptionSelectInteraction(String choice, String timestamp);
+        void onCandidateSelectInteraction(String choice, String timestamp);
     }
 
     public void getBallotOptions(){
@@ -127,14 +127,13 @@ public class SelectCandidateFragment extends Fragment {
                 ListView listView=(ListView) getView().findViewById(R.id.listview_candidatelist);
                 listView.setAdapter(mCandidateList);
                 //setup the button event when a candidate is pressed
-                //Add the event to call BallotConfirmationFragment when candidate is clicked
                 listView.setOnItemClickListener( new AdapterView.OnItemClickListener(){
 
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
                         String choice=mCandidateList.getItem(i);
                         //TODO: get the timestamp
-                        mListener.onOptionSelectInteraction(choice, "test hour");
+                        mListener.onCandidateSelectInteraction(choice, "test hour");
                     }
                 });
             }

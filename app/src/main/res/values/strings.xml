@@ -5,23 +5,24 @@
     <string name="electionRegister">Register</string>
     <string name="electionVote">Vote</string>
     <string name="electionHelp">Help</string>
-
-
-    <string name="regigstrarName">tommy</string>
-
-
-    <!--The current state of ElectionActivity-->
-    <string name="ElectionActivityState">stateinfo</string>
-
     <!--The possible states of ElectionActivity-->
     <string name="RegistrationState">Regis</string>
-    <string name="RegistrationStatusState">RegisState</string>
+    <string name="SelectRegistrarState">SelecRegis</string>
+    <string name="GenQRState">genqr</string>
     <string name="VoteButtonState">VotBut</string>
     <string name="ReviewBallotState">RevBalot</string>
 
     <!--Keys for SharedPreferences-->
-    <string name="selectedElectionKey">electnKey</string>
+    <string name="ElectionActivityStateKey">stateinfo</string>
     <string name="voterNameKey">vnameKey</string>
     <string name="districtKey">distrct</string>
+
+    <string name="regigstrarNameKey">regname</string>
+
+    <!--Dialog content-->
+    <string name="dialog_message_DLFrag">We haveve grabbed your name from your phone. If you would like to
+    change it, you are free to do so.</string>
+    <string name="dialog_title_DLFrag">Information</string>
+    <string name="ok">OK</string>
 
 </resources>
