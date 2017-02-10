@@ -1,13 +1,16 @@
 package com.blockvote.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.blockvote.auxillary.simpleDialog;
+import com.blockvote.votingclient.ElectionActivity;
 import com.blockvote.votingclient.R;
 
 /**
@@ -19,14 +22,8 @@ import com.blockvote.votingclient.R;
  * create an instance of this fragment.
  */
 public class SelectRegistrarFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private final String LOG_TAG = ElectionActivity.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
 
@@ -34,46 +31,65 @@ public class SelectRegistrarFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SelectRegistrarFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SelectRegistrarFragment newInstance(String param1, String param2) {
+    public static SelectRegistrarFragment newInstance() {
         SelectRegistrarFragment fragment = new SelectRegistrarFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.v(LOG_TAG, "Entering registrat select fragment...");
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_select_registrar, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_select_registrar, container, false);
+
+        //create a dialog
+        new simpleDialog(getContext(), R.string.dialog_title_DLFrag, R.string.dialog_message_SelecReg);
+        //TODO: get the registrar list from the server
+
+        //fake registrar list
+
+
+        //Setup the buttons
+        Button nextButton = (Button) rootView.findViewById(R.id.select_registrar_next);
+        //Register button callback
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mListener != null) {
+                    onNextClick();
+                }
+            }
+        });
+
+        Button backButton = (Button) rootView.findViewById(R.id.select_registrar_back);
+        //Register button callback
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mListener != null) {
+                    onBackClick();
+                }
+            }
+        });
+        return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onRegistrarSelected(uri);
-        }
+    public void onNextClick(){
+        //get the selected registrar
+
+//        mListener.onNextSelected();
     }
+
+    public void onBackClick(){
+        mListener.onBackSelected();
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -92,18 +108,9 @@ public class SelectRegistrarFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onRegistrarSelected(Uri uri);
+
+        void onNextSelected(String registrarName);
+        void onBackSelected();
     }
 }

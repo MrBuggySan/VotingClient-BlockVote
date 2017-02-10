@@ -4,6 +4,9 @@
 
     <!-- This is needed to use the network -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--This is to access the user's profile-->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_PROFILE"/>
 
     <application
         android:allowBackup="true"

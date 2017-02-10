@@ -52,7 +52,7 @@ public class DistrictListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_register, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_district_list, container, false);
 
         //TODO: setup the popup so it only shows up the very first time the user opens the app
         //idea: have a don't show this again popup.
@@ -62,14 +62,28 @@ public class DistrictListFragment extends Fragment {
         //TODO: get the name of the user from the system, have an option to edit the values
 
 
-        //Hide the other views
+        //TODO: plan up a better UI for this fragment (use pictures to for the districts?)
+
+
         rootView.findViewById(R.id.reg_firstNameText).setVisibility(View.GONE);
         rootView.findViewById(R.id.reg_lastNameText).setVisibility(View.GONE);
         rootView.findViewById(R.id.register_districtspinner).setVisibility(View.GONE);
         rootView.findViewById(R.id.reg_register_button).setVisibility(View.GONE);
+//
+//        String[] mProjection = new String[]
+//                {
+//                        ContactsContract.Profile.DISPLAY_NAME_PRIMARY
+//                };
+//        ContentResolver mProfileCursor = getContentResolver().query(
+//                ContactsContract.Profile.CONTENT_URI,
+//                mProjection ,
+//                null,
+//                null,
+//                null);
+
 
         //get the districts from the server
-//        getElectionInfo();
+        getElectionInfo();
 
 
 
@@ -105,7 +119,7 @@ public class DistrictListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onRegisterButtonInteraction(String firstName, String lastName, String districtName);
+        void onDistrictListNextInteraction(String firstName, String lastName, String districtName);
     }
 
     public void displayDistrictsonSpinner(List<String> districtList){
@@ -127,6 +141,24 @@ public class DistrictListFragment extends Fragment {
 
     }
 
+    public void onNextClick(){
+        View rootView = getView();
+        EditText firstText = (EditText) rootView.findViewById(R.id.reg_firstNameText);
+        EditText lastText = (EditText) rootView.findViewById(R.id.reg_lastNameText);
+
+        String firstName = firstText.getText().toString();
+        String lastName = lastText.getText().toString();
+        if (firstName.equals("") || lastName.equals("")) {
+            ToastWrapper.initiateToast(getContext(), "Please enter your name");
+
+            return;
+        }
+        Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+        String districtName = districtSpinner.getSelectedItem().toString();
+
+        mListener.onDistrictListNextInteraction(firstName, lastName, districtName);
+    }
+
     public void getElectionInfo(){
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
@@ -144,6 +176,7 @@ public class DistrictListFragment extends Fragment {
                 if(rootView_ != null){
                     Log.v(LOG_TAG, "DistrictListFragment marker.");
 
+                    //TODO: change this to a better UI (possible a radio button)
                     displayDistrictsonSpinner(districtList);
 
                     //Setup the button
@@ -152,22 +185,7 @@ public class DistrictListFragment extends Fragment {
                     registerButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                             if (mListener != null) {
-                                View rootView = getView();
-                                EditText firstText = (EditText) rootView.findViewById(R.id.reg_firstNameText);
-                                EditText lastText = (EditText) rootView.findViewById(R.id.reg_lastNameText);
-
-                                String firstName = firstText.getText().toString();
-                                String lastName = lastText.getText().toString();
-                                if (firstName.equals("") || lastName.equals("")) {
-                                    ToastWrapper.initiateToast(getContext(), "Please enter your name");
-
-                                    return;
-                                }
-                                Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
-                                String districtName = districtSpinner.getSelectedItem().toString();
-
-
-                                mListener.onRegisterButtonInteraction(firstName, lastName, districtName);
+                                onNextClick();
                             }
                         }
                     });

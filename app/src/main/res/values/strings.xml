@@ -5,6 +5,7 @@
     <string name="electionRegister">Register</string>
     <string name="electionVote">Vote</string>
     <string name="electionHelp">Help</string>
+
     <!--The possible states of ElectionActivity-->
     <string name="RegistrationState">Regis</string>
     <string name="SelectRegistrarState">SelecRegis</string>
@@ -16,13 +17,16 @@
     <string name="ElectionActivityStateKey">stateinfo</string>
     <string name="voterNameKey">vnameKey</string>
     <string name="districtKey">distrct</string>
-
     <string name="regigstrarNameKey">regname</string>
 
     <!--Dialog content-->
     <string name="dialog_message_DLFrag">We haveve grabbed your name from your phone. If you would like to
     change it, you are free to do so.</string>
+    <string name="dialog_message_SelecReg">Please select a registrar</string>
     <string name="dialog_title_DLFrag">Information</string>
     <string name="ok">OK</string>
 
+    <!--Button text-->
+    <string name="BasicNext">Next ➨</string>
+    <string name="RegisSelectBack">  Edit name and district</string>
 </resources>
