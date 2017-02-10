@@ -8,7 +8,6 @@
 
     <!--The possible states of ElectionActivity-->
     <string name="RegistrationState">Regis</string>
-    <string name="SelectRegistrarState">SelecRegis</string>
     <string name="GenQRState">genqr</string>
     <string name="VoteButtonState">VotBut</string>
     <string name="ReviewBallotState">RevBalot</string>
@@ -20,8 +19,7 @@
     <string name="regigstrarNameKey">regname</string>
 
     <!--Dialog content-->
-    <string name="dialog_message_DLFrag">We haveve grabbed your name from your phone. If you would like to
-    change it, you are free to do so.</string>
+    <string name="dialog_message_DLFrag">This is your registration form, please fill it out!</string>
     <string name="dialog_message_SelecReg">Please select a registrar</string>
     <string name="dialog_title_DLFrag">Information</string>
     <string name="ok">OK</string>
@@ -29,4 +27,7 @@
     <!--Button text-->
     <string name="BasicNext">Next ➨</string>
     <string name="RegisSelectBack">  Edit name and district</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

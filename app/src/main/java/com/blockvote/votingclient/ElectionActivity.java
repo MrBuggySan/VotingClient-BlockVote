@@ -13,10 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.fragments.DistrictListFragment;
+import com.blockvote.fragments.GenerateQRFragment;
+import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.fragments.SelectCandidateFragment;
-import com.blockvote.fragments.SelectRegistrarFragment;
 import com.blockvote.fragments.VoteButtonFragment;
 
 /**
@@ -24,8 +24,8 @@ import com.blockvote.fragments.VoteButtonFragment;
  */
 
 public class ElectionActivity extends AppCompatActivity
-        implements DistrictListFragment.OnFragmentInteractionListener,
-        SelectRegistrarFragment.OnFragmentInteractionListener,
+        implements RegistrationFormFragment.OnFragmentInteractionListener,
+        GenerateQRFragment.OnFragmentInteractionListener,
         VoteButtonFragment.OnFragmentInteractionListener,
         SelectCandidateFragment.OnFragmentInteractionListener,
         ReviewBallotFragment.OnFragmentInteractionListener {
@@ -111,13 +111,8 @@ public class ElectionActivity extends AppCompatActivity
         Log.d(LOG_TAG, currentState + " is the current state.");
         if (savedInstanceState == null) {
             if(currentState.equals(getString(R.string.RegistrationState))){
-                DistrictListFragment registerFragment = new DistrictListFragment();
+                RegistrationFormFragment registerFragment = new RegistrationFormFragment();
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, registerFragment).commit();
-                return;
-            }
-            if(currentState.equals(getString(R.string.SelectRegistrarState))){
-                SelectRegistrarFragment selectRegistrarFragment = new SelectRegistrarFragment();
-                getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, selectRegistrarFragment).commit();
                 return;
             }
             if(currentState.equals(getString(R.string.GenQRState))){
@@ -160,47 +155,40 @@ public class ElectionActivity extends AppCompatActivity
         }
     }
 
-    public void onDistrictListNextInteraction(String firstName, String lastName, String districtName){
+    public void onDistrictListNextInteraction(String firstName, String lastName, String districtName, String registrarName){
         SharedPreferences.Editor editor = dataStore.edit();
         //Store the voter's specifics
         editor.putString(districtKey, districtName);
         editor.putString(voterNameKey, firstName + " " + lastName);
+        editor.putString(registrarNameKey, registrarName);
         //change the state of ElectionActivity
-        editor.putString(electionStateKey, getString(R.string.SelectRegistrarState));
-        editor.commit();
-
-
-        //Call the selectRegistrarFragment
-        SelectRegistrarFragment selectRegistrarFragment = SelectRegistrarFragment.newInstance();
-        //Switch the VoteButtonFragment with the SelectCandidateFragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.ElectionContainer, selectRegistrarFragment);
-        //add the transaction to the BackStack
-        transaction.addToBackStack("Transition to SelectRegistrarFragment");
-        transaction.commit();
-        Log.d(LOG_TAG,"Opening SelectRegistrarFragment ");
-    }
-
-    public void onNextSelected(String registrarName){
-        SharedPreferences.Editor editor = dataStore.edit();
-        //Store the registrar name
-        editor.putString(registrarNameKey, registrarName );
         editor.putString(electionStateKey, getString(R.string.GenQRState));
         editor.commit();
+
+
+        //Call the GenerateQRFragment
+        GenerateQRFragment generateQRFragment = GenerateQRFragment.newInstance(null, null);
+        //Switch the VoteButtonFragment with the SelectCandidateFragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.ElectionContainer, generateQRFragment);
+        //add the transaction to the BackStack
+        transaction.addToBackStack("Transition to generateQRFragment");
+        transaction.commit();
+        Log.d(LOG_TAG,"Opening generateQRFragment ");
     }
 
-    public void onBackSelected(){
+    public void onBackGenQRSelected(){
         //change the state of ElectionActivity
         SharedPreferences.Editor editor = dataStore.edit();
         editor.putString(electionStateKey, getString(R.string.RegistrationState));
         editor.commit();
-        //Activate DistrictListFragment again.
+        //Activate RegistrationFormFragment again.
         FragmentManager fragmentManager= getSupportFragmentManager();
 
         //Pop all of the previous registration fragments
         fragmentManager.popBackStack("Transition to SelectRegistrarFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        Log.d(LOG_TAG,"Opening DistrictListFragment again.");
+        Log.d(LOG_TAG,"Opening RegistrationFormFragment again.");
 
     }
 

@@ -30,16 +30,16 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link DistrictListFragment.OnFragmentInteractionListener} interface
+ * {@link RegistrationFormFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
 
  */
-public class DistrictListFragment extends Fragment {
-    private final String LOG_TAG = DistrictListFragment.class.getSimpleName();
+public class RegistrationFormFragment extends Fragment {
+    private final String LOG_TAG = RegistrationFormFragment.class.getSimpleName();
 
     private OnFragmentInteractionListener mListener;
 
-    public DistrictListFragment() {
+    public RegistrationFormFragment() {
         // Required empty public constructor
     }
 
@@ -52,7 +52,7 @@ public class DistrictListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_district_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_registration_form, container, false);
 
         //TODO: setup the popup so it only shows up the very first time the user opens the app
         //idea: have a don't show this again popup.
@@ -119,7 +119,7 @@ public class DistrictListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onDistrictListNextInteraction(String firstName, String lastName, String districtName);
+        void onDistrictListNextInteraction(String firstName, String lastName, String districtName, String registrarName);
     }
 
     public void displayDistrictsonSpinner(List<String> districtList){
@@ -139,6 +139,29 @@ public class DistrictListFragment extends Fragment {
         Spinner spinner = (Spinner) getView().findViewById(R.id.register_districtspinner);
         spinner.setAdapter(mDistrictList);
 
+        //TODO: get the registrar list from the server
+        ArrayList<String> registrarList = new ArrayList<String>();
+        registrarList.add("tommy");
+        displayRegistrarSpinner(registrarList);
+
+    }
+
+    public void displayRegistrarSpinner(List<String> registrarList){
+        ArrayAdapter<String> mRegistrarList = new ArrayAdapter<String>(
+                getActivity(),
+                R.layout.listentry,
+                R.id.listEntry,
+                new ArrayList<String>()
+        );
+
+        for (int i = 0; i < registrarList.size(); i++) {
+            Log.d(LOG_TAG, registrarList.get(i) + " available.");
+            mRegistrarList.add(registrarList.get(i));
+        }
+
+        //Setup the spinner showing the different districts available
+        Spinner spinner = (Spinner) getView().findViewById(R.id.register_registrar_spinner);
+        spinner.setAdapter(mRegistrarList);
     }
 
     public void onNextClick(){
@@ -154,9 +177,11 @@ public class DistrictListFragment extends Fragment {
             return;
         }
         Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+        Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
         String districtName = districtSpinner.getSelectedItem().toString();
+        String registrarName = registrarSpinner.getSelectedItem().toString();
 
-        mListener.onDistrictListNextInteraction(firstName, lastName, districtName);
+        mListener.onDistrictListNextInteraction(firstName, lastName, districtName, registrarName);
     }
 
     public void getElectionInfo(){
@@ -174,7 +199,7 @@ public class DistrictListFragment extends Fragment {
                 //apply the results to the UI
                 View rootView_ = getView();
                 if(rootView_ != null){
-                    Log.v(LOG_TAG, "DistrictListFragment marker.");
+                    Log.v(LOG_TAG, "RegistrationFormFragment marker.");
 
                     //TODO: change this to a better UI (possible a radio button)
                     displayDistrictsonSpinner(districtList);

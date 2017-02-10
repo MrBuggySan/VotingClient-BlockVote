@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.blockvote.fragments.DistrictListFragment">
+    tools:context="com.blockvote.fragments.RegistrationFormFragment">
 
     <RelativeLayout
         android:id="@+id/registration_loadingPanel"
@@ -15,6 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true" />
+
+
     </RelativeLayout>
 
     <LinearLayout
@@ -63,7 +65,7 @@
 
         </LinearLayout>
         <TextView
-            android:text="Your District:"
+            android:text="Your Registrar:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView2"
@@ -72,16 +74,41 @@
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/register_districtspinner" />
+            android:id="@+id/register_registrar_spinner" />
+
+
 
     </LinearLayout>
 
-    <Button
-        android:text="@string/BasicNext"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/reg_register_button"
-        android:layout_alignParentBottom="true"/>
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:text="Your District:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3"
+            android:layout_weight="1"
+            android:paddingTop="@dimen/activity_vertical_margin" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/register_districtspinner" />
+
+        <Button
+            android:text="@string/BasicNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reg_register_button"
+            />
+
+    </LinearLayout>
+
+
 
 
 </RelativeLayout>
