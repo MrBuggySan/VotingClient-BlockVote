@@ -141,7 +141,7 @@ public class RegistrationFormFragment extends Fragment {
 
         //TODO: get the registrar list from the server
         ArrayList<String> registrarList = new ArrayList<String>();
-        registrarList.add("tommy");
+        registrarList.add("jose");
         displayRegistrarSpinner(registrarList);
 
     }

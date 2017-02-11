@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by Beast Mode on 1/28/2017.
  */
 
-public class    RequestToVote_response {
+public class writeVote_response {
 
     private String result;
     private String disclaimer;

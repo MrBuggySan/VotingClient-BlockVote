@@ -1,15 +1,11 @@
 package com.blockvote.networking;
 
-import com.blockvote.model.MODEL_ElectionList;
 import com.blockvote.model.MODEL_ElectionInfo;
-import com.blockvote.model.MODEL_UserAuthorizationStatus;
-import com.blockvote.model.POST_BODY_RegistrationRequest;
-import com.blockvote.model.MODEL_RequestToVote;
-import com.blockvote.model.POST_BODY_writeVote;
-
+import com.blockvote.model.MODEL_writeVote;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -21,22 +17,17 @@ import retrofit2.http.POST;
 public interface BlockVoteServerAPI {
 
     @Headers({"Accept: application/json"})
-    @GET("elections/")
-    Call<MODEL_ElectionList> getElectionList();
-
-    @Headers({"Accept: application/json"})
     @GET("getElectionInfo/")
     Call<MODEL_ElectionInfo> getElectionInfo();
 
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    @POST("requestToVote/")
-    Call<MODEL_RequestToVote> sendRegistrationRequest(@Body POST_BODY_RegistrationRequest body);
+//    @Headers({"Content-Type: application/json", "Accept: application/json"})
+//    @POST("writeVote/")
+//    Call<MODEL_writeVote> writeVote(@Body POST_BODY_writeVote body);
 
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
-    @POST("UserAuthorizationStatus/")
-    Call<MODEL_UserAuthorizationStatus> statusRegistrationRequest(@Body POST_BODY_RegistrationRequest body);
-
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @FormUrlEncoded
     @POST("writeVote/")
-    Call<MODEL_RequestToVote> writeVote(@Body POST_BODY_writeVote body);
+    Call<MODEL_writeVote> writeVote(@Field("region") String region, @Field("signedTokenID") String signedTokenID,
+                                    @Field("signedTokenSig") String signedTokenSig ,
+                                    @Field("vote") String vote,
+                                    @Field("registrarName") String registrarName);
 }
