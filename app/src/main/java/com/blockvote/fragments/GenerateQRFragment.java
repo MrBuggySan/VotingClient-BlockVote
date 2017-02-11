@@ -60,7 +60,7 @@ public class GenerateQRFragment extends Fragment {
         new simpleDialog(getContext(), R.string.dialog_title_DLFrag, R.string.dialog_message_GenQR);
 
         //TODO: get the blindedToken
-        //fake 2048 bit key
+        //fake 2048 bit key, or 256 bytes
         String fakeToken ="MIICXAIBAAKBgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUp\n" +
                 "wmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ5\n" +
                 "1s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZwIDAQABAoGAFijko56+qGyN8M0RVyaRAXz++xTqHBLh\n" +
@@ -85,6 +85,8 @@ public class GenerateQRFragment extends Fragment {
 
         //start generating the QR
         new QRGenerator(rootView).execute(fakeToken);
+
+        //TODO: I must somehow cache the QR so I don't have to generate it everytime.
 
         return rootView;
     }
