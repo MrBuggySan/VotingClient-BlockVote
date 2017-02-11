@@ -1,8 +1,8 @@
 package com.blockvote.votingclient;
 
 import android.graphics.Bitmap;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,8 +14,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-
-import static android.R.attr.button;
 
 public class GenerateQRActivity extends AppCompatActivity {
 
@@ -96,4 +94,7 @@ public class GenerateQRActivity extends AppCompatActivity {
         bitmap.setPixels(pixels, 0, bitMatrixWidth, 0, 0, bitMatrixWidth, bitMatrixHeight);
         return bitmap;
     }
+
+
+
 }

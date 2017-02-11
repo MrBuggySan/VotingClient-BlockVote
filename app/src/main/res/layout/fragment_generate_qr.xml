@@ -7,7 +7,7 @@
     android:background="@color/colorAccent">
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animation_view"
+        android:id="@+id/QR_animation_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:lottie_fileName="possibleLoading.json"
@@ -15,4 +15,18 @@
         app:lottie_autoPlay="true"
         android:layout_centerVertical="true"/>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image_QRCode"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
+    <Button
+        android:text="@string/BasicNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/generateQR_nextbutton"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>
