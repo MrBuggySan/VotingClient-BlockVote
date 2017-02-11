@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.model.MODEL_ElectionInfo;
+import com.blockvote.model.MODEL_writeVote;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
 import com.blockvote.votingclient.R;
@@ -106,16 +107,13 @@ public class SelectCandidateFragment extends Fragment {
         String message = "Please confirm that you selected " + option;
         builder.setMessage(message)
                 .setTitle(R.string.dialog_title_WARNING);
-
+        final String optionFin = option;
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //TODO: submit the vote here
                 ToastWrapper.initiateToast(getContext(),"Submitting your vote...");
-
-
-                //move on to reviewBallotfragment
-                mListener.onYesConfirmCandidateSelectInteraction();
+                submitVote(optionFin);
 
             }
         })
@@ -128,6 +126,42 @@ public class SelectCandidateFragment extends Fragment {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void submitVote(String option){
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+
+        //These are temp values
+        String region = "US";
+        String signedTokenID = "Tester447";
+        String signedTokenSig = "IwQB21ANVMoP5lSa/KH8X193VPu6Sjwone2ysdt1iumfQV8O/JeV4fX8s93dwwkRZARw6TtC7YQnYqL99isJOvabDavXmpEk8+XjpVZPIZiVEqpjGnrzshe10rZNA2eyL8zepil4RrTbRz7FZ6FIAwVlIVUwfku/zvS+W67/ENOdtVp9uhrCGGXQgZzbij+Jboj4/uNAuqeMbsbIyOrmVO6u1souPZV2qEWia2zwKcQxRa0HSjbAgPJEEfe/LIQVyHBV6hhak90VmNhDKE8dw72HUKNaXTghj8JmrETFViZmltqCdXSJKmHZHD2j0w3QEnBcrtGGnKv1kYeiXDZ1tg==";
+        //TODO: grab registarName from sharedPreferences
+        String registrarName = "jose";
+
+        Call<MODEL_writeVote> call = apiService.writeVote(region, signedTokenID, signedTokenSig,
+                option ,registrarName);
+
+        call.enqueue(new Callback<MODEL_writeVote>() {
+            @Override
+            public void onResponse(Call<MODEL_writeVote> call, Response<MODEL_writeVote> response) {
+                int statusCode = response.code();
+                Log.v(LOG_TAG, "Response code" + statusCode);
+                String disclaimer = response.body().getResponse().getDisclaimer();
+                ToastWrapper.initiateToast(getContext(), disclaimer);
+
+                //move on to reviewBallotfragment
+                mListener.onYesConfirmCandidateSelectInteraction();
+            }
+
+            @Override
+            public void onFailure(Call<MODEL_writeVote> call, Throwable t) {
+                Log.e(LOG_TAG, "Submitting vote has failed");
+                throw new RuntimeException("Could not submit vote do to network issues.");
+                //TODO:Restart the connection if failure
+            }
+        });
+
     }
 
     public void getBallotOptions(){
