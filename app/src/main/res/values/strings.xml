@@ -21,12 +21,19 @@
     <!--Dialog content-->
     <string name="dialog_message_DLFrag">This is your registration form, please fill it out!</string>
     <string name="dialog_message_GenQR">We are now creating your request. This may take some time, so please be patient :)</string>
+    <string name="dialog_message_scanQR">Only go to the next step if you have been approved by the registrar</string>
     <string name="dialog_title_DLFrag">Information</string>
+    <string name="dialog_title_WARNING">ATTENTION</string>
+    <string name="pos_button_SelecCandi">YES</string>
+    <string name="neg_button_SelecCandi">No</string>
     <string name="ok">OK</string>
 
     <!--Button text-->
     <string name="BasicNext">Next ➨</string>
-    <string name="RegisSelectBack">  Edit name and district</string>
+    <string name="GenQRBack">  Edit your information</string>
+
+    <!--Toast content-->
+    <string name="RegistrationApprove">Contratulations, you can now vote!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

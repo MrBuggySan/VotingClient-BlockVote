@@ -23,10 +23,28 @@
         android:layout_centerVertical="true"
         />
 
-    <Button
-        android:text="@string/BasicNext"
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/generateQR_nextbutton"
-        android:layout_alignParentBottom="true"/>
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:text="@string/GenQRBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/generateQR_backbutton"
+            />
+        <Button
+            android:text="@string/BasicNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/generateQR_nextbutton"
+            />
+
+
+    </LinearLayout>
+
 </RelativeLayout>

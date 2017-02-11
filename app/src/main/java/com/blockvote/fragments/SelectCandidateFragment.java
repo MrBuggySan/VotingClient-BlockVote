@@ -1,8 +1,10 @@
 package com.blockvote.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.model.MODEL_ElectionInfo;
@@ -40,35 +43,25 @@ public class SelectCandidateFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private static final String ARG_PARAM1 = "param1";
+    private String districtName;
 
     public SelectCandidateFragment() {
         // Required empty public constructor
     }
 
-    public static SelectCandidateFragment newInstance() {
+    public static SelectCandidateFragment newInstance(String districtName_) {
         SelectCandidateFragment fragment = new SelectCandidateFragment();
-
-
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, districtName_);
+        fragment.setArguments(args);
         return fragment;
     }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_select_candidate, container, false);
-
-        //get the options from the server
-        getBallotOptions();
-
-
-
-
-
-        Log.d(LOG_TAG, "Fragment setup done");
-
-        return rootView;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            districtName = getArguments().getString(ARG_PARAM1);
+        }
     }
 
     @Override
@@ -82,24 +75,59 @@ public class SelectCandidateFragment extends Fragment {
         }
     }
 
+
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        void onCandidateSelectInteraction(String choice, String timestamp);
+        void onYesConfirmCandidateSelectInteraction();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_select_candidate, container, false);
+        TextView blurb = (TextView)rootView.findViewById(R.id.candi_List_blurb);
+        blurb.setText("Here are the candidates available for " + districtName);
+
+        //get the options from the server
+        getBallotOptions();
+        return rootView;
+    }
+
+    public void confirmVote(String option){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        String message = "Please confirm that you selected " + option;
+        builder.setMessage(message)
+                .setTitle(R.string.dialog_title_WARNING);
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //TODO: submit the vote here
+                ToastWrapper.initiateToast(getContext(),"Submitting your vote...");
+
+
+                //move on to reviewBallotfragment
+                mListener.onYesConfirmCandidateSelectInteraction();
+
+            }
+        })
+        .setNegativeButton(R.string.neg_button_SelecCandi, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //do nothing
+            }
+        });
+
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void getBallotOptions(){
@@ -133,7 +161,10 @@ public class SelectCandidateFragment extends Fragment {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
                         String choice=mCandidateList.getItem(i);
                         //TODO: get the timestamp
-                        mListener.onCandidateSelectInteraction(choice, "test hour");
+
+                        //confirm the vote
+                        confirmVote(choice);
+
                     }
                 });
             }

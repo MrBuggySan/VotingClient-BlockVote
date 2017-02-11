@@ -7,5 +7,7 @@
     android:minHeight="@dimen/List_text_height"
     android:text="List Entry"
     android:id="@+id/listEntry"
-    android:gravity="center_vertical" />
+    android:gravity="center_vertical"
+    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+    android:textAlignment="center" />
 

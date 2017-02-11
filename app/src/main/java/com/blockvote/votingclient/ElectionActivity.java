@@ -1,5 +1,6 @@
 package com.blockvote.votingclient;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.fragments.GenerateQRFragment;
@@ -19,6 +21,8 @@ import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.fragments.SelectCandidateFragment;
 import com.blockvote.fragments.VoteButtonFragment;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -38,7 +42,7 @@ public class ElectionActivity extends AppCompatActivity
     private String districtKey;
     private String registrarNameKey;
     private String electionName;
-
+    private String districtName;
 
 
     private SharedPreferences dataStore;
@@ -76,6 +80,29 @@ public class ElectionActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume(){
+        Log.v(LOG_TAG, "onResume called.");
+        super.onResume();
+
+        String currentState = dataStore.getString(electionStateKey, null);
+        if(currentState.equals(getString(R.string.VoteButtonState))){
+            Log.v(LOG_TAG, "Opening voteButtonFragment");
+            findViewById(R.id.electionmain_toolbar).setVisibility(View.VISIBLE);
+            String voterName = dataStore.getString(voterNameKey, null);
+
+            if(voterName == null){
+                Log.e(LOG_TAG, "failure to retrieve voter's name");
+                ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
+            }
+            VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(voterName);
+            getSupportFragmentManager().beginTransaction().replace(R.id.ElectionContainer, voteButtonFragment).commit();
+
+            //TODO: remove the contents of the backstack
+        }
+
     }
 
     @Override
@@ -124,8 +151,8 @@ public class ElectionActivity extends AppCompatActivity
                 return;
             }
             if(currentState.equals(getString(R.string.VoteButtonState))){
-                //TODO:get the district name
-
+                Log.v(LOG_TAG, "Opening voteButtonFragment");
+                findViewById(R.id.electionmain_toolbar).setVisibility(View.VISIBLE);
                 String voterName = dataStore.getString(voterNameKey, null);
 
                 if(voterName == null){
@@ -204,9 +231,43 @@ public class ElectionActivity extends AppCompatActivity
     }
 
     public void onNextGenQRSelected(){
-        //TODO: ScanQRfragment
 
-        findViewById(R.id.electionmain_toolbar).setVisibility(View.VISIBLE);
+        //Call the ScanQRfragment
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setPrompt("Scan");
+        integrator.setCameraId(0);
+        integrator.setBeepEnabled(false);
+        integrator.setBarcodeImageEnabled(false);
+        integrator.initiateScan();
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Log.d("MainActivity", "Cancelled scan");
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                //TODO: verify authenticity of signedBlindedToken
+                //Change state of ElectionActivity
+                SharedPreferences.Editor editor = dataStore.edit();
+                editor.putString(electionStateKey, getString(R.string.VoteButtonState));
+                editor.commit();
+
+                //TODO: cache the signedblindedToken
+
+                ToastWrapper.initiateToast(this,getString(R.string.RegistrationApprove));
+                Log.v(LOG_TAG, "Scan complete");
+
+
+            }
+        } else {
+            // This is important, otherwise the result will not be passed to the fragment
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     /**
@@ -214,8 +275,13 @@ public class ElectionActivity extends AppCompatActivity
      * VoteButtonFragment will call this function
      */
     public void onVoteButtonInteraction(){
-        //Setup the SelectCandidateFragment
-        SelectCandidateFragment selectCandidateFragment = SelectCandidateFragment.newInstance();
+        String districtName = dataStore.getString(districtKey, "null");
+        if(districtName.equals(null)){
+            Log.e(LOG_TAG, "District name not found.");
+            return;
+        }
+        //Open the SelectCandidate Fragment
+        SelectCandidateFragment selectCandidateFragment = SelectCandidateFragment.newInstance(districtName);
         //Switch the VoteButtonFragment with the SelectCandidateFragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.ElectionContainer, selectCandidateFragment);
@@ -229,8 +295,8 @@ public class ElectionActivity extends AppCompatActivity
 
 
 
-    public void onCandidateSelectInteraction(String choice, String timestamp){
-
+    public void onYesConfirmCandidateSelectInteraction(){
+        //TODO: call reviewBallotFragment
     }
 
 
