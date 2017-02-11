@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.fragments.GenerateQRFragment;
@@ -116,8 +117,10 @@ public class ElectionActivity extends AppCompatActivity
                 return;
             }
             if(currentState.equals(getString(R.string.GenQRState))){
-
-
+                GenerateQRFragment generateQRFragment = new GenerateQRFragment();
+                getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, generateQRFragment).commit();
+                //take off the toolbar
+                findViewById(R.id.electionmain_toolbar).setVisibility(View.GONE);
                 return;
             }
             if(currentState.equals(getString(R.string.VoteButtonState))){
@@ -167,7 +170,7 @@ public class ElectionActivity extends AppCompatActivity
 
 
         //Call the GenerateQRFragment
-        GenerateQRFragment generateQRFragment = GenerateQRFragment.newInstance(null, null);
+        GenerateQRFragment generateQRFragment = GenerateQRFragment.newInstance();
         //Switch the VoteButtonFragment with the SelectCandidateFragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.ElectionContainer, generateQRFragment);
@@ -175,9 +178,14 @@ public class ElectionActivity extends AppCompatActivity
         transaction.addToBackStack("Transition to generateQRFragment");
         transaction.commit();
         Log.d(LOG_TAG,"Opening generateQRFragment ");
+
+        //take off the toolbar
+        findViewById(R.id.electionmain_toolbar).setVisibility(View.GONE);
     }
 
     public void onBackGenQRSelected(){
+        //TODO: what should I do if user press this and there is no data in the backstack?
+
         //change the state of ElectionActivity
         SharedPreferences.Editor editor = dataStore.edit();
         editor.putString(electionStateKey, getString(R.string.RegistrationState));
@@ -186,10 +194,19 @@ public class ElectionActivity extends AppCompatActivity
         FragmentManager fragmentManager= getSupportFragmentManager();
 
         //Pop all of the previous registration fragments
-        fragmentManager.popBackStack("Transition to SelectRegistrarFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.popBackStack("Transition to generateQRFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         Log.d(LOG_TAG,"Opening RegistrationFormFragment again.");
 
+        //put up the toolbar
+        findViewById(R.id.electionmain_toolbar).setVisibility(View.VISIBLE);
+
+    }
+
+    public void onNextGenQRSelected(){
+        //TODO: ScanQRfragment
+
+        findViewById(R.id.electionmain_toolbar).setVisibility(View.VISIBLE);
     }
 
     /**
