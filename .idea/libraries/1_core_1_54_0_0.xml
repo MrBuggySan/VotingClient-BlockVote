@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="1_core-1.54.0.0">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/libs/core-1.54.0.0.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

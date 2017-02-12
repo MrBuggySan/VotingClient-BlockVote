@@ -36,5 +36,4 @@ dependencies {
     compile 'com.madgag.spongycastle:pkix:1.54.0.0'
     compile 'com.madgag.spongycastle:pg:1.54.0.0'
     testCompile 'junit:junit:4.12'
-    compile files('libs/core-1.54.0.0.jar')
 }

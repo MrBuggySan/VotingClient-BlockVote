@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,8 +22,16 @@ import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.fragments.SelectCandidateFragment;
 import com.blockvote.fragments.VoteButtonFragment;
+import com.blockvote.security.BlindedToken;
+import com.blockvote.security.Token;
+import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import org.spongycastle.crypto.digests.SHA1Digest;
+import org.spongycastle.crypto.engines.RSAEngine;
+import org.spongycastle.crypto.params.RSAKeyParameters;
+import org.spongycastle.crypto.signers.PSSSigner;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -252,15 +261,58 @@ public class ElectionActivity extends AppCompatActivity
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 //TODO: verify authenticity of signedBlindedToken
-                //Change state of ElectionActivity
-                SharedPreferences.Editor editor = dataStore.edit();
-                editor.putString(electionStateKey, getString(R.string.VoteButtonState));
-                editor.commit();
+                //This is from the registrar
+                String signature = result.getContents();
 
-                //TODO: cache the signedblindedToken
+                //get the blindedToken
+                Gson gson = new Gson();
+                String json = dataStore.getString(getString(R.string.blindedTokenkey), null);
+                if(json.equals(null)){
 
-                ToastWrapper.initiateToast(this,getString(R.string.RegistrationApprove));
-                Log.v(LOG_TAG, "Scan complete");
+                    Log.e(LOG_TAG, "Could not get the blindedToken");
+                    return;
+                }
+                BlindedToken blindedToken = gson.fromJson(json, BlindedToken.class);
+
+                Token token = blindedToken.unblindToken(Base64.decode(signature, Base64.DEFAULT));
+
+                //TODO:verify the signature
+
+                String jsonRSAKeyParam = dataStore.getString(getString(R.string.rsaKeyPramKey), null);
+                if(jsonRSAKeyParam.equals(null)){
+
+                    Log.e(LOG_TAG, "Could not get the RSAKeyparams.");
+                    return;
+                }
+                RSAKeyParameters rsaKeyParameters = gson.fromJson(jsonRSAKeyParam, RSAKeyParameters.class);
+                // Verify that the coin has a valid signature using our public key.
+                byte[] id = token.getID();
+                byte[] registrarsignature = token.getSignature();
+
+                PSSSigner signer = new PSSSigner(new RSAEngine(), new SHA1Digest(), 20);
+                signer.init(false, rsaKeyParameters);
+
+                signer.update(id, 0, id.length);
+
+                if(signer.verifySignature(registrarsignature)){
+                    //TODO: good signature
+                    Log.v(LOG_TAG, "The QR was from legit registrar");
+                    //Change state of ElectionActivity
+                    SharedPreferences.Editor editor = dataStore.edit();
+                    editor.putString(electionStateKey, getString(R.string.VoteButtonState));
+                    editor.commit();
+
+                    //TODO: cache the signedblindedToken
+
+                    ToastWrapper.initiateToast(this,getString(R.string.RegistrationApprove));
+
+                }else{
+                    //TODO: badsignature
+
+                }
+
+
+
 
 
             }
