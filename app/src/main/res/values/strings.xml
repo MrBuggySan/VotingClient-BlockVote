@@ -37,6 +37,9 @@
     <!--Toast content-->
     <string name="RegistrationApprove">Contratulations, you can now vote!</string>
 
+    <!--Misc Text-->
+    <string name="GenQR_blurb1">Registration Request:</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -38,7 +38,10 @@
             android:text="Your Name:"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView" />
+            android:id="@+id/textView"
+            android:paddingTop="@dimen/fab_margin"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:textSize="24sp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -64,18 +67,21 @@
 
 
         </LinearLayout>
+
         <TextView
-            android:text="Your Registrar:"
+            android:text="Your District:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2"
+            android:id="@+id/textView3"
             android:layout_weight="1"
-            android:paddingTop="@dimen/activity_vertical_margin" />
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:textSize="24sp" />
+
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/register_registrar_spinner" />
-
+            android:id="@+id/register_districtspinner" />
 
 
     </LinearLayout>
@@ -86,18 +92,21 @@
         android:orientation="vertical"
         android:layout_alignParentBottom="true">
 
+
+
         <TextView
-            android:text="Your District:"
+            android:text="Your Registrar:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView3"
+            android:id="@+id/textView2"
             android:layout_weight="1"
-            android:paddingTop="@dimen/activity_vertical_margin" />
-
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:textSize="24sp" />
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/register_districtspinner" />
+            android:id="@+id/register_registrar_spinner" />
 
         <Button
             android:text="@string/BasicNext"

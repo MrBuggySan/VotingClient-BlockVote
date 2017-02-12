@@ -295,20 +295,17 @@ public class ElectionActivity extends AppCompatActivity
                 signer.update(id, 0, id.length);
 
                 if(signer.verifySignature(registrarsignature)){
-                    //TODO: good signature
+                    //good signature
                     Log.v(LOG_TAG, "The QR was from legit registrar");
                     //Change state of ElectionActivity
                     SharedPreferences.Editor editor = dataStore.edit();
                     editor.putString(electionStateKey, getString(R.string.VoteButtonState));
                     editor.commit();
-
-                    //TODO: cache the signedblindedToken
-
-                    ToastWrapper.initiateToast(this,getString(R.string.RegistrationApprove));
-
                 }else{
-                    //TODO: badsignature
-
+                    //badsignature
+                    String resgistrarName = dataStore.getString(getString(R.string.regigstrarNameKey), null);
+                    Log.e(LOG_TAG, "The QR scanned is not valid.");
+                    ToastWrapper.initiateToast(this, "The QR code you scanned is not from registrar" + resgistrarName);
                 }
 
 
