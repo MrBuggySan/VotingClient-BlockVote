@@ -286,8 +286,9 @@ public class ElectionActivity extends AppCompatActivity
                 }
                 RSAKeyParameters rsaKeyParameters = gson.fromJson(jsonRSAKeyParam, RSAKeyParameters.class);
                 // Verify that the coin has a valid signature using our public key.
-                byte[] id = token.getID();
-                byte[] registrarsignature = token.getSignature();
+                //TODO: encode to BASE64 before sending to server
+                byte[] id = token.getID(); //TODO: SignedTokenID
+                byte[] registrarsignature = token.getSignature(); //TODO: SignedTokenSig
 
                 PSSSigner signer = new PSSSigner(new RSAEngine(), new SHA1Digest(), 20);
                 signer.init(false, rsaKeyParameters);
