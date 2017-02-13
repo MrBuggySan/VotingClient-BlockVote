@@ -164,10 +164,7 @@ public class ElectionActivity extends AppCompatActivity
                 return;
             }
             if(currentState.equals(getString(R.string.GenQRState))){
-                GenerateQRFragment generateQRFragment = new GenerateQRFragment();
-                getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, generateQRFragment).commit();
-                //take off the toolbar
-                findViewById(R.id.electionmain_toolbar).setVisibility(View.GONE);
+                createGenQRFragment();
                 return;
             }
             if(currentState.equals(getString(R.string.VoteButtonState))){
@@ -205,18 +202,10 @@ public class ElectionActivity extends AppCompatActivity
         }
     }
 
-    public void onDistrictListNextInteraction(String firstName, String lastName, String districtName,
-                                              String registrarName, String keyModulus, String keyExponent){
-        SharedPreferences.Editor editor = dataStore.edit();
-        //Store the voter's specifics
-        editor.putString(districtKey, districtName);
-        editor.putString(voterNameKey, firstName + " " + lastName);
-        editor.putString(registrarNameKey, registrarName);
-        editor.putString(keyModulusKey, keyModulus);
-        editor.putString(keyExponentKey, keyExponent);
-        //change the state of ElectionActivity
-        editor.putString(electionStateKey, getString(R.string.GenQRState));
-        editor.commit();
+    public void createGenQRFragment(){
+        String keyModulus = dataStore.getString(keyModulusKey, null);
+        String keyExponent = dataStore.getString(keyExponentKey, null);
+        //TODO: error checking here
 
         //Call the GenerateQRFragment
         GenerateQRFragment generateQRFragment = GenerateQRFragment.newInstance(keyModulus, keyExponent);
@@ -230,6 +219,23 @@ public class ElectionActivity extends AppCompatActivity
 
         //take off the toolbar
         findViewById(R.id.electionmain_toolbar).setVisibility(View.GONE);
+    }
+
+    public void onDistrictListNextInteraction(String firstName, String lastName, String districtName,
+                                              String registrarName, String keyModulus, String keyExponent){
+        SharedPreferences.Editor editor = dataStore.edit();
+        //Store the voter's specifics
+        editor.putString(districtKey, districtName);
+        editor.putString(voterNameKey, firstName + " " + lastName);
+        editor.putString(registrarNameKey, registrarName);
+        editor.putString(keyModulusKey, keyModulus);
+        editor.putString(keyExponentKey, keyExponent);
+        //change the state of ElectionActivity
+        editor.putString(electionStateKey, getString(R.string.GenQRState));
+        editor.commit();
+
+        createGenQRFragment();
+
     }
 
     public void store_BlindedKey_RSAKeyParam(String jsonBlindedToken, String jsonRSAKeyParams){
