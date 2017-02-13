@@ -17,6 +17,9 @@
     <string name="voterNameKey">vnameKey</string>
     <string name="districtKey">distrct</string>
     <string name="regigstrarNameKey">regname</string>
+    <string name="keyExpKey">keyExpKey</string>
+    <string name="keyModKey">keyModKey</string>
+
     <string name="blindedTokenkey">blindkey</string>
     <string name="rsaKeyPramKey">rsakeyparam</string>
     <string name="registrarListKey">regList</string>
@@ -25,11 +28,12 @@
     <string name="dialog_message_DLFrag">This is your registration form, please fill it out!</string>
     <string name="dialog_message_GenQR">We are now creating your request. This may take some time, so please be patient :)</string>
     <string name="dialog_message_scanQR">Only go to the next step if you have been approved by the registrar</string>
-    <string name="dialog_title_DLFrag">Information</string>
+    <string name="dialog_title_Information">Information</string>
     <string name="dialog_title_WARNING">ATTENTION</string>
     <string name="pos_button_SelecCandi">YES</string>
     <string name="neg_button_SelecCandi">No</string>
     <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
     <!--Button text-->
     <string name="BasicNext">Next ➨</string>

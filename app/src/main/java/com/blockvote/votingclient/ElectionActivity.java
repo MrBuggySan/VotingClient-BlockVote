@@ -50,8 +50,14 @@ public class ElectionActivity extends AppCompatActivity
     private String voterNameKey;
     private String districtKey;
     private String registrarNameKey;
+    private String keyExponentKey;
+    private String keyModulusKey;
+    private String jsonBlindedTokenKey;
+    private String jsonRSAkeyParamsKey;
+
+
     private String electionName;
-    private String districtName;
+
 
 
     private SharedPreferences dataStore;
@@ -133,6 +139,11 @@ public class ElectionActivity extends AppCompatActivity
         voterNameKey = getString(R.string.voterNameKey)+ electionName;
         districtKey = getString(R.string.districtKey) + electionName;
         registrarNameKey = getString(R.string.regigstrarNameKey) + electionName;
+        keyExponentKey = getString(R.string.keyExpKey) + electionName;
+        keyModulusKey= getString(R.string.keyModKey) + electionName;
+        String jsonBlindedTokenKey = getString(R.string.blindedTokenkey) + electionName;
+        String jsonRSAkeyParamsKey = getString(R.string.rsaKeyPramKey) + electionName;
+
         if (!dataStore.contains(electionStateKey)){
             //This is the first time the user has opened the app
             SharedPreferences.Editor editor = dataStore.edit();
@@ -194,20 +205,21 @@ public class ElectionActivity extends AppCompatActivity
         }
     }
 
-    public void onDistrictListNextInteraction(String firstName, String lastName, String districtName, String registrarName){
+    public void onDistrictListNextInteraction(String firstName, String lastName, String districtName,
+                                              String registrarName, String keyModulus, String keyExponent){
         SharedPreferences.Editor editor = dataStore.edit();
         //Store the voter's specifics
         editor.putString(districtKey, districtName);
         editor.putString(voterNameKey, firstName + " " + lastName);
-        //TODO: store the JSONstring of the selected registrar.
         editor.putString(registrarNameKey, registrarName);
+        editor.putString(keyModulusKey, keyModulus);
+        editor.putString(keyExponentKey, keyExponent);
         //change the state of ElectionActivity
         editor.putString(electionStateKey, getString(R.string.GenQRState));
         editor.commit();
 
-
         //Call the GenerateQRFragment
-        GenerateQRFragment generateQRFragment = GenerateQRFragment.newInstance();
+        GenerateQRFragment generateQRFragment = GenerateQRFragment.newInstance(keyModulus, keyExponent);
         //Switch the VoteButtonFragment with the SelectCandidateFragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.ElectionContainer, generateQRFragment);
@@ -218,6 +230,14 @@ public class ElectionActivity extends AppCompatActivity
 
         //take off the toolbar
         findViewById(R.id.electionmain_toolbar).setVisibility(View.GONE);
+    }
+
+    public void store_BlindedKey_RSAKeyParam(String jsonBlindedToken, String jsonRSAKeyParams){
+        SharedPreferences.Editor prefsEditor = dataStore.edit();
+
+        prefsEditor.putString(jsonBlindedTokenKey, jsonBlindedToken);
+        prefsEditor.putString(jsonRSAkeyParamsKey, jsonRSAKeyParams);
+        prefsEditor.commit();
     }
 
     public void onBackGenQRSelected(){
@@ -262,12 +282,12 @@ public class ElectionActivity extends AppCompatActivity
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 //TODO: verify authenticity of signedBlindedToken
-                //This is from the registrar
+                //Signature from registrar to be verified
                 String signature = result.getContents();
 
                 //get the blindedToken
                 Gson gson = new Gson();
-                String json = dataStore.getString(getString(R.string.blindedTokenkey), null);
+                String json = dataStore.getString(jsonBlindedTokenKey, null);
                 if(json.equals(null)){
 
                     Log.e(LOG_TAG, "Could not get the blindedToken");
@@ -277,9 +297,7 @@ public class ElectionActivity extends AppCompatActivity
 
                 Token token = blindedToken.unblindToken(Base64.decode(signature, Base64.DEFAULT));
 
-                //TODO:verify the signature
-
-                String jsonRSAKeyParam = dataStore.getString(getString(R.string.rsaKeyPramKey), null);
+                String jsonRSAKeyParam = dataStore.getString(jsonRSAkeyParamsKey, null);
                 if(jsonRSAKeyParam.equals(null)){
 
                     Log.e(LOG_TAG, "Could not get the RSAKeyparams.");
@@ -299,7 +317,7 @@ public class ElectionActivity extends AppCompatActivity
                 if(signer.verifySignature(registrarsignature)){
                     //good signature
                     Log.v(LOG_TAG, "The QR was from legit registrar");
-                    //Change state of ElectionActivity
+                    //Change state of ElectionActivity to VoteButtonFragment
                     SharedPreferences.Editor editor = dataStore.edit();
                     editor.putString(electionStateKey, getString(R.string.VoteButtonState));
                     editor.commit();
@@ -307,13 +325,8 @@ public class ElectionActivity extends AppCompatActivity
                     //badsignature
                     String resgistrarName = dataStore.getString(getString(R.string.regigstrarNameKey), null);
                     Log.e(LOG_TAG, "The QR scanned is not valid.");
-                    ToastWrapper.initiateToast(this, "The QR code you scanned is not from registrar" + resgistrarName);
+                    ToastWrapper.initiateToast(this, "The QR code you scanned is not from your registrar," + resgistrarName);
                 }
-
-
-
-
-
             }
         } else {
             // This is important, otherwise the result will not be passed to the fragment

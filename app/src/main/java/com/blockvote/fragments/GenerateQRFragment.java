@@ -47,18 +47,33 @@ public class GenerateQRFragment extends Fragment {
     private final static int QRcodeWidth = 1000 ;
     private final String LOG_TAG = GenerateQRFragment.class.getSimpleName();
 
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    private String keyModulus;
+    private String keyExponent;
+
     public GenerateQRFragment() {
         // Required empty public constructor
     }
 
-    public static GenerateQRFragment newInstance() {
+    public static GenerateQRFragment newInstance(String keyMod , String keyExp ) {
+
         GenerateQRFragment fragment = new GenerateQRFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1,keyMod );
+        args.putString(ARG_PARAM2, keyExp);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            keyModulus = getArguments().getString(ARG_PARAM1);
+            keyExponent = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     @Override
@@ -68,45 +83,31 @@ public class GenerateQRFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_generate_qr, container, false);
 
         //hide the rest of the layouts
-        rootView.findViewById(R.id.image_QRCode).setVisibility(View.GONE);
-        rootView.findViewById(R.id.generateQR_nextbutton).setVisibility(View.GONE);
-        rootView.findViewById(R.id.generateQR_backbutton).setVisibility(View.GONE);
-        rootView.findViewById(R.id.GenQR_textBlurb).setVisibility(View.GONE);
+        rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
 
         //create a dialog
-        new simpleDialog(getContext(), R.string.dialog_title_DLFrag, R.string.dialog_message_GenQR);
+        new simpleDialog(getContext(), R.string.dialog_title_Information, R.string.dialog_message_GenQR);
 
-        //TODO: get the public key of the Registrar
-
-
-
-
-        String sampleModulus = "AKBDi814o+/Ujo8bF1qjMnyotruZHLv5FWl/xYYFpKLgU4jmeXxhJKY36kmJFK+Kxt6anqmmVBKVZityfp+2lUzojYEJJ9Jzv4qQQQ4BcHijlrrBSvvWZ6KOVB30n2Lgxj99g6B1Eopyq4h+6TC3Sr/DBIkZ0tAH5a3+RG3Q8OEcYGpCQu7v4MIOgF+bFikeu6gk0Mob71TlPGauAIFpc4q3UVBjhbEIyc6vv76Z+RtNd3FZZzsLphzrJB4s6b6TwKpUsIWJ7dXBpkCSVv/sDtB4PeOrzHTH5UHGYkTLbF4o1ie23mbjhIWcSJryJrS+3VMaNuB+waImz/nlJEh/qy0=";
-
-        String sampleExponent = "AQAB";
         RSAKeyParameters rsaKeyParameters = new RSAKeyParameters(false,
-                new BigInteger(Base64.decode(sampleModulus, Base64.DEFAULT)),
-                new BigInteger(Base64.decode(sampleExponent, Base64.DEFAULT)));
+                new BigInteger(Base64.decode(keyModulus, Base64.DEFAULT)),
+                new BigInteger(Base64.decode(keyExponent, Base64.DEFAULT)));
         //Create BlindedToken
         BlindedToken blindedToken = new BlindedToken( rsaKeyParameters );
         //Store the blindedToken in Shared Preferences
         SharedPreferences mPrefs = getActivity().getPreferences(MODE_PRIVATE);
 
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(blindedToken);
+        String jsonBlindedToken = gson.toJson(blindedToken);
         String jsonRSAKeyParams = gson.toJson(rsaKeyParameters);
-        prefsEditor.putString(getString(R.string.blindedTokenkey), json);
-        prefsEditor.putString(getString(R.string.rsaKeyPramKey), jsonRSAKeyParams);
-        prefsEditor.commit();
+        //store these values in the ElectionActivity
+        mListener.store_BlindedKey_RSAKeyParam(jsonBlindedToken, jsonRSAKeyParams);
 
         //Create tokenRequest
         try{
             TokenRequest tokenRequest = blindedToken.generateTokenRequest();
             byte[] tokenMsg = tokenRequest.getMessage();
 
-            //start generating the QRcccc
-
+            //start generating the QR
             new QRGenerator(rootView).execute(Base64.encodeToString(tokenMsg, Base64.DEFAULT));
             Log.v(LOG_TAG, "Creating the sample blindedToken");
 
@@ -155,13 +156,11 @@ public class GenerateQRFragment extends Fragment {
                 mListener.onNextGenQRSelected();
 
             }
-        }).setNegativeButton(R.string.neg_button_SelecCandi, new DialogInterface.OnClickListener() {
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //do nothing
                     }
                 });
-
-
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -188,6 +187,7 @@ public class GenerateQRFragment extends Fragment {
         // TODO: Update argument type and name
         void onBackGenQRSelected();
         void onNextGenQRSelected();
+        void store_BlindedKey_RSAKeyParam(String jsonBlindedToken, String jsonRSAKeyParams);
     }
 
 
@@ -218,10 +218,7 @@ public class GenerateQRFragment extends Fragment {
             ImageView imageView = (ImageView) rootView.findViewById(R.id.image_QRCode);
             imageView.setImageBitmap(bitmap);
 
-            rootView.findViewById(R.id.image_QRCode).setVisibility(View.VISIBLE);
-            rootView.findViewById(R.id.generateQR_nextbutton).setVisibility(View.VISIBLE);
-            rootView.findViewById(R.id.generateQR_backbutton).setVisibility(View.VISIBLE);
-            rootView.findViewById(R.id.GenQR_textBlurb).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.QR_animation_view).setVisibility(View.GONE);
         }
 

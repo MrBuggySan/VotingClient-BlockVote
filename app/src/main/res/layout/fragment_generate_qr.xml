@@ -6,21 +6,7 @@
     tools:context="com.blockvote.fragments.GenerateQRFragment"
     android:background="@color/colorAccent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true">
-        <TextView
-            android:text="@string/GenQR_blurb1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/GenQR_textBlurb"
-            android:textStyle="normal|bold"
-            android:textAlignment="center"
-            android:textSize="30sp"
-            android:paddingTop="@dimen/activity_vertical_margin" />
-    </LinearLayout>
+
 
 
     <com.airbnb.lottie.LottieAnimationView
@@ -33,36 +19,62 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/image_QRCode"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        />
 
-
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true">
+        android:layout_height="match_parent"
+        android:id="@+id/genQR_UI">
 
-        <Button
-            android:text="@string/GenQRBack"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/generateQR_backbutton"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true">
+            <TextView
+                android:text="@string/GenQR_blurb1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/GenQR_textBlurb"
+                android:textStyle="normal|bold"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:paddingTop="@dimen/activity_vertical_margin" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/image_QRCode"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             />
-        <Button
-            android:text="@string/BasicNext"
+
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/generateQR_nextbutton"
-            />
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:text="@string/GenQRBack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/generateQR_backbutton"
+                />
+            <Button
+                android:text="@string/BasicNext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/generateQR_nextbutton"
+                />
 
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

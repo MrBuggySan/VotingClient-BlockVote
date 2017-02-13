@@ -67,7 +67,7 @@ public class RegistrationFormFragment extends Fragment {
         //TODO: setup the popup so it only shows up the very first time the user opens the app
         //idea: have a don't show this again popup.
         //create a dialog
-        new simpleDialog(getContext(), R.string.dialog_title_DLFrag, R.string.dialog_message_DLFrag);
+        new simpleDialog(getContext(), R.string.dialog_title_Information, R.string.dialog_message_DLFrag);
 
         //TODO: get the name of the user from the system, have an option to edit the values
 
@@ -129,7 +129,8 @@ public class RegistrationFormFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onDistrictListNextInteraction(String firstName, String lastName, String districtName, String registrarName);
+        void onDistrictListNextInteraction(String firstName, String lastName, String districtName,
+                                           String registrarName,String keyModulus, String keyExponent);
     }
 
     public void displayDistrictsonSpinner(List<String> districtList){
@@ -188,11 +189,50 @@ public class RegistrationFormFragment extends Fragment {
         //TODO: test if the user has selected a district and a registrar.
 
         Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
-        Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+        Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_registrar_spinner);
+
         String districtName = districtSpinner.getSelectedItem().toString();
+
+        if(registrarSpinner.getSelectedItem() == null ){
+            ToastWrapper.initiateToast(getContext(), "Please enter your registrar");
+            return;
+        }
         String registrarName = registrarSpinner.getSelectedItem().toString();
 
-        mListener.onDistrictListNextInteraction(firstName, lastName, districtName, registrarName);
+        //TODO: fix this error checking
+        if (registrarName == null || districtName == null) {
+            ToastWrapper.initiateToast(getContext(), "Please your district and your registrar");
+            return;
+        }
+
+        //extract the registrar key's modulus and exponent
+        try{
+            JSONArray regisListJSONstr = new JSONArray(respJSONStr);
+            String keyModulus = null;
+            String keyExponent = null;
+            String regName ="";
+            for(int i = 0 ; i < regisListJSONstr.length(); i++){
+                JSONObject registrarInfo = regisListJSONstr.getJSONObject(i).getJSONObject("Registrar");
+                regName = registrarInfo.getString("RegistrarName");
+                if( regName.equals(registrarName)){
+                    keyModulus = registrarInfo.getString("KeyModulus");
+                    keyExponent = registrarInfo.getString("KeyExponent");
+
+                }
+            }
+//            Log.v(LOG_TAG, regName + " is the selected registrar");
+//            Log.v(LOG_TAG, keyModulus);
+//            Log.v(LOG_TAG, keyExponent);
+            //TODO: fix this error checking
+            if(keyModulus == null || keyExponent == null){
+                Log.e(LOG_TAG, "The registrar was not found in the downloaded respJSONStr");
+            }
+            mListener.onDistrictListNextInteraction(firstName, lastName, districtName, registrarName, keyModulus, keyExponent);
+        }catch(JSONException e){
+            Log.e(LOG_TAG, "Could not find the respJSONstr");
+        }
+
+
     }
 
     private String respJSONStr;
@@ -223,8 +263,6 @@ public class RegistrationFormFragment extends Fragment {
                         Log.v(LOG_TAG, "District selected : " + selectedDistrict);
 
                         ArrayList<String> registrarList = new ArrayList<String>();
-
-                        SharedPreferences dataStore = getActivity().getPreferences(Context.MODE_PRIVATE);
                         try{
                             JSONArray regisListJSONstr = new JSONArray(respJSONStr);
                             for(int i = 0 ; i < regisListJSONstr.length(); i++){
