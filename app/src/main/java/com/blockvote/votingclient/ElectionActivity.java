@@ -199,6 +199,7 @@ public class ElectionActivity extends AppCompatActivity
         //Store the voter's specifics
         editor.putString(districtKey, districtName);
         editor.putString(voterNameKey, firstName + " " + lastName);
+        //TODO: store the JSONstring of the selected registrar.
         editor.putString(registrarNameKey, registrarName);
         //change the state of ElectionActivity
         editor.putString(electionStateKey, getString(R.string.GenQRState));

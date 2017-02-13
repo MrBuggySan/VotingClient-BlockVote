@@ -1,6 +1,7 @@
 package com.blockvote.networking;
 
 import com.blockvote.model.MODEL_ElectionInfo;
+import com.blockvote.model.MODEL_getRegistrarInfo;
 import com.blockvote.model.MODEL_writeVote;
 
 import retrofit2.Call;
@@ -19,6 +20,11 @@ public interface BlockVoteServerAPI {
     @Headers({"Accept: application/json"})
     @GET("getElectionInfo/")
     Call<MODEL_ElectionInfo> getElectionInfo();
+
+
+    @GET("getRegistrarInfo/")
+    Call<MODEL_getRegistrarInfo> getRegistrarInfo();
+
 
 //    @Headers({"Content-Type: application/json", "Accept: application/json"})
 //    @POST("writeVote/")

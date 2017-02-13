@@ -19,6 +19,7 @@
     <string name="regigstrarNameKey">regname</string>
     <string name="blindedTokenkey">blindkey</string>
     <string name="rsaKeyPramKey">rsakeyparam</string>
+    <string name="registrarListKey">regList</string>
 
     <!--Dialog content-->
     <string name="dialog_message_DLFrag">This is your registration form, please fill it out!</string>
