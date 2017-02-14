@@ -1,4 +1,4 @@
-package com.blockvote.security;
+package com.blockvote.crypto;
 
 public interface IToken {
 	// The token's globally unique ID

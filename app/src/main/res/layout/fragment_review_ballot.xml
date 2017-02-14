@@ -8,28 +8,33 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!-- TODO: Update blank fragment layout -->
-
+        android:layout_height="match_parent"
+        android:gravity="center">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/review_textblurb"
-            android:text="Options for website or to see submitted ballot" />
+            android:paddingBottom="@dimen/activity_vertical_margin" />
 
         <Button
-            android:text="Show Results"
-            android:layout_width="match_parent"
+            android:text="Results Website"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/Review_show_results_button" />
+            android:id="@+id/Review_show_results_button"
+            android:textSize="40sp"
+            android:textAlignment="center"
+            android:textStyle="normal|bold|italic"
+            android:paddingBottom="@dimen/fab_margin" />
 
         <Button
-            android:text="View Ballot"
-            android:layout_width="match_parent"
+            android:text="Review Ballot"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/Review_show_ballot_button" />
+            android:id="@+id/Review_show_ballot_button"
+            android:textAlignment="textStart"
+            android:textStyle="normal|bold|italic"
+            android:textSize="40sp" />
 
     </LinearLayout>
 

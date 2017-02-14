@@ -55,7 +55,7 @@ public class ReviewBallotFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_review_ballot, container, false);
 
         TextView textView = (TextView) rootView.findViewById(R.id.review_textblurb);
-        textView.setText(voterName + ", you have succesfully voted. You can now view the results of the election and review the ballot you submitted");
+        textView.setText(voterName + ", you have succesfully voted. ");
 
 
         //TODO: setup buttons for viewing the results and reviewing the voter's ballot.

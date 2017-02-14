@@ -1,4 +1,4 @@
-package com.blockvote.security;
+package com.blockvote.crypto;
 
 public class TokenRequest implements ITokenRequest{
 	private final byte[] message;

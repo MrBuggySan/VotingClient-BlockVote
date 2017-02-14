@@ -44,16 +44,27 @@ public class SelectCandidateFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
+    private static final String ARG_PARAM4 = "param4";
+
     private String districtName;
+    private String signedTokenIDKey;
+    private String signedTokenSigKey;
+    private String registrarNameKey;
 
     public SelectCandidateFragment() {
         // Required empty public constructor
     }
 
-    public static SelectCandidateFragment newInstance(String districtName_) {
+    public static SelectCandidateFragment newInstance(String districtName_, String signedTokenIDKey_,
+                                                      String signedTokenSigKey_, String registrarNameKey_) {
         SelectCandidateFragment fragment = new SelectCandidateFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, districtName_);
+        args.putString(ARG_PARAM2, signedTokenIDKey_);
+        args.putString(ARG_PARAM3, signedTokenSigKey_);
+        args.putString(ARG_PARAM4, registrarNameKey_);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +73,9 @@ public class SelectCandidateFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             districtName = getArguments().getString(ARG_PARAM1);
+            signedTokenIDKey = getArguments().getString(ARG_PARAM2);
+            signedTokenSigKey = getArguments().getString(ARG_PARAM3);
+            registrarNameKey = getArguments().getString(ARG_PARAM4);
         }
     }
 
@@ -132,12 +146,20 @@ public class SelectCandidateFragment extends Fragment {
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
 
-        //These are temp values
         String region = "US";
-        String signedTokenID = "Tester447";
-        String signedTokenSig = "IwQB21ANVMoP5lSa/KH8X193VPu6Sjwone2ysdt1iumfQV8O/JeV4fX8s93dwwkRZARw6TtC7YQnYqL99isJOvabDavXmpEk8+XjpVZPIZiVEqpjGnrzshe10rZNA2eyL8zepil4RrTbRz7FZ6FIAwVlIVUwfku/zvS+W67/ENOdtVp9uhrCGGXQgZzbij+Jboj4/uNAuqeMbsbIyOrmVO6u1souPZV2qEWia2zwKcQxRa0HSjbAgPJEEfe/LIQVyHBV6hhak90VmNhDKE8dw72HUKNaXTghj8JmrETFViZmltqCdXSJKmHZHD2j0w3QEnBcrtGGnKv1kYeiXDZ1tg==";
+        String signedTokenID = getActivity().getPreferences(Context.MODE_PRIVATE).getString(signedTokenIDKey, null);
+        String signedTokenSig = getActivity().getPreferences(Context.MODE_PRIVATE).getString(signedTokenSigKey, null);
+        String registrarName =  getActivity().getPreferences(Context.MODE_PRIVATE).getString(registrarNameKey, null);
+        if(signedTokenID == null || signedTokenSig == null){
+            Log.e(LOG_TAG, "failed to get the tokenID and tokenSig from datastore.");
+            throw new RuntimeException("\"failed to get the tokenID and tokenSig from datastore.\"");
+        }
+        if(registrarName == null){
+            Log.e(LOG_TAG, "failed to get the registrar's namefrom datastore");
+            throw new RuntimeException("failed to get the registrar's namefrom datastore");
+        }
         //TODO: grab registarName from sharedPreferences
-        String registrarName = "jose";
+
 
         Call<MODEL_writeVote> call = apiService.writeVote(region, signedTokenID, signedTokenSig,
                 option ,registrarName);

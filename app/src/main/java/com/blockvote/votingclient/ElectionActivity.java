@@ -22,8 +22,11 @@ import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.fragments.SelectCandidateFragment;
 import com.blockvote.fragments.VoteButtonFragment;
-import com.blockvote.security.BlindedToken;
-import com.blockvote.security.Token;
+import com.blockvote.model.MODEL_ElectionInfo;
+import com.blockvote.networking.BlockVoteServerAPI;
+import com.blockvote.networking.BlockVoteServerInstance;
+import com.blockvote.crypto.BlindedToken;
+import com.blockvote.crypto.Token;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -32,6 +35,10 @@ import org.spongycastle.crypto.digests.SHA1Digest;
 import org.spongycastle.crypto.engines.RSAEngine;
 import org.spongycastle.crypto.params.RSAKeyParameters;
 import org.spongycastle.crypto.signers.PSSSigner;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -54,7 +61,10 @@ public class ElectionActivity extends AppCompatActivity
     private String keyModulusKey;
     private String jsonBlindedTokenKey;
     private String jsonRSAkeyParamsKey;
+    private String signedTokenIDKey;
+    private String signedTokenSignatureKey;
 
+    private boolean firstProcessDone = false;
 
     private String electionName;
 
@@ -101,21 +111,24 @@ public class ElectionActivity extends AppCompatActivity
     protected void onResume(){
         Log.v(LOG_TAG, "onResume called.");
         super.onResume();
+        if(firstProcessDone){
+            //We are not done downloading the electioninfo from the server yet
+            String currentState = dataStore.getString(electionStateKey, null);
+            if(currentState.equals(getString(R.string.VoteButtonState))){
+                Log.v(LOG_TAG, "Opening voteButtonFragment");
+                findViewById(R.id.electionmain_toolbar).setVisibility(View.VISIBLE);
+                String voterName = dataStore.getString(voterNameKey, null);
 
-        String currentState = dataStore.getString(electionStateKey, null);
-        if(currentState.equals(getString(R.string.VoteButtonState))){
-            Log.v(LOG_TAG, "Opening voteButtonFragment");
-            findViewById(R.id.electionmain_toolbar).setVisibility(View.VISIBLE);
-            String voterName = dataStore.getString(voterNameKey, null);
+                if(voterName == null){
+                    Log.e(LOG_TAG, "failure to retrieve voter's name");
+                    ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
+                }
+                VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(voterName);
+                getSupportFragmentManager().beginTransaction().replace(R.id.ElectionContainer, voteButtonFragment).commit();
 
-            if(voterName == null){
-                Log.e(LOG_TAG, "failure to retrieve voter's name");
-                ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
+                //TODO: remove the contents of the backstack
             }
-            VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(voterName);
-            getSupportFragmentManager().beginTransaction().replace(R.id.ElectionContainer, voteButtonFragment).commit();
 
-            //TODO: remove the contents of the backstack
         }
 
     }
@@ -125,15 +138,45 @@ public class ElectionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_election);
 
-        //TODO:get the election name from the server
-        electionName = "False election";
+        //TODO:get the election name from the server, if the request fails then the server is down.
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
+        dataStore = getPreferences(MODE_PRIVATE);
+        Log.v(LOG_TAG, "onCreate called.");
+        if(savedInstanceState == null){
+            call.enqueue(new Callback<MODEL_ElectionInfo>(){
+                @Override
+                public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
+                    int statusCode = response.code();
 
+                    String ename = response.body().getResponse().getId();
+                    startProcess(ename);
+                }
+
+                @Override
+                public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
+                    Log.e(LOG_TAG, "Downloading the election name has failed...");
+                    //TODO:Invoked when a network exception occurred talking to
+                    // the server or when an unexpected exception occurred creating the request or processing the response.
+                }
+            });
+        }else{
+            //TODO: protect the activity and its current fragments if it is somehow destroyed
+            Log.e(LOG_TAG, "The Election Activity was temporarily destroyed, and now it has nowhere to go...");
+            throw new RuntimeException("Unexpected destruction of Election Activity");
+        }
+
+    }
+
+    public void startProcess(String electionName_){
+        electionName = electionName_;
         //Toolbar setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.electionmain_toolbar);
         setSupportActionBar(myToolbar);
         ActionBar myActionBar = (ActionBar) getSupportActionBar();
         myActionBar.setTitle(electionName);
-        dataStore = getPreferences(MODE_PRIVATE);
+
         //define the keys for this particular election
         electionStateKey=  getString(R.string.ElectionActivityStateKey)+ electionName;
         voterNameKey = getString(R.string.voterNameKey)+ electionName;
@@ -141,9 +184,12 @@ public class ElectionActivity extends AppCompatActivity
         registrarNameKey = getString(R.string.regigstrarNameKey) + electionName;
         keyExponentKey = getString(R.string.keyExpKey) + electionName;
         keyModulusKey= getString(R.string.keyModKey) + electionName;
-        String jsonBlindedTokenKey = getString(R.string.blindedTokenkey) + electionName;
-        String jsonRSAkeyParamsKey = getString(R.string.rsaKeyPramKey) + electionName;
+        jsonBlindedTokenKey = getString(R.string.blindedTokenkey) + electionName;
+        jsonRSAkeyParamsKey = getString(R.string.rsaKeyPramKey) + electionName;
+        signedTokenIDKey = getString(R.string.signedtokenIDkey) + electionName;
+        signedTokenSignatureKey = getString(R.string.signedtokensigkey) + electionName;
 
+        firstProcessDone = true;
         if (!dataStore.contains(electionStateKey)){
             //This is the first time the user has opened the app
             SharedPreferences.Editor editor = dataStore.edit();
@@ -157,49 +203,44 @@ public class ElectionActivity extends AppCompatActivity
             throw new RuntimeException(LOG_TAG + " could not find the state.");
         }
         Log.d(LOG_TAG, currentState + " is the current state.");
-        if (savedInstanceState == null) {
-            if(currentState.equals(getString(R.string.RegistrationState))){
-                RegistrationFormFragment registerFragment = new RegistrationFormFragment();
-                getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, registerFragment).commit();
-                return;
-            }
-            if(currentState.equals(getString(R.string.GenQRState))){
-                createGenQRFragment();
-                return;
-            }
-            if(currentState.equals(getString(R.string.VoteButtonState))){
-                Log.v(LOG_TAG, "Opening voteButtonFragment");
-                findViewById(R.id.electionmain_toolbar).setVisibility(View.VISIBLE);
-                String voterName = dataStore.getString(voterNameKey, null);
-
-                if(voterName == null){
-                    Log.e(LOG_TAG, "failure to retrieve voter's name");
-                    ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
-                }
-                VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(voterName);
-                getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, voteButtonFragment).commit();
-                return;
-            }
-            if(currentState.equals(getString(R.string.ReviewBallotState))){
-                //TODO:get the district name
-
-                String voterName= dataStore.getString(voterNameKey, null);
-
-                if(voterName == null){
-                    Log.e(LOG_TAG, "failure to retrieve voter's name");
-                    ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
-                }
-                ReviewBallotFragment reviewBallotFragment = ReviewBallotFragment.newInstance(voterName);
-                getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, reviewBallotFragment).commit();
-                return;
-            }
-            Log.e(LOG_TAG, "Could not start the appropriate fragment");
-            throw new RuntimeException(LOG_TAG + " fragment missing... ");
-        }else{
-            //TODO: protect the activity and its current fragments if it is somehow destroyed
-            Log.e(LOG_TAG, "The Election Activity was temporarily destroyed, and now it has nowhere to go...");
-            throw new RuntimeException("Unexpected destruction of Election Activity");
+        //Determine the current state of the activity
+        if(currentState.equals(getString(R.string.RegistrationState))){
+            RegistrationFormFragment registerFragment = new RegistrationFormFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, registerFragment).commit();
+            return;
         }
+        if(currentState.equals(getString(R.string.GenQRState))){
+            createGenQRFragment();
+            return;
+        }
+        if(currentState.equals(getString(R.string.VoteButtonState))){
+            Log.v(LOG_TAG, "Opening voteButtonFragment");
+            findViewById(R.id.electionmain_toolbar).setVisibility(View.VISIBLE);
+            String voterName = dataStore.getString(voterNameKey, null);
+
+            if(voterName == null){
+                Log.e(LOG_TAG, "failure to retrieve voter's name");
+                ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
+            }
+            VoteButtonFragment voteButtonFragment = VoteButtonFragment.newInstance(voterName);
+            getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, voteButtonFragment).commit();
+            return;
+        }
+        if(currentState.equals(getString(R.string.ReviewBallotState))){
+            //TODO:get the district name
+
+            String voterName= dataStore.getString(voterNameKey, null);
+
+            if(voterName == null){
+                Log.e(LOG_TAG, "failure to retrieve voter's name");
+                ToastWrapper.initiateToast(this, "failure to retrieve voter's name");
+            }
+            ReviewBallotFragment reviewBallotFragment = ReviewBallotFragment.newInstance(voterName);
+            getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, reviewBallotFragment).commit();
+            return;
+        }
+        Log.e(LOG_TAG, "Could not start the appropriate fragment");
+        throw new RuntimeException(LOG_TAG + " fragment missing... ");
     }
 
     public void createGenQRFragment(){
@@ -295,7 +336,6 @@ public class ElectionActivity extends AppCompatActivity
                 Gson gson = new Gson();
                 String json = dataStore.getString(jsonBlindedTokenKey, null);
                 if(json.equals(null)){
-
                     Log.e(LOG_TAG, "Could not get the blindedToken");
                     return;
                 }
@@ -312,20 +352,23 @@ public class ElectionActivity extends AppCompatActivity
                 RSAKeyParameters rsaKeyParameters = gson.fromJson(jsonRSAKeyParam, RSAKeyParameters.class);
                 // Verify that the coin has a valid signature using our public key.
                 //TODO: encode to BASE64 before sending to server
-                byte[] id = token.getID(); //TODO: SignedTokenID
-                byte[] registrarsignature = token.getSignature(); //TODO: SignedTokenSig
+                byte[] signedTokenID = token.getID(); //TODO: SignedTokenID
+                byte[] signedTokenSig = token.getSignature(); //TODO: SignedTokenSig
+
 
                 PSSSigner signer = new PSSSigner(new RSAEngine(), new SHA1Digest(), 20);
                 signer.init(false, rsaKeyParameters);
 
-                signer.update(id, 0, id.length);
+                signer.update(signedTokenID, 0, signedTokenID.length);
 
-                if(signer.verifySignature(registrarsignature)){
+                if(signer.verifySignature(signedTokenSig)){
                     //good signature
                     Log.v(LOG_TAG, "The QR was from legit registrar");
                     //Change state of ElectionActivity to VoteButtonFragment
                     SharedPreferences.Editor editor = dataStore.edit();
                     editor.putString(electionStateKey, getString(R.string.VoteButtonState));
+                    editor.putString(signedTokenIDKey, Base64.encodeToString(signedTokenID, Base64.DEFAULT));
+                    editor.putString(signedTokenSignatureKey, Base64.encodeToString(signedTokenSig, Base64.DEFAULT));
                     editor.commit();
                 }else{
                     //badsignature
@@ -351,7 +394,8 @@ public class ElectionActivity extends AppCompatActivity
             return;
         }
         //Open the SelectCandidate Fragment
-        SelectCandidateFragment selectCandidateFragment = SelectCandidateFragment.newInstance(districtName);
+        SelectCandidateFragment selectCandidateFragment = SelectCandidateFragment.newInstance(districtName, signedTokenIDKey,
+                signedTokenSignatureKey, registrarNameKey);
         //Switch the VoteButtonFragment with the SelectCandidateFragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.ElectionContainer, selectCandidateFragment);
@@ -366,7 +410,22 @@ public class ElectionActivity extends AppCompatActivity
 
 
     public void onYesConfirmCandidateSelectInteraction(){
-        //TODO: call reviewBallotFragment
+        ToastWrapper.initiateToast(this, "Congratulations, you have succesfully voted");
+        SharedPreferences.Editor editor = dataStore.edit();
+        editor.putString(electionStateKey, getString(R.string.ReviewBallotState));
+        editor.commit();
+
+        String voterName = dataStore.getString(voterNameKey, null);
+        if(voterName == null){
+            throw new RuntimeException("failed to retrieve registrar name");
+        }
+        //Open the ReviewBallotFragment Fragment
+        ReviewBallotFragment reviewBallotFragment = ReviewBallotFragment.newInstance(voterName);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.ElectionContainer, reviewBallotFragment);
+        transaction.commit();
+        Log.d(LOG_TAG,"Opening reviewBallotFragment ");
+
     }
 
 

@@ -18,8 +18,8 @@ import android.widget.ImageView;
 
 
 import com.blockvote.auxillary.simpleDialog;
-import com.blockvote.security.BlindedToken;
-import com.blockvote.security.TokenRequest;
+import com.blockvote.crypto.BlindedToken;
+import com.blockvote.crypto.TokenRequest;
 import com.blockvote.votingclient.R;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;

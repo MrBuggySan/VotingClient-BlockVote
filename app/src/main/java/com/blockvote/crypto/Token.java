@@ -1,4 +1,4 @@
-package com.blockvote.security;
+package com.blockvote.crypto;
 
 public class Token implements IToken {
 	private final byte[] id;

@@ -17,13 +17,15 @@
     <string name="voterNameKey">vnameKey</string>
     <string name="districtKey">distrct</string>
     <string name="regigstrarNameKey">regname</string>
-    <string name="keyExpKey">keyExpKey</string>
-    <string name="keyModKey">keyModKey</string>
-
-    <string name="blindedTokenkey">blindkey</string>
-    <string name="rsaKeyPramKey">rsakeyparam</string>
     <string name="registrarListKey">regList</string>
 
+    <!--keys for crypto stuff-->
+    <string name="keyExpKey">keyExpKey</string>
+    <string name="keyModKey">keyModKey</string>
+    <string name="blindedTokenkey">blindkey</string>
+    <string name="rsaKeyPramKey">rsakeyparam</string>
+    <string name="signedtokenIDkey">sigtokid</string>
+    <string name="signedtokensigkey">sigtokensignature</string>
     <!--Dialog content-->
     <string name="dialog_message_DLFrag">This is your registration form, please fill it out!</string>
     <string name="dialog_message_GenQR">We are now creating your request. This may take some time, so please be patient :)</string>

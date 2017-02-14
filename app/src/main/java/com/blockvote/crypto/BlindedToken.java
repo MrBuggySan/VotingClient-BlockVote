@@ -1,4 +1,4 @@
-package com.blockvote.security;
+package com.blockvote.crypto;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
