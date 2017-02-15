@@ -71,7 +71,7 @@ public class ReviewBallotFragment extends Fragment {
         showResultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ToastWrapper.initiateToast(getContext(), "Showing you the results is still being worked on.");
+                mListener.onReviewResultsButtonPress();
             }
         });
 

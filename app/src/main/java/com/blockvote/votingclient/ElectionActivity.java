@@ -2,6 +2,7 @@ package com.blockvote.votingclient;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -433,6 +434,8 @@ public class ElectionActivity extends AppCompatActivity
 
     }
     public void onReviewResultsButtonPress(){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://mrbuggysan.github.io/BlockVoteResultsWebsite/#pricing"));
+        startActivity(browserIntent);
 
     }
 }

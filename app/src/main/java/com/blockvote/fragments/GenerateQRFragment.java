@@ -93,8 +93,7 @@ public class GenerateQRFragment extends Fragment {
                 new BigInteger(Base64.decode(keyExponent, Base64.DEFAULT)));
         //Create BlindedToken
         BlindedToken blindedToken = new BlindedToken( rsaKeyParameters );
-        //Store the blindedToken in Shared Preferences
-        SharedPreferences mPrefs = getActivity().getPreferences(MODE_PRIVATE);
+
 
         Gson gson = new Gson();
         String jsonBlindedToken = gson.toJson(blindedToken);
