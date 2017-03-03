@@ -186,7 +186,7 @@ public class RegistrationFormFragment extends Fragment {
             return;
         }
 
-        //TODO: test if the user has selected a district and a registrar.
+        //test if the user has selected a district and a registrar.
 
         Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
         Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_registrar_spinner);
@@ -254,6 +254,8 @@ public class RegistrationFormFragment extends Fragment {
                 editor.putString(getString(R.string.registrarListKey),respJSONStr );
                 editor.commit();
                 Spinner spinner = (Spinner) getView().findViewById(R.id.register_districtspinner);
+
+
                 //set up an event to change the registrarlist available when a district is chosen.
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
