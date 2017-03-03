@@ -122,6 +122,8 @@ public class SelectCandidateFragment extends Fragment {
         builder.setMessage(message)
                 .setTitle(R.string.dialog_title_WARNING);
         final String optionFin = option;
+
+
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
