@@ -2,7 +2,7 @@ package com.blockvote.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-
+import com.blockvote.auxillary.QRCreatorService;
 import com.blockvote.auxillary.simpleDialog;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.crypto.TokenRequest;
@@ -31,8 +31,6 @@ import org.spongycastle.crypto.CryptoException;
 import org.spongycastle.crypto.params.RSAKeyParameters;
 
 import java.math.BigInteger;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -107,7 +105,14 @@ public class GenerateQRFragment extends Fragment {
             byte[] tokenMsg = tokenRequest.getMessage();
 
             //start generating the QR
-            new QRGenerator(rootView).execute(Base64.encodeToString(tokenMsg, Base64.DEFAULT));
+
+            //TODO: Create the background service
+            Intent mServiceIntent = new Intent(getActivity(), QRCreatorService.class);
+            mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
+
+            //TODO:Make the ElectionActivity ask for updates from the Background service
+
+            //new QRGenerator(rootView).execute(Base64.encodeToString(tokenMsg, Base64.DEFAULT));
             Log.v(LOG_TAG, "Creating the sample blindedToken");
 
 
@@ -152,10 +157,7 @@ public class GenerateQRFragment extends Fragment {
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                //Start generating the QR code
-                //TODO: Create the background service
-
-                //TODO:Make the ElectionActivity ask for updates from the Background service
+                //Scan the registrar's QR code.
                 mListener.onNextGenQRSelected();
 
             }

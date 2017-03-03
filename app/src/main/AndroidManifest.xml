@@ -27,11 +27,9 @@
             </activity>
 
 
-        <activity
-            android:name=".ReadQRActivity"
-            android:label="Read QR"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".GenerateQRActivity"></activity>
+        <service
+            android:name=".QRCreatorService"
+            android:exported="false"/>
     </application>
 
 </manifest>
