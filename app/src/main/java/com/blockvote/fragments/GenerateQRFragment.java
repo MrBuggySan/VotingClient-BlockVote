@@ -152,6 +152,10 @@ public class GenerateQRFragment extends Fragment {
         // Add the buttons
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                //Start generating the QR code
+                //TODO: Create the background service
+
+                //TODO:Make the ElectionActivity ask for updates from the Background service
                 mListener.onNextGenQRSelected();
 
             }
