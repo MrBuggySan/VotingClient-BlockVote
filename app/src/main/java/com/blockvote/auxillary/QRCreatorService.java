@@ -19,7 +19,7 @@ import com.google.zxing.common.BitMatrix;
 public class QRCreatorService extends IntentService {
 
     /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
+     * Creates an Igit antentService.  Invoked by your subclass's constructor.
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
@@ -81,6 +81,6 @@ public class QRCreatorService extends IntentService {
         bitmap.setPixels(pixels, 0, bitMatrixWidth, 0, 0, bitMatrixWidth, bitMatrixHeight);
         return bitmap;
     }
-}
+
 
 }
