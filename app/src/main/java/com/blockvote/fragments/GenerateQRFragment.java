@@ -1,12 +1,15 @@
 package com.blockvote.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
@@ -51,6 +54,8 @@ public class GenerateQRFragment extends Fragment {
     private String keyModulus;
     private String keyExponent;
 
+    private View rootView;
+
     public GenerateQRFragment() {
         // Required empty public constructor
     }
@@ -78,7 +83,7 @@ public class GenerateQRFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_generate_qr, container, false);
+        rootView = inflater.inflate(R.layout.fragment_generate_qr, container, false);
 
         //hide the rest of the layouts
         rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
@@ -109,6 +114,20 @@ public class GenerateQRFragment extends Fragment {
             //TODO: Create the background service
             Intent mServiceIntent = new Intent(getActivity(), QRCreatorService.class);
             mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
+
+
+            // The filter's action is BROADCAST_ACTION
+            IntentFilter statusIntentFilter = new IntentFilter(getString(R.string.BackgroundQRAction));
+
+
+            // Instantiates a new DownloadStateReceiver
+            DownloadStateReceiver mDownloadStateReceiver =
+                    new DownloadStateReceiver();
+            // Registers the DownloadStateReceiver and its intent filters
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+                    mDownloadStateReceiver,
+                    statusIntentFilter);
+
 
             //TODO:Make the ElectionActivity ask for updates from the Background service
 
@@ -196,71 +215,92 @@ public class GenerateQRFragment extends Fragment {
     }
 
 
-    public class QRGenerator extends AsyncTask<String, Void, Bitmap> {
-        private final String LOG_TAG= GenerateQRFragment.class.getSimpleName();
-        private View rootView;
+//    public class QRGenerator extends AsyncTask<String, Void, Bitmap> {
+//        private final String LOG_TAG= GenerateQRFragment.class.getSimpleName();
+//        private View rootView;
+//
+//        public QRGenerator(View rootView){
+//            this.rootView=rootView;
+//
+//        }
+//
+//        @Override
+//        public Bitmap doInBackground (String... params) {
+//            try{
+//                Bitmap bitmap= TextToImageEncode(params[0]);
+//                return bitmap;
+//            }catch(WriterException writerException){
+//                Log.e(LOG_TAG, "QR generation failed... " + "\n" + writerException.getMessage() );
+//                return null;
+//            }
+//
+//        }
+//
+//        @Override
+//        public void onPostExecute(Bitmap bitmap){
+//            Log.v(LOG_TAG, "Displaying the QR now");
+//            ImageView imageView = (ImageView) rootView.findViewById(R.id.image_QRCode);
+//            imageView.setImageBitmap(bitmap);
+//
+//            rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
+//            rootView.findViewById(R.id.QR_animation_view).setVisibility(View.GONE);
+//        }
+//
+//        Bitmap TextToImageEncode(String Value) throws WriterException {
+//            BitMatrix bitMatrix;
+//            try {
+//                bitMatrix = new MultiFormatWriter().encode(
+//                        Value,
+//                        BarcodeFormat.DATA_MATRIX.QR_CODE,
+//                        QRcodeWidth, QRcodeWidth, null
+//                );
+//
+//            } catch (IllegalArgumentException Illegalargumentexception) {
+//
+//                return null;
+//            }
+//            int bitMatrixWidth = bitMatrix.getWidth();
+//
+//            int bitMatrixHeight = bitMatrix.getHeight();
+//
+//            Log.v(LOG_TAG, "QR Width: " + bitMatrixWidth + ", Height: " + bitMatrixHeight);
+//            int[] pixels = new int[bitMatrixWidth * bitMatrixHeight];
+//
+//            for (int y = 0; y < bitMatrixHeight; y++) {
+//                int offset = y * bitMatrixWidth;
+//
+//                for (int x = 0; x < bitMatrixWidth; x++) {
+////                getResources().getColor(R.color.QR)
+//                    pixels[offset + x] = bitMatrix.get(x, y) ?
+//                            getResources().getColor(R.color.QRDarkColor):getResources().getColor(R.color.QRWhite);
+//
+//                }
+//            }
+//            Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
+//
+//            bitmap.setPixels(pixels, 0, bitMatrixWidth, 0, 0, bitMatrixWidth, bitMatrixHeight);
+//            return bitmap;
+//        }
+//    }
+//
 
-        public QRGenerator(View rootView){
-            this.rootView=rootView;
-
+    // Broadcast receiver for receiving status updates from the IntentService
+    private class DownloadStateReceiver extends BroadcastReceiver
+    {
+        // Prevents instantiation
+        private DownloadStateReceiver() {
         }
 
+        // Called when the BroadcastReceiver gets an Intent it's registered to receive
         @Override
-        public Bitmap doInBackground (String... params) {
-            try{
-                Bitmap bitmap= TextToImageEncode(params[0]);
-                return bitmap;
-            }catch(WriterException writerException){
-                Log.e(LOG_TAG, "QR generation failed... " + "\n" + writerException.getMessage() );
-                return null;
-            }
-
-        }
-
-        @Override
-        public void onPostExecute(Bitmap bitmap){
-            Log.v(LOG_TAG, "Displaying the QR now");
-            ImageView imageView = (ImageView) rootView.findViewById(R.id.image_QRCode);
+        public void onReceive(Context context, Intent intent) {
+            Bitmap bitmap = intent.getParcelableExtra(getString(R.string.GeneratedQR_from_background));
+            Log.v(LOG_TAG, "Displaying the QR now, this is from the background service.");
+            ImageView imageView = (ImageView) getActivity().findViewById(R.id.image_QRCode);
             imageView.setImageBitmap(bitmap);
 
             rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.QR_animation_view).setVisibility(View.GONE);
-        }
-
-        Bitmap TextToImageEncode(String Value) throws WriterException {
-            BitMatrix bitMatrix;
-            try {
-                bitMatrix = new MultiFormatWriter().encode(
-                        Value,
-                        BarcodeFormat.DATA_MATRIX.QR_CODE,
-                        QRcodeWidth, QRcodeWidth, null
-                );
-
-            } catch (IllegalArgumentException Illegalargumentexception) {
-
-                return null;
-            }
-            int bitMatrixWidth = bitMatrix.getWidth();
-
-            int bitMatrixHeight = bitMatrix.getHeight();
-
-            Log.v(LOG_TAG, "QR Width: " + bitMatrixWidth + ", Height: " + bitMatrixHeight);
-            int[] pixels = new int[bitMatrixWidth * bitMatrixHeight];
-
-            for (int y = 0; y < bitMatrixHeight; y++) {
-                int offset = y * bitMatrixWidth;
-
-                for (int x = 0; x < bitMatrixWidth; x++) {
-//                getResources().getColor(R.color.QR)
-                    pixels[offset + x] = bitMatrix.get(x, y) ?
-                            getResources().getColor(R.color.QRDarkColor):getResources().getColor(R.color.QRWhite);
-
-                }
-            }
-            Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
-
-            bitmap.setPixels(pixels, 0, bitMatrixWidth, 0, 0, bitMatrixWidth, bitMatrixHeight);
-            return bitmap;
         }
     }
 }

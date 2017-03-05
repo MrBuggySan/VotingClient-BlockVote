@@ -12,6 +12,10 @@
     <string name="VoteButtonState">VotBut</string>
     <string name="ReviewBallotState">RevBalot</string>
 
+    <!--Constants for Broadcasats-->
+    <string name="BackgroundQRAction">BackgroundQRAction</string>
+    <string name="GeneratedQR_from_background">GeneratedQR_from_background</string>
+    
     <!--Keys for SharedPreferences-->
     <string name="ElectionActivityStateKey">stateinfo</string>
     <string name="voterNameKey">vnameKey</string>

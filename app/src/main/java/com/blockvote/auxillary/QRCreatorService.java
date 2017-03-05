@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.blockvote.votingclient.R;
@@ -38,7 +39,14 @@ public class QRCreatorService extends IntentService {
         try{
             Bitmap bitmap= TextToImageEncode(tokenMsg);
 
-            //TODO: we have to deliver the result to the UI thread
+            //We have to deliver the result to the UI thread
+            Intent localIntent =
+                    new Intent(getString(R.string.BackgroundQRAction))
+                            // Puts the status into the Intent
+                            .putExtra(getString(R.string.GeneratedQR_from_background), bitmap);
+            // Broadcasts the Intent to receivers in this app.
+            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+
 
         }catch(WriterException writerException){
             Log.e(LOG_TAG, "Failure to create the QR code " + "\n" + writerException.getMessage() );
