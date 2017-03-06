@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.auxillary.simpleDialog;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.model.MODEL_getRegistrarInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
@@ -63,29 +62,15 @@ public class RegistrationFormFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_registration_form, container, false);
 
-        //TODO: setup the popup so it only shows up the very first time the user opens the app
-        //idea: have a don't show this again popup.
-        //create a dialog
-        new simpleDialog(getContext(), R.string.dialog_title_Information, R.string.dialog_message_DLFrag);
-
-        //TODO: get the name of the user from the system, have an option to edit the values
-
-
-        //TODO: plan up a better UI for this fragment (use pictures to for the districts?)
-
-
         rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
-
-
         //get the districts from the server
         getElectionInfo();
-
         //get the registrars from the server
         getRegistrarInfo();
-
-
         return rootView;
     }
+
+
 
 
     @Override

@@ -1,24 +1,16 @@
 package com.blockvote.fragments;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
-import com.blockvote.auxillary.QRCreatorService;
 import com.blockvote.auxillary.simpleDialog;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.crypto.TokenRequest;
@@ -105,24 +97,15 @@ public class GenerateQRFragment extends Fragment {
             byte[] tokenMsg = tokenRequest.getMessage();
 
             //start generating the QR
-
             //TODO: Create the background service
-            Intent mServiceIntent = new Intent(getActivity(), QRCreatorService.class);
-            mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
-            getActivity().startService(mServiceIntent);
+//            Intent mServiceIntent = new Intent(this, QRCreatorService.class);
+//            mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
+//            this.startService(mServiceIntent);
 
-            // The filter's action is BROADCAST_ACTION
-            IntentFilter statusIntentFilter = new IntentFilter(getString(R.string.BackgroundQRAction));
 
-            //TODO:Make the ElectionActivity ask for updates from the Background service
 
-            // Instantiates a new DownloadStateReceiver
-            DownloadStateReceiver mDownloadStateReceiver =
-                    new DownloadStateReceiver();
-            // Registers the DownloadStateReceiver and its intent filters
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
-                    mDownloadStateReceiver,
-                    statusIntentFilter);
+            //TODO: When back is pressed, cancel the IntentService
+
 
         }catch(CryptoException cryptoException){
             //TODO: handle this
@@ -203,23 +186,5 @@ public class GenerateQRFragment extends Fragment {
         void store_BlindedKey_RSAKeyParam(String jsonBlindedToken, String jsonRSAKeyParams);
     }
 
-    // Broadcast receiver for receiving status updates from the IntentService
-    private class DownloadStateReceiver extends BroadcastReceiver
-    {
-        // Prevents instantiation
-        private DownloadStateReceiver() {
-        }
 
-        // Called when the BroadcastReceiver gets an Intent it's registered to receive
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bitmap bitmap = intent.getParcelableExtra(getString(R.string.GeneratedQR_from_background));
-            Log.v(LOG_TAG, "Displaying the QR now, this is from the background service.");
-            ImageView imageView = (ImageView) getActivity().findViewById(R.id.image_QRCode);
-            imageView.setImageBitmap(bitmap);
-
-            rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
-            rootView.findViewById(R.id.QR_animation_view).setVisibility(View.GONE);
-        }
-    }
 }

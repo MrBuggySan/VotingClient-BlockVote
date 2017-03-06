@@ -1,11 +1,16 @@
 package com.blockvote.votingclient;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.blockvote.auxillary.QRCreatorService;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.crypto.Token;
@@ -262,6 +268,25 @@ public class ElectionActivity extends AppCompatActivity
 
         //take off the toolbar
         findViewById(R.id.electionmain_toolbar).setVisibility(View.GONE);
+
+        //TODO: Create the background service
+        Intent mServiceIntent = new Intent(this, QRCreatorService.class);
+        mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), "Hello~");
+        this.startService(mServiceIntent);
+
+        // The filter's action is BROADCAST_ACTION
+        IntentFilter statusIntentFilter = new IntentFilter(getString(R.string.BackgroundQRAction));
+
+        //TODO:Make the ElectionActivity ask for updates from the Background service
+
+        // Instantiates a new DownloadStateReceiver
+        DownloadStateReceiver mDownloadStateReceiver =
+                new DownloadStateReceiver();
+        // Registers the DownloadStateReceiver and its intent filters
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mDownloadStateReceiver,
+                statusIntentFilter);
+
     }
 
     public void onDistrictListNextInteraction( String districtName,
@@ -440,5 +465,26 @@ public class ElectionActivity extends AppCompatActivity
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://mrbuggysan.github.io/BlockVoteResultsWebsite/#pricing"));
         startActivity(browserIntent);
 
+    }
+
+
+    // Broadcast receiver for receiving status updates from the IntentService
+    private class DownloadStateReceiver extends BroadcastReceiver
+    {
+        // Prevents instantiation
+        private DownloadStateReceiver() {
+        }
+
+        // Called when the BroadcastReceiver gets an Intent it's registered to receive
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bitmap bitmap = intent.getParcelableExtra(getString(R.string.GeneratedQR_from_background));
+            Log.v(LOG_TAG, "Displaying the QR now, this is from the background service.");
+//            ImageView imageView = (ImageView) getActivity().findViewById(R.id.image_QRCode);
+//            imageView.setImageBitmap(bitmap);
+//
+//            rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
+//            rootView.findViewById(R.id.QR_animation_view).setVisibility(View.GONE);
+        }
     }
 }
