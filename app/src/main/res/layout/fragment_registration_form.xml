@@ -37,42 +37,6 @@
         <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
         <!--android:minHeight="@dimen/fab_margin" />-->
 
-        <TextView
-            android:text="Your Name:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:paddingTop="@dimen/fab_margin"
-            android:textSize="24sp"
-            android:textAllCaps="false"
-            android:fontFamily="sans-serif" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:layout_weight="1"
-                android:id="@+id/reg_firstNameText"
-                android:hint="First Name"
-                android:textSize="24sp" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:layout_weight="1"
-                android:id="@+id/reg_lastNameText"
-                android:hint="Last Name"
-                android:textSize="24sp" />
-
-
-
-        </LinearLayout>
 
         <TextView
             android:text="Your District:"

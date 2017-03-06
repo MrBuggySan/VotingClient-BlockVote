@@ -28,7 +28,7 @@
 
 
         <service
-            android:name=".QRCreatorService"
+            android:name="com.blockvote.auxillary.QRCreatorService"
             android:exported="false"/>
     </application>
 

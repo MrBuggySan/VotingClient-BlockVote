@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -25,10 +24,6 @@ import com.blockvote.crypto.BlindedToken;
 import com.blockvote.crypto.TokenRequest;
 import com.blockvote.votingclient.R;
 import com.google.gson.Gson;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
 
 import org.spongycastle.crypto.CryptoException;
 import org.spongycastle.crypto.params.RSAKeyParameters;
@@ -114,11 +109,12 @@ public class GenerateQRFragment extends Fragment {
             //TODO: Create the background service
             Intent mServiceIntent = new Intent(getActivity(), QRCreatorService.class);
             mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
-
+            getActivity().startService(mServiceIntent);
 
             // The filter's action is BROADCAST_ACTION
             IntentFilter statusIntentFilter = new IntentFilter(getString(R.string.BackgroundQRAction));
 
+            //TODO:Make the ElectionActivity ask for updates from the Background service
 
             // Instantiates a new DownloadStateReceiver
             DownloadStateReceiver mDownloadStateReceiver =
@@ -127,13 +123,6 @@ public class GenerateQRFragment extends Fragment {
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                     mDownloadStateReceiver,
                     statusIntentFilter);
-
-
-            //TODO:Make the ElectionActivity ask for updates from the Background service
-
-            //new QRGenerator(rootView).execute(Base64.encodeToString(tokenMsg, Base64.DEFAULT));
-            Log.v(LOG_TAG, "Creating the sample blindedToken");
-
 
         }catch(CryptoException cryptoException){
             //TODO: handle this
@@ -213,76 +202,6 @@ public class GenerateQRFragment extends Fragment {
         void onNextGenQRSelected();
         void store_BlindedKey_RSAKeyParam(String jsonBlindedToken, String jsonRSAKeyParams);
     }
-
-
-//    public class QRGenerator extends AsyncTask<String, Void, Bitmap> {
-//        private final String LOG_TAG= GenerateQRFragment.class.getSimpleName();
-//        private View rootView;
-//
-//        public QRGenerator(View rootView){
-//            this.rootView=rootView;
-//
-//        }
-//
-//        @Override
-//        public Bitmap doInBackground (String... params) {
-//            try{
-//                Bitmap bitmap= TextToImageEncode(params[0]);
-//                return bitmap;
-//            }catch(WriterException writerException){
-//                Log.e(LOG_TAG, "QR generation failed... " + "\n" + writerException.getMessage() );
-//                return null;
-//            }
-//
-//        }
-//
-//        @Override
-//        public void onPostExecute(Bitmap bitmap){
-//            Log.v(LOG_TAG, "Displaying the QR now");
-//            ImageView imageView = (ImageView) rootView.findViewById(R.id.image_QRCode);
-//            imageView.setImageBitmap(bitmap);
-//
-//            rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
-//            rootView.findViewById(R.id.QR_animation_view).setVisibility(View.GONE);
-//        }
-//
-//        Bitmap TextToImageEncode(String Value) throws WriterException {
-//            BitMatrix bitMatrix;
-//            try {
-//                bitMatrix = new MultiFormatWriter().encode(
-//                        Value,
-//                        BarcodeFormat.DATA_MATRIX.QR_CODE,
-//                        QRcodeWidth, QRcodeWidth, null
-//                );
-//
-//            } catch (IllegalArgumentException Illegalargumentexception) {
-//
-//                return null;
-//            }
-//            int bitMatrixWidth = bitMatrix.getWidth();
-//
-//            int bitMatrixHeight = bitMatrix.getHeight();
-//
-//            Log.v(LOG_TAG, "QR Width: " + bitMatrixWidth + ", Height: " + bitMatrixHeight);
-//            int[] pixels = new int[bitMatrixWidth * bitMatrixHeight];
-//
-//            for (int y = 0; y < bitMatrixHeight; y++) {
-//                int offset = y * bitMatrixWidth;
-//
-//                for (int x = 0; x < bitMatrixWidth; x++) {
-////                getResources().getColor(R.color.QR)
-//                    pixels[offset + x] = bitMatrix.get(x, y) ?
-//                            getResources().getColor(R.color.QRDarkColor):getResources().getColor(R.color.QRWhite);
-//
-//                }
-//            }
-//            Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
-//
-//            bitmap.setPixels(pixels, 0, bitMatrixWidth, 0, 0, bitMatrixWidth, bitMatrixHeight);
-//            return bitmap;
-//        }
-//    }
-//
 
     // Broadcast receiver for receiving status updates from the IntentService
     private class DownloadStateReceiver extends BroadcastReceiver

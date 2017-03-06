@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.crypto.BlindedToken;
+import com.blockvote.crypto.Token;
 import com.blockvote.fragments.GenerateQRFragment;
 import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.fragments.ReviewBallotFragment;
@@ -26,8 +28,6 @@ import com.blockvote.fragments.VoteButtonFragment;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
-import com.blockvote.crypto.BlindedToken;
-import com.blockvote.crypto.Token;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -138,6 +138,7 @@ public class ElectionActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_election);
+
 
         //TODO:get the election name from the server, if the request fails then the server is down.
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
@@ -263,11 +264,13 @@ public class ElectionActivity extends AppCompatActivity
         findViewById(R.id.electionmain_toolbar).setVisibility(View.GONE);
     }
 
-    public void onDistrictListNextInteraction(String firstName, String lastName, String districtName,
+    public void onDistrictListNextInteraction( String districtName,
                                               String registrarName, String keyModulus, String keyExponent){
         SharedPreferences.Editor editor = dataStore.edit();
         //Store the voter's specifics
         editor.putString(districtKey, districtName);
+        String firstName ="Tester";
+        String lastName ="Tester";
         editor.putString(voterNameKey, firstName + " " + lastName);
         editor.putString(registrarNameKey, registrarName);
         editor.putString(keyModulusKey, keyModulus);

@@ -19,13 +19,8 @@ import com.google.zxing.common.BitMatrix;
 
 public class QRCreatorService extends IntentService {
 
-    /**
-     * Creates an Igit antentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public QRCreatorService(String name) {
-        super(name);
+    public QRCreatorService() {
+        super(QRCreatorService.class.getSimpleName());
     }
 
     private final String LOG_TAG = IntentService.class.getSimpleName();

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -77,18 +76,6 @@ public class RegistrationFormFragment extends Fragment {
 
         rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
 
-//
-//        String[] mProjection = new String[]
-//                {
-//                        ContactsContract.Profile.DISPLAY_NAME_PRIMARY
-//                };
-//        ContentResolver mProfileCursor = getContentResolver().query(
-//                ContactsContract.Profile.CONTENT_URI,
-//                mProjection ,
-//                null,
-//                null,
-//                null);
-
 
         //get the districts from the server
         getElectionInfo();
@@ -129,7 +116,7 @@ public class RegistrationFormFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onDistrictListNextInteraction(String firstName, String lastName, String districtName,
+        void onDistrictListNextInteraction( String districtName,
                                            String registrarName,String keyModulus, String keyExponent);
     }
 
@@ -175,16 +162,6 @@ public class RegistrationFormFragment extends Fragment {
 
     public void onNextClick(){
         View rootView = getView();
-        EditText firstText = (EditText) rootView.findViewById(R.id.reg_firstNameText);
-        EditText lastText = (EditText) rootView.findViewById(R.id.reg_lastNameText);
-
-        String firstName = firstText.getText().toString();
-        String lastName = lastText.getText().toString();
-        if (firstName.equals("") || lastName.equals("")) {
-            ToastWrapper.initiateToast(getContext(), "Please enter your name");
-
-            return;
-        }
 
         //test if the user has selected a district and a registrar.
 
@@ -227,7 +204,7 @@ public class RegistrationFormFragment extends Fragment {
             if(keyModulus == null || keyExponent == null){
                 Log.e(LOG_TAG, "The registrar was not found in the downloaded respJSONStr");
             }
-            mListener.onDistrictListNextInteraction(firstName, lastName, districtName, registrarName, keyModulus, keyExponent);
+            mListener.onDistrictListNextInteraction( districtName, registrarName, keyModulus, keyExponent);
         }catch(JSONException e){
             Log.e(LOG_TAG, "Could not find the respJSONstr");
         }
