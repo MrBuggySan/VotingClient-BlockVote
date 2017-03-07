@@ -32,9 +32,6 @@ import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.fragments.SelectCandidateFragment;
 import com.blockvote.fragments.VoteButtonFragment;
-import com.blockvote.model.MODEL_ElectionInfo;
-import com.blockvote.networking.BlockVoteServerAPI;
-import com.blockvote.networking.BlockVoteServerInstance;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -44,10 +41,6 @@ import org.spongycastle.crypto.digests.SHA1Digest;
 import org.spongycastle.crypto.engines.RSAEngine;
 import org.spongycastle.crypto.params.RSAKeyParameters;
 import org.spongycastle.crypto.signers.PSSSigner;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -151,8 +144,12 @@ public class ElectionActivity extends AppCompatActivity
 
 
 
-        mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
+        mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayouttt);
+//        if(mStepperLayout != null){
+//            mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
+//        }
         mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
+
 
 
 //        //TODO:get the election name from the server, if the request fails then the server is down.

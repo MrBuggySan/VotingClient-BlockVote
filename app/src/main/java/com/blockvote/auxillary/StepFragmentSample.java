@@ -33,7 +33,7 @@ public class StepFragmentSample extends Fragment implements Step {
 
     @Override
     public VerificationError verifyStep() {
-        //return null if the user can go to the next step, create a new VerificationError instance otherwise
+        //return null if the user can go to the next stepper_layout, create a new VerificationError instance otherwise
         return null;
     }
 
