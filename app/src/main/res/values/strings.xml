@@ -15,7 +15,7 @@
     <!--Constants for Broadcasats-->
     <string name="BackgroundQRAction">BackgroundQRAction</string>
     <string name="GeneratedQR_from_background">GeneratedQR_from_background</string>
-    
+
     <!--Keys for SharedPreferences-->
     <string name="ElectionActivityStateKey">stateinfo</string>
     <string name="voterNameKey">vnameKey</string>
@@ -38,7 +38,7 @@
     <string name="dialog_message_GenQR">We are now creating your request. This may take some time, so please be patient :)</string>
     <string name="dialog_message_scanQR">Only go to the next step if you have been approved by the registrar</string>
     <string name="dialog_title_Information">Information</string>
-    <string name="dialog_title_WARNING">ATTENTION</string>
+    CURRENT_STEP_POSITION_KEY    <string name="dialog_title_WARNING">ATTENTION</string>
     <string name="pos_button_SelecCandi">YES</string>
     <string name="neg_button_SelecCandi">No</string>
     <string name="ok">OK</string>
@@ -56,4 +56,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!--Stepper stuff-->
+    <string name="CURRENT_STEP_POSITION_KEY">CURRENT_STEP_POSITION_KEY</string>
 </resources>

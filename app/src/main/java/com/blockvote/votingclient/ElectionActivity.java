@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.blockvote.auxillary.QRCreatorService;
+import com.blockvote.auxillary.StepperAdapter;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.crypto.Token;
@@ -37,6 +38,7 @@ import com.blockvote.networking.BlockVoteServerInstance;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.stepstone.stepper.StepperLayout;
 
 import org.spongycastle.crypto.digests.SHA1Digest;
 import org.spongycastle.crypto.engines.RSAEngine;
@@ -140,40 +142,47 @@ public class ElectionActivity extends AppCompatActivity
 
     }
 
+    private StepperLayout mStepperLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_election);
 
 
-        //TODO:get the election name from the server, if the request fails then the server is down.
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
-        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-        Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
-        dataStore = getPreferences(MODE_PRIVATE);
-        Log.v(LOG_TAG, "onCreate called.");
-        if(savedInstanceState == null){
-            call.enqueue(new Callback<MODEL_ElectionInfo>(){
-                @Override
-                public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
-                    int statusCode = response.code();
 
-                    String ename = response.body().getResponse().getId();
-                    startProcess(ename);
-                }
+        mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
+        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
 
-                @Override
-                public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
-                    Log.e(LOG_TAG, "Downloading the election name has failed...");
-                    //TODO:Invoked when a network exception occurred talking to
-                    // the server or when an unexpected exception occurred creating the request or processing the response.
-                }
-            });
-        }else{
-            //TODO: protect the activity and its current fragments if it is somehow destroyed
-            Log.e(LOG_TAG, "The Election Activity was temporarily destroyed, and now it has nowhere to go...");
-            throw new RuntimeException("Unexpected destruction of Election Activity");
-        }
+
+//        //TODO:get the election name from the server, if the request fails then the server is down.
+//        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+//        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+//        Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
+//        dataStore = getPreferences(MODE_PRIVATE);
+//        Log.v(LOG_TAG, "onCreate called.");
+//        if(savedInstanceState == null){
+//            call.enqueue(new Callback<MODEL_ElectionInfo>(){
+//                @Override
+//                public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
+//                    int statusCode = response.code();
+//
+//                    String ename = response.body().getResponse().getId();
+//                    startProcess(ename);
+//                }
+//
+//                @Override
+//                public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
+//                    Log.e(LOG_TAG, "Downloading the election name has failed...");
+//                    //TODO:Invoked when a network exception occurred talking to
+//                    // the server or when an unexpected exception occurred creating the request or processing the response.
+//                }
+//            });
+//        }else{
+//            //TODO: protect the activity and its current fragments if it is somehow destroyed
+//            Log.e(LOG_TAG, "The Election Activity was temporarily destroyed, and now it has nowhere to go...");
+//            throw new RuntimeException("Unexpected destruction of Election Activity");
+//        }
 
     }
 
