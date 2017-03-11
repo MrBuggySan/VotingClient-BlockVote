@@ -5,8 +5,9 @@
     android:layout_height="match_parent"
     tools:context="com.blockvote.fragments.RegistrationFormFragment">
 
+
     <RelativeLayout
-        android:id="@+id/registration_loadingPanel"
+        android:id="@+id/registration_loadingPanel1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center" >
@@ -27,7 +28,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:padding="@dimen/ms_material_button_padding_horizontal"
         android:paddingLeft="@dimen/fab_margin"
         android:paddingRight="@dimen/fab_margin">
 
@@ -74,48 +74,73 @@
                         android:textSize="16sp"/>
                     <Button
                         android:text="Set"
+                        android:id="@+id/regis_setButton"
                         android:layout_weight="0.5"
                         android:layout_width="0dp"
                         android:layout_height="match_parent" />
                 </LinearLayout>
 
 
-                <TextView
-                    android:id="@+id/regform_districttext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingBottom="@dimen/ms_nav_bar_button_padding_vertical"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    android:text="District"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="12sp" />
-
-                <Spinner
-                    android:id="@+id/register_districtspinner"
+                <RelativeLayout
+                    android:id="@+id/registration_loadingPanel2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/fab_margin"
-                    android:textSize="16sp" />
+                    android:layout_height="match_parent"
+                    android:gravity="center" >
 
-                <TextView
-                    android:id="@+id/regform_registrartext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif"
-                    android:paddingBottom="@dimen/ms_material_button_padding_vertical"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    android:text="Registrar"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="12sp" />
+                    <com.wang.avi.AVLoadingIndicatorView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:indicatorName="BallClipRotateIndicator"
+                        app:indicatorColor="@color/colorPrimary"
+                        />
 
-                <Spinner
-                    android:id="@+id/register_registrar_spinner"
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/regis_districtregistrar_ui"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/activity_vertical_margin"
-                    android:textSize="16sp" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/regform_districttext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingBottom="@dimen/ms_nav_bar_button_padding_vertical"
+                        android:paddingTop="@dimen/activity_vertical_margin"
+                        android:text="District"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+
+                    <Spinner
+                        android:id="@+id/register_districtspinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/fab_margin"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/regform_registrartext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif"
+                        android:paddingBottom="@dimen/ms_material_button_padding_vertical"
+                        android:paddingTop="@dimen/activity_vertical_margin"
+                        android:text="Registrar"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="12sp" />
+
+                    <Spinner
+                        android:id="@+id/register_registrar_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/activity_vertical_margin"
+                        android:textSize="16sp" />
+
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
@@ -126,7 +151,11 @@
                 android:layout_weight="1"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:textSize="24sp" />
+
         </LinearLayout>
+
+
+
     </RelativeLayout>
 
 

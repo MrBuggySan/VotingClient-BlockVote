@@ -64,9 +64,9 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_registration_form, container, false);
 
-        //Hide the registration form
-//        rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
-        rootView.findViewById(R.id.registration_loadingPanel).setVisibility(View.GONE);
+
+
+//        rootView.findViewById(R.id.registration_loadingPanel).setVisibility(View.GONE);
 
         //TODO: make the child classes determine the components of the UI
         EditUI(defaultInteractions);
@@ -211,8 +211,8 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
     private String respJSONStr;
 
-    public void getRegistrarInfo(){
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+    public void getRegistrarInfo(String electionURL){
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
         Call<MODEL_getRegistrarInfo> call = apiService.getRegistrarInfo();
 
@@ -274,24 +274,26 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         });
     }
 
-    public void getElectionInfo(){
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+    protected void getElectionInfo(String electionURL){
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
         Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
 
+        //Enable the loading screen
+        rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
+        rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
+
+        //TODO: must handle invalid URLs (not a URL at all)
+        //TODO: must handle invalid URLs (not available on BlockVote)
         call.enqueue(new Callback<MODEL_ElectionInfo>() {
             @Override
             public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
                 int statusCode = response.code();
 
-                //TODO: This response is GET, next time it will be a POST so that i can query for specific election
                 List<String> districtList = response.body().getResponse().getElectionData().getDistricts();
                 //apply the results to the UI
                 View rootView_ = getView();
                 if(rootView_ != null){
-                    Log.v(LOG_TAG, "RegistrationFormFragment marker.");
-
-                    //TODO: change this to a better UI (possible a radio button)
                     displayDistrictsonSpinner(districtList);
 
                     //Setup the button
@@ -306,7 +308,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 //                    });
 
                     //disable the loading screen
-                    rootView_.findViewById(R.id.registration_loadingPanel).setVisibility(View.GONE);
+                    rootView_.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
 
 
 

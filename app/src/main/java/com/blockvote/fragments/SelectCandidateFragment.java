@@ -145,7 +145,7 @@ public class SelectCandidateFragment extends Fragment {
     }
 
     public void submitVote(String option){
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance("ElectionURL");
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
 
         String region = "US";
@@ -189,7 +189,7 @@ public class SelectCandidateFragment extends Fragment {
     }
 
     public void getBallotOptions(){
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance("ElectionURL");
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
         Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
 

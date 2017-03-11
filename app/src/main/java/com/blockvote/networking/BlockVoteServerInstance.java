@@ -11,9 +11,9 @@ public class BlockVoteServerInstance {
     private final String BASE_URL = "https://blockvotenode2.mybluemix.net/";
     private BlockVoteServerAPI apiService;
 
-    public BlockVoteServerInstance(){
+    public BlockVoteServerInstance(String electionURL){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(electionURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiService = retrofit.create(BlockVoteServerAPI.class);

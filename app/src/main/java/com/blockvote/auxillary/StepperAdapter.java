@@ -44,10 +44,19 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
     @NonNull
     @Override
     public StepViewModel getViewModel(@IntRange(from = 0) int position) {
-        //Override this method to set Step title for the Tabs, not necessary for other stepper types
-        return new StepViewModel.Builder(context)
-                .setTitle("Hello World") //can be a CharSequence instead
-                .create();
+
+        switch (position) {
+            case 0:
+                return new StepViewModel.Builder(context)
+                        .setTitle("Registration Form")
+                        .create();
+            case 1:
+                return new StepViewModel.Builder(context)
+                        .setTitle("QR Code")
+                        .create();
+            default:
+                throw new IllegalArgumentException("Unsupported position: " + position);
+        }
     }
 
 }
