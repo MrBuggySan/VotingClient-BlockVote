@@ -16,7 +16,6 @@ public class FilledForm extends RegistrationFormFragment {
 
         //TODO: take away the URL text and edittext
 
-
     }
 
     @Override

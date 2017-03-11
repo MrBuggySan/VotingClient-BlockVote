@@ -5,6 +5,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
+import com.blockvote.fragments.GenerateQRFragment;
 import com.blockvote.fragments.RegistrationFormFragment;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
@@ -27,6 +28,8 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
         switch (position) {
             case 0:
                 return regisForm;
+            case 1:
+                return new GenerateQRFragment();
             default:
                 throw new IllegalArgumentException("Unsupported position: " + position);
         }
@@ -35,7 +38,7 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
 
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 
     @NonNull

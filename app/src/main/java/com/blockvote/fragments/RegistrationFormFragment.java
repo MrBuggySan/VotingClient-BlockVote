@@ -88,7 +88,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             defaultInteractions = (DefaultInteractions) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement DefaultInteractions");
         }
     }
 

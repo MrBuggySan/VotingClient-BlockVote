@@ -3,35 +3,20 @@ package com.blockvote.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.blockvote.auxillary.simpleDialog;
-import com.blockvote.crypto.BlindedToken;
-import com.blockvote.crypto.TokenRequest;
+import com.blockvote.interfaces.DefaultInteractions;
 import com.blockvote.votingclient.R;
-import com.google.gson.Gson;
+import com.stepstone.stepper.Step;
+import com.stepstone.stepper.VerificationError;
 
-import org.spongycastle.crypto.CryptoException;
-import org.spongycastle.crypto.params.RSAKeyParameters;
-
-import java.math.BigInteger;
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link GenerateQRFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link GenerateQRFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class GenerateQRFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
+public class GenerateQRFragment extends Fragment implements Step {
+    private DefaultInteractions defaultInteractions;
     private final static int QRcodeWidth = 1000 ;
     private final String LOG_TAG = GenerateQRFragment.class.getSimpleName();
 
@@ -47,24 +32,7 @@ public class GenerateQRFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static GenerateQRFragment newInstance(String keyMod , String keyExp ) {
 
-        GenerateQRFragment fragment = new GenerateQRFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1,keyMod );
-        args.putString(ARG_PARAM2, keyExp);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            keyModulus = getArguments().getString(ARG_PARAM1);
-            keyExponent = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,6 +43,9 @@ public class GenerateQRFragment extends Fragment {
         //hide the rest of the layouts
         rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
 
+        //TODO: access the appropriate data from datastore
+
+        /*
         //create a dialog
         new simpleDialog(getContext(), R.string.dialog_title_Information, R.string.dialog_message_GenQR);
 
@@ -135,7 +106,7 @@ public class GenerateQRFragment extends Fragment {
           }
 }
         );
-
+*/
         return rootView;
     }
 
@@ -149,7 +120,7 @@ public class GenerateQRFragment extends Fragment {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //Scan the registrar's QR code.
-                mListener.onNextGenQRSelected();
+//                mListener.onNextGenQRSelected();
 
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -165,18 +136,18 @@ public class GenerateQRFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof DefaultInteractions) {
+            defaultInteractions = (DefaultInteractions) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement DefaultInteractions");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        defaultInteractions = null;
     }
 
     public interface OnFragmentInteractionListener {
@@ -186,5 +157,25 @@ public class GenerateQRFragment extends Fragment {
         void store_BlindedKey_RSAKeyParam(String jsonBlindedToken, String jsonRSAKeyParams);
     }
 
+
+    @Override
+    public void onError(@NonNull VerificationError error) {
+        //handle error inside of the fragment, e.g. show error on EditText
+        //editText.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
+    }
+
+    @Override
+    public void onSelected() {
+        //update UI when selected
+    }
+
+    @Override
+    public VerificationError verifyStep() {
+        //return null if the user can go to the next stepper_layout, create a new VerificationError instance otherwise
+//        return TextUtils.isEmpty(editText.getText().toString())
+//                ? new VerificationError("Password cannot be empty")
+//                : null;
+        return null;
+    }
 
 }

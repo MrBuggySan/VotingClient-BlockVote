@@ -250,15 +250,15 @@ public class VotingActivity extends AppCompatActivity
         String keyExponent = dataStore.getString(keyExponentKey, null);
         //TODO: error checking here
 
-        //Call the GenerateQRFragment
-        GenerateQRFragment generateQRFragment = GenerateQRFragment.newInstance(keyModulus, keyExponent);
-        //Switch the VoteButtonFragment with the SelectCandidateFragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.ElectionContainer, generateQRFragment);
-        //add the transaction to the BackStack
-        transaction.addToBackStack("Transition to generateQRFragment");
-        transaction.commit();
-        Log.d(LOG_TAG,"Opening generateQRFragment ");
+//        //Call the GenerateQRFragment
+//        GenerateQRFragment generateQRFragment = GenerateQRFragment.newInstance(keyModulus, keyExponent);
+//        //Switch the VoteButtonFragment with the SelectCandidateFragment
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.ElectionContainer, generateQRFragment);
+//        //add the transaction to the BackStack
+//        transaction.addToBackStack("Transition to generateQRFragment");
+//        transaction.commit();
+//        Log.d(LOG_TAG,"Opening generateQRFragment ");
 
         //take off the toolbar
         findViewById(R.id.electionmain_toolbar).setVisibility(View.GONE);
