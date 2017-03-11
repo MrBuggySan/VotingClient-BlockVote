@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,6 +19,7 @@ import com.blockvote.model.MODEL_getRegistrarInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
 import com.blockvote.votingclient.R;
+import com.stepstone.stepper.Step;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,8 +42,9 @@ import static com.blockvote.votingclient.R.id.register_registrar_spinner;
  * to handle interaction events.
 
  */
-public class RegistrationFormFragment extends Fragment {
+public abstract class RegistrationFormFragment extends Fragment implements Step {
     private final String LOG_TAG = RegistrationFormFragment.class.getSimpleName();
+    protected View rootView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -60,13 +61,18 @@ public class RegistrationFormFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_registration_form, container, false);
+        rootView = inflater.inflate(R.layout.fragment_registration_form, container, false);
 
+        //Hide the registration form
         rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
+
+        //TODO: make the child classes determine the components of the UI
+        EditUI();
+
         //get the districts from the server
-        getElectionInfo();
+        //getElectionInfo();
         //get the registrars from the server
-        getRegistrarInfo();
+        //getRegistrarInfo();
         return rootView;
     }
 
@@ -76,12 +82,12 @@ public class RegistrationFormFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
     }
 
     @Override
@@ -89,6 +95,8 @@ public class RegistrationFormFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    abstract void EditUI();
 
     /**
      * This interface must be implemented by activities that contain this
@@ -283,15 +291,15 @@ public class RegistrationFormFragment extends Fragment {
                     displayDistrictsonSpinner(districtList);
 
                     //Setup the button
-                    Button registerButton = (Button) rootView_.findViewById(R.id.reg_register_button);
-                    //Register button callback
-                    registerButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            if (mListener != null) {
-                                onNextClick();
-                            }
-                        }
-                    });
+//                    Button registerButton = (Button) rootView_.findViewById(R.id.reg_register_button);
+//                    //Register button callback
+//                    registerButton.setOnClickListener(new View.OnClickListener() {
+//                        public void onClick(View v) {
+//                            if (mListener != null) {
+//                                onNextClick();
+//                            }
+//                        }
+//                    });
 
                     //disable the loading screen
                     rootView_.findViewById(R.id.registration_loadingPanel).setVisibility(View.GONE);

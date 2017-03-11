@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.blockvote.auxillary.QRCreatorService;
-import com.blockvote.auxillary.StepperAdapter;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.crypto.Token;
@@ -35,7 +34,6 @@ import com.blockvote.fragments.VoteButtonFragment;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.stepstone.stepper.StepperLayout;
 
 import org.spongycastle.crypto.digests.SHA1Digest;
 import org.spongycastle.crypto.engines.RSAEngine;
@@ -136,18 +134,11 @@ public class VotingActivity extends AppCompatActivity
     }
 
 
-    private StepperLayout mStepperLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_election);
-
-
-        mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
-        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
-
-
-
+        setContentView(R.layout.activity_voting);
 
 //        //TODO:get the election name from the server, if the request fails then the server is down.
 //        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance();
@@ -216,8 +207,8 @@ public class VotingActivity extends AppCompatActivity
         Log.d(LOG_TAG, currentState + " is the current state.");
         //Determine the current state of the activity
         if(currentState.equals(getString(R.string.RegistrationState))){
-            RegistrationFormFragment registerFragment = new RegistrationFormFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, registerFragment).commit();
+            //RegistrationFormFragment registerFragment = new RegistrationFormFragment();
+            //getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, registerFragment).commit();
             return;
         }
         if(currentState.equals(getString(R.string.GenQRState))){

@@ -1,12 +1,11 @@
 package com.blockvote.auxillary;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
-import com.blockvote.votingclient.R;
+import com.blockvote.fragments.RegistrationFormFragment;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
 import com.stepstone.stepper.viewmodel.StepViewModel;
@@ -17,22 +16,26 @@ import com.stepstone.stepper.viewmodel.StepViewModel;
 
 public class StepperAdapter extends AbstractFragmentStepAdapter {
 
-    public StepperAdapter(FragmentManager fm, Context context) {
+    private RegistrationFormFragment regisForm;
+    public StepperAdapter(FragmentManager fm, Context context, RegistrationFormFragment regisForm) {
         super(fm, context);
+        this.regisForm = regisForm;
     }
 
     @Override
     public Step createStep(int position) {
-        final StepFragmentSample step = new StepFragmentSample();
-        Bundle b = new Bundle();
-        b.putInt(ImportantConstants.createStepInt, position);
-        step.setArguments(b);
-        return step;
+        switch (position) {
+            case 0:
+                return regisForm;
+            default:
+                throw new IllegalArgumentException("Unsupported position: " + position);
+        }
+
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 1;
     }
 
     @NonNull
