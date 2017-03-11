@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.blockvote.votingclient.RegistrationActivity">
 
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/electionmain_toolbar"
+        android:id="@+id/registration_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+       />
 
-    <com.stepstone.stepper.StepperLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.stepstone.stepper.StepperLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/stepperLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:ms_stepperType="tabs"
-        app:ms_showErrorState="true"
-        app:ms_showErrorStateOnBack="true"/>
-
-</android.support.constraint.ConstraintLayout>
+        app:ms_stepperType="progress_bar" />
+</LinearLayout>

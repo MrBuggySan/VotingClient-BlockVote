@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.interfaces.DefaultInteractions;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.model.MODEL_getRegistrarInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
@@ -46,7 +47,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     private final String LOG_TAG = RegistrationFormFragment.class.getSimpleName();
     protected View rootView;
 
-    private OnFragmentInteractionListener mListener;
+    private DefaultInteractions defaultInteractions;
 
     public RegistrationFormFragment() {
         // Required empty public constructor
@@ -64,10 +65,11 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         rootView = inflater.inflate(R.layout.fragment_registration_form, container, false);
 
         //Hide the registration form
-        rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
+//        rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
+        rootView.findViewById(R.id.registration_loadingPanel).setVisibility(View.GONE);
 
         //TODO: make the child classes determine the components of the UI
-        EditUI();
+        EditUI(defaultInteractions);
 
         //get the districts from the server
         //getElectionInfo();
@@ -82,21 +84,21 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        if (context instanceof DefaultInteractions) {
+            defaultInteractions = (DefaultInteractions) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        defaultInteractions = null;
     }
 
-    abstract void EditUI();
+    abstract void EditUI(DefaultInteractions defaultInteractions);
 
     /**
      * This interface must be implemented by activities that contain this
@@ -112,6 +114,8 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         void onDistrictListNextInteraction( String districtName,
                                            String registrarName,String keyModulus, String keyExponent);
     }
+
+
 
     public void displayDistrictsonSpinner(List<String> districtList){
         ArrayAdapter<String> mDistrictList = new ArrayAdapter<String>(
@@ -197,7 +201,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             if(keyModulus == null || keyExponent == null){
                 Log.e(LOG_TAG, "The registrar was not found in the downloaded respJSONStr");
             }
-            mListener.onDistrictListNextInteraction( districtName, registrarName, keyModulus, keyExponent);
+            //mListener.onDistrictListNextInteraction( districtName, registrarName, keyModulus, keyExponent);
         }catch(JSONException e){
             Log.e(LOG_TAG, "Could not find the respJSONstr");
         }
