@@ -88,7 +88,7 @@ public class GenerateQRFragment extends Fragment {
         Gson gson = new Gson();
         String jsonBlindedToken = gson.toJson(blindedToken);
         String jsonRSAKeyParams = gson.toJson(rsaKeyParameters);
-        //store these values in the ElectionActivity
+        //store these values in the VotingActivity
         mListener.store_BlindedKey_RSAKeyParam(jsonBlindedToken, jsonRSAKeyParams);
 
         //Create tokenRequest

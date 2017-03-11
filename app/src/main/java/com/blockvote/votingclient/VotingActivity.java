@@ -46,7 +46,7 @@ import org.spongycastle.crypto.signers.PSSSigner;
  * Created by Beast Mode on 12/26/2016.
  */
 
-public class ElectionActivity extends AppCompatActivity
+public class VotingActivity extends AppCompatActivity
         implements RegistrationFormFragment.OnFragmentInteractionListener,
         GenerateQRFragment.OnFragmentInteractionListener,
         VoteButtonFragment.OnFragmentInteractionListener,
@@ -54,7 +54,7 @@ public class ElectionActivity extends AppCompatActivity
         ReviewBallotFragment.OnFragmentInteractionListener {
 
 
-    private final String LOG_TAG = ElectionActivity.class.getSimpleName();
+    private final String LOG_TAG = VotingActivity.class.getSimpleName();
     private String electionStateKey ;
     private String voterNameKey;
     private String districtKey;
@@ -135,20 +135,17 @@ public class ElectionActivity extends AppCompatActivity
 
     }
 
-    private StepperLayout mStepperLayout;
 
+    private StepperLayout mStepperLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_election);
 
 
-
-        mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayouttt);
-//        if(mStepperLayout != null){
-//            mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
-//        }
+        mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
         mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this));
+
 
 
 
@@ -213,7 +210,7 @@ public class ElectionActivity extends AppCompatActivity
         //get the current state
         String currentState = dataStore.getString(electionStateKey, "error");
         if(currentState.equals("error")){
-            Log.e(LOG_TAG, "Could not find the current state of ElectionActivity");
+            Log.e(LOG_TAG, "Could not find the current state of VotingActivity");
             throw new RuntimeException(LOG_TAG + " could not find the state.");
         }
         Log.d(LOG_TAG, currentState + " is the current state.");
@@ -283,7 +280,7 @@ public class ElectionActivity extends AppCompatActivity
         // The filter's action is BROADCAST_ACTION
         IntentFilter statusIntentFilter = new IntentFilter(getString(R.string.BackgroundQRAction));
 
-        //TODO:Make the ElectionActivity ask for updates from the Background service
+        //TODO:Make the VotingActivity ask for updates from the Background service
 
         // Instantiates a new DownloadStateReceiver
         DownloadStateReceiver mDownloadStateReceiver =
@@ -306,7 +303,7 @@ public class ElectionActivity extends AppCompatActivity
         editor.putString(registrarNameKey, registrarName);
         editor.putString(keyModulusKey, keyModulus);
         editor.putString(keyExponentKey, keyExponent);
-        //change the state of ElectionActivity
+        //change the state of VotingActivity
         editor.putString(electionStateKey, getString(R.string.GenQRState));
         editor.commit();
 
@@ -325,7 +322,7 @@ public class ElectionActivity extends AppCompatActivity
     public void onBackGenQRSelected(){
         //TODO: what should I do if user press this and there is no data in the backstack?
 
-        //change the state of ElectionActivity
+        //change the state of VotingActivity
         SharedPreferences.Editor editor = dataStore.edit();
         editor.putString(electionStateKey, getString(R.string.RegistrationState));
         editor.commit();
@@ -399,7 +396,7 @@ public class ElectionActivity extends AppCompatActivity
                 if(signer.verifySignature(signedTokenSig)){
                     //good signature
                     Log.v(LOG_TAG, "The QR was from legit registrar");
-                    //Change state of ElectionActivity to VoteButtonFragment
+                    //Change state of VotingActivity to VoteButtonFragment
                     SharedPreferences.Editor editor = dataStore.edit();
                     editor.putString(electionStateKey, getString(R.string.VoteButtonState));
                     editor.putString(signedTokenIDKey, Base64.encodeToString(signedTokenID, Base64.DEFAULT));

@@ -6,7 +6,7 @@
     <string name="electionVote">Vote</string>
     <string name="electionHelp">Help</string>
 
-    <!--The possible states of ElectionActivity-->
+    <!--The possible states of VotingActivity-->
     <string name="RegistrationState">Regis</string>
     <string name="GenQRState">genqr</string>
     <string name="VoteButtonState">VotBut</string>
@@ -38,7 +38,8 @@
     <string name="dialog_message_GenQR">We are now creating your request. This may take some time, so please be patient :)</string>
     <string name="dialog_message_scanQR">Only go to the next step if you have been approved by the registrar</string>
     <string name="dialog_title_Information">Information</string>
-    CURRENT_STEP_POSITION_KEY    <string name="dialog_title_WARNING">ATTENTION</string>
+    CURRENT_STEP_POSITION_KEY
+    <string name="dialog_title_WARNING">ATTENTION</string>
     <string name="pos_button_SelecCandi">YES</string>
     <string name="neg_button_SelecCandi">No</string>
     <string name="ok">OK</string>
