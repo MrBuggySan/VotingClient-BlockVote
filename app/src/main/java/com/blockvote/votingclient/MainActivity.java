@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.blockvote.fragments.FinishedElections;
 import com.blockvote.fragments.OnGoingElections;
@@ -30,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        toolbar.setTitle("BlockVote");
+        toolbar.setNavigationIcon(R.drawable.ic_action_name);
         setSupportActionBar(toolbar);
 
-        ActionBar myActionBar = (ActionBar) getSupportActionBar();
-        myActionBar.setTitle("BlockVote");
+
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -42,6 +45,28 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.Main_Option_Help:
+                //TODO: Start the HelpActivity
+                return true;
+            case R.id.Main_Option_About:
+                //TODO: Start the HelpActivity
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
