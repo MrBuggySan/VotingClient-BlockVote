@@ -293,6 +293,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             electionInstance.setrSAkeyParams(rsaKeyParameters);
 
             //TODO: Store the electionInstance inside dataStore
+            //The key is the election's URL
 
             //mListener.onDistrictListNextInteraction( districtName, registrarName, keyModulus, keyExponent);
         }catch(JSONException e){

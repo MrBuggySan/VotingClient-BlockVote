@@ -16,22 +16,22 @@
         android:theme="@style/AppTheme">
 
         <!-- VotingActivity is now the main activity -->
-        <activity android:name=".VotingActivity"></activity>
+        <activity android:name=".VotingActivity" />
 
         <service
             android:name="com.blockvote.auxillary.QRCreatorService"
             android:exported="false" />
 
         <activity android:name=".MainActivity">
-
-        </activity>
-        <activity android:name=".RegistrationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".RegistrationActivity" />
+        <activity android:name=".HelpActivity" />
+        <activity android:name=".AboutActivity"></activity>
     </application>
 
 </manifest>
