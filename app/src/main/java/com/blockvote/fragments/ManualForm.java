@@ -60,10 +60,15 @@ public class ManualForm extends RegistrationFormFragment {
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.VISIBLE);
 
         //Download the data
-        //getElectionInfo(electionURL);
+        getElectionInfo(electionURL);
 
         //Show the loading animation
 
+    }
+
+    public void stopLoadingAnim(){
+        rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
+        rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -82,7 +87,11 @@ public class ManualForm extends RegistrationFormFragment {
         EditText urlEditText = (EditText)rootView.findViewById(R.id.regform_urledittext);
         if(TextUtils.isEmpty(urlEditText.getText().toString()))
             return new VerificationError("You must enter the election's URL.");
-        else return null;
+        else {
+            //TODO: Insert the electionInstance to the dataStore
+            saveElectionInstance();
+            return null;
+        }
     }
 
 

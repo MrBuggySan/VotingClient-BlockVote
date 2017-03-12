@@ -1,7 +1,6 @@
 package com.blockvote.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.interfaces.DefaultInteractions;
 import com.blockvote.model.MODEL_ElectionInfo;
@@ -35,19 +35,12 @@ import retrofit2.Response;
 
 import static com.blockvote.votingclient.R.id.register_registrar_spinner;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RegistrationFormFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
-
- */
 public abstract class RegistrationFormFragment extends Fragment implements Step {
     private final String LOG_TAG = RegistrationFormFragment.class.getSimpleName();
     protected View rootView;
 
     private DefaultInteractions defaultInteractions;
+    private ElectionInstance electionInstance;
 
     public RegistrationFormFragment() {
         // Required empty public constructor
@@ -64,22 +57,12 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_registration_form, container, false);
 
-
-
-//        rootView.findViewById(R.id.registration_loadingPanel).setVisibility(View.GONE);
-
-        //TODO: make the child classes determine the components of the UI
+        electionInstance = new ElectionInstance();
+        //make the children determine the components of the UI
         EditUI(defaultInteractions);
 
-        //get the districts from the server
-        //getElectionInfo();
-        //get the registrars from the server
-        //getRegistrarInfo();
         return rootView;
     }
-
-
-
 
     @Override
     public void onAttach(Context context) {
@@ -99,22 +82,110 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     }
 
     abstract void EditUI(DefaultInteractions defaultInteractions);
+    abstract void stopLoadingAnim();
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onDistrictListNextInteraction( String districtName,
-                                           String registrarName,String keyModulus, String keyExponent);
+    private String respJSONStr;
+    public void getRegistrarInfo(String electionURL){
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<MODEL_getRegistrarInfo> call = apiService.getRegistrarInfo();
+
+        call.enqueue(new Callback<MODEL_getRegistrarInfo>() {
+            @Override
+            public void onResponse(Call<MODEL_getRegistrarInfo> call, Response<MODEL_getRegistrarInfo> response) {
+                respJSONStr = response.body().getResponse();
+                if(respJSONStr.equals(null)){
+                    Log.e(LOG_TAG, "failed to get the registrar JSON string");
+                    ToastWrapper.initiateToast(getContext(), "failed to get the registrar JSON string");
+                }
+                //TODO: stop the loading
+                stopLoadingAnim();
+
+                displayDistrictsonSpinner(districtList);
+                Spinner spinner = (Spinner) getView().findViewById(R.id.register_districtspinner);
+
+                //set up an event to change the registrarlist available when a district is chosen.
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                        TextView textView = (TextView) selectedItemView;
+                        String selectedDistrict = textView.getText().toString();
+                        Log.v(LOG_TAG, "District selected : " + selectedDistrict);
+
+                        ArrayList<String>  registrarList = new ArrayList<String>();
+                        try{
+                            JSONArray regisListJSONstr = new JSONArray(respJSONStr);
+                            for(int i = 0 ; i < regisListJSONstr.length(); i++){
+                                JSONObject registrarInfo = regisListJSONstr.getJSONObject(i).getJSONObject("Registrar");
+                                if(registrarInfo.getString("RegistrationDistrict").equals(selectedDistrict)){
+                                    String registrarName = registrarInfo.getString("RegistrarName");
+                                    Log.v(LOG_TAG, registrarName + " is a registrar in " + selectedDistrict);
+                                    registrarList.add(registrarName);
+                                }
+                            }
+
+
+
+                        }catch(JSONException e){
+                            Log.e(LOG_TAG, "could not find the JSONObject inside regisListJSONstr");
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+
+                    }
+
+                });
+            }
+
+            @Override
+            public void onFailure(Call<MODEL_getRegistrarInfo> call, Throwable t) {
+                Log.e(LOG_TAG, "Downloading the registrar information has failed...");
+                throw new RuntimeException("Could not download the registrar list");
+                //TODO:Restart the connection if failure
+            }
+        });
     }
 
+    private List<String> districtList;
+
+    protected void getElectionInfo(final String electionURL){
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
+
+        call.enqueue(new Callback<MODEL_ElectionInfo>() {
+            @Override
+            public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
+                int statusCode = response.code();
+
+                if(statusCode != 200){
+                    ToastWrapper.initiateToast(getContext(), "The election you entered is not available in BlockVote.");
+                    return;
+                }
+                electionInstance.setElectionURL(electionURL);
+                String temp_electionName = response.body().getResponse().getId();
+                electionInstance.setElectionName(temp_electionName);
+                //change the name of the toolbar
+                defaultInteractions.changeTitleBarName(temp_electionName);
+
+                districtList = response.body().getResponse().getElectionData().getDistricts();
+                //download the registrar list
+                getRegistrarInfo(electionURL);
+
+            }
+
+            @Override
+            public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
+                Log.e(LOG_TAG, "Downloading the district list has failed...");
+                throw new RuntimeException("Could not download the election list");
+                //TODO:Restart the connection if failure
+            }
+        });
+
+    }
 
 
     public void displayDistrictsonSpinner(List<String> districtList){
@@ -136,7 +207,6 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
         getView().findViewById(R.id.regform_UI).setVisibility(View.VISIBLE);
 
-
     }
 
     public void displayRegistrarSpinner(List<String> registrarList){
@@ -157,8 +227,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         spinner.setAdapter(mRegistrarList);
     }
 
-    public void onNextClick(){
-        View rootView = getView();
+
+    public void saveElectionInstance(){
+        //TODO: check if the electionInstance is already in the list
+
 
         //test if the user has selected a district and a registrar.
 
@@ -175,7 +247,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
         //TODO: fix this error checking
         if (registrarName == null || districtName == null) {
-            ToastWrapper.initiateToast(getContext(), "Please your district and your registrar");
+            ToastWrapper.initiateToast(getContext(), "Please enter your district and your registrar");
             return;
         }
 
@@ -209,120 +281,4 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
     }
 
-    private String respJSONStr;
-
-    public void getRegistrarInfo(String electionURL){
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
-        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-        Call<MODEL_getRegistrarInfo> call = apiService.getRegistrarInfo();
-
-        call.enqueue(new Callback<MODEL_getRegistrarInfo>() {
-            @Override
-            public void onResponse(Call<MODEL_getRegistrarInfo> call, Response<MODEL_getRegistrarInfo> response) {
-                respJSONStr = response.body().getResponse();
-                if(respJSONStr.equals(null)){
-                    Log.e(LOG_TAG, "failed to get the registrar JSON string");
-                    ToastWrapper.initiateToast(getContext(), "failed to get the registrar JSON string");
-                }
-                SharedPreferences.Editor editor = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
-                editor.putString(getString(R.string.registrarListKey),respJSONStr );
-                editor.commit();
-                Spinner spinner = (Spinner) getView().findViewById(R.id.register_districtspinner);
-
-
-                //set up an event to change the registrarlist available when a district is chosen.
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                        TextView textView = (TextView) selectedItemView;
-                        String selectedDistrict = textView.getText().toString();
-                        Log.v(LOG_TAG, "District selected : " + selectedDistrict);
-
-                        ArrayList<String> registrarList = new ArrayList<String>();
-                        try{
-                            JSONArray regisListJSONstr = new JSONArray(respJSONStr);
-                            for(int i = 0 ; i < regisListJSONstr.length(); i++){
-                                JSONObject registrarInfo = regisListJSONstr.getJSONObject(i).getJSONObject("Registrar");
-                                if(registrarInfo.getString("RegistrationDistrict").equals(selectedDistrict)){
-                                    String registrarName = registrarInfo.getString("RegistrarName");
-                                    Log.v(LOG_TAG, registrarName + " is a registrar in " + selectedDistrict);
-                                    registrarList.add(registrarName);
-                                }
-                            }
-                            displayRegistrarSpinner(registrarList);
-
-                        }catch(JSONException e){
-                            Log.e(LOG_TAG, "could not find the JSONObject inside regisListJSONstr");
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parentView) {
-
-                    }
-
-                });
-            }
-
-            @Override
-            public void onFailure(Call<MODEL_getRegistrarInfo> call, Throwable t) {
-                Log.e(LOG_TAG, "Downloading the registrar information has failed...");
-                throw new RuntimeException("Could not download the registrar list");
-                //TODO:Restart the connection if failure
-            }
-        });
-    }
-
-    protected void getElectionInfo(String electionURL){
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
-        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-        Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
-
-        //Enable the loading screen
-        rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
-        rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
-
-        //TODO: must handle invalid URLs (not a URL at all)
-        //TODO: must handle invalid URLs (not available on BlockVote)
-        call.enqueue(new Callback<MODEL_ElectionInfo>() {
-            @Override
-            public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
-                int statusCode = response.code();
-
-                List<String> districtList = response.body().getResponse().getElectionData().getDistricts();
-                //apply the results to the UI
-                View rootView_ = getView();
-                if(rootView_ != null){
-                    displayDistrictsonSpinner(districtList);
-
-                    //Setup the button
-//                    Button registerButton = (Button) rootView_.findViewById(R.id.reg_register_button);
-//                    //Register button callback
-//                    registerButton.setOnClickListener(new View.OnClickListener() {
-//                        public void onClick(View v) {
-//                            if (mListener != null) {
-//                                onNextClick();
-//                            }
-//                        }
-//                    });
-
-                    //disable the loading screen
-                    rootView_.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
-
-
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
-                Log.e(LOG_TAG, "Downloading the district list has failed...");
-                throw new RuntimeException("Could not download the election list");
-                //TODO:Restart the connection if failure
-            }
-        });
-
-    }
 }
