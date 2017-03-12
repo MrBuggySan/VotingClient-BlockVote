@@ -1,6 +1,7 @@
 package com.blockvote.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
@@ -17,12 +18,13 @@ import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
-import com.blockvote.interfaces.DefaultInteractions;
+import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.model.MODEL_getRegistrarInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
 import com.blockvote.votingclient.R;
+import com.google.gson.Gson;
 import com.stepstone.stepper.Step;
 
 import org.json.JSONArray;
@@ -44,7 +46,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     private final String LOG_TAG = RegistrationFormFragment.class.getSimpleName();
     protected View rootView;
 
-    private DefaultInteractions defaultInteractions;
+    private RegistrationDefaultInteractions registrationDefaultInteractions;
     private ElectionInstance electionInstance;
     protected boolean isReadyForNextStep;
     protected boolean hasValidElectionURL;
@@ -66,7 +68,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
         electionInstance = new ElectionInstance();
         //make the children determine the components of the UI
-        EditUI(defaultInteractions);
+        EditUI(registrationDefaultInteractions);
         isReadyForNextStep = false;
         hasValidElectionURL = false;
         return rootView;
@@ -75,8 +77,8 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof DefaultInteractions) {
-            defaultInteractions = (DefaultInteractions) context;
+        if (context instanceof RegistrationDefaultInteractions) {
+            registrationDefaultInteractions = (RegistrationDefaultInteractions) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement DefaultInteractions");
@@ -86,10 +88,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     @Override
     public void onDetach() {
         super.onDetach();
-        defaultInteractions = null;
+        registrationDefaultInteractions = null;
     }
 
-    abstract void EditUI(DefaultInteractions defaultInteractions);
+    abstract void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions);
     abstract void stopLoadingAnimOnSuccess();
     abstract void stopLoadingAnimOnFail();
 
@@ -115,7 +117,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                 String temp_electionName = response.body().getResponse().getId();
                 electionInstance.setElectionName(temp_electionName);
                 //change the name of the toolbar
-                defaultInteractions.changeTitleBarName(temp_electionName);
+                registrationDefaultInteractions.changeTitleBarName(temp_electionName);
 
                 districtList = response.body().getResponse().getElectionData().getDistricts();
                 //download the registrar list
@@ -247,8 +249,20 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
 
     public void saveElectionInstance(){
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(
+                getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
+
         //TODO: this check can be taken out for the demo at the Olympic Oval.
-        //TODO: check if the electionInstance is already in the list
+        //TODO: check if the electionInstance is already in the datastore
+        /*
+        if(sharedPref.contains(electionInstance.getElectionURL())){
+            //TODO:Check if the electionInstance is the same as the one already being worked on
+
+            ToastWrapper.initiateToast(getContext(), "This election is already in the app.");
+            return;
+        }*/
+
+        SharedPreferences.Editor editor = sharedPref.edit();
 
         //setup the state of this electionInstance
         electionInstance.setElectionState(ElectionState.GEN_QR);
@@ -306,6 +320,15 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
             //TODO: Store the electionInstance inside dataStore
             //The key is the election's URL
+            Gson gson = new Gson();
+            String jsonElectionInstance = gson.toJson(electionInstance);
+            editor.putString(electionInstance.getElectionURL(), jsonElectionInstance);
+            editor.commit();
+
+            //TODO: Add the electionInstance to the list of Elections
+
+            //Update the activeElection of RegistrationActivity
+            registrationDefaultInteractions.setActiveElection(electionInstance.getElectionURL());
 
             //mListener.onDistrictListNextInteraction( districtName, registrarName, keyModulus, keyExponent);
         }catch(JSONException e){

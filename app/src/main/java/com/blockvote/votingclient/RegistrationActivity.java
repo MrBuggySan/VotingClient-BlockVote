@@ -7,17 +7,20 @@ import android.support.v7.widget.Toolbar;
 
 import com.blockvote.auxillary.StepperAdapter;
 import com.blockvote.fragments.ManualForm;
-import com.blockvote.interfaces.DefaultInteractions;
+import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.stepstone.stepper.StepperLayout;
 
-public class RegistrationActivity extends AppCompatActivity implements DefaultInteractions {
+public class RegistrationActivity extends AppCompatActivity implements RegistrationDefaultInteractions {
 
     private StepperLayout mStepperLayout;
+    private String activeElection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        //TODO: determine how I can manage the activeElection string
 
         //TODO: determine if I have to use FilledForm or ManualForm for this Election
 
@@ -38,4 +41,15 @@ public class RegistrationActivity extends AppCompatActivity implements DefaultIn
         ActionBar myActionBar = (ActionBar) getSupportActionBar();
         myActionBar.setTitle(name);
     }
+
+    @Override
+    public String getActiveElection(){
+        return activeElection;
+    }
+
+    @Override
+    public void setActiveElection(String activeElection){
+        this.activeElection = activeElection;
+    }
+
 }

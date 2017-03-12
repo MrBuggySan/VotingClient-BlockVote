@@ -2,13 +2,13 @@ package com.blockvote.fragments;
 
 import android.support.annotation.NonNull;
 
-import com.blockvote.interfaces.DefaultInteractions;
+import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.stepstone.stepper.VerificationError;
 
 public class FilledForm extends RegistrationFormFragment {
 
     @Override
-    public void EditUI(DefaultInteractions defaultInteractions){
+    public void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions){
 
         //TODO: verify that the information on the QR is valid against what we have
 
