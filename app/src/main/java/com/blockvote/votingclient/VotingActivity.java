@@ -27,7 +27,6 @@ import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.crypto.Token;
 import com.blockvote.fragments.GenerateQRFragment;
-import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.fragments.SelectCandidateFragment;
 import com.blockvote.fragments.VoteButtonFragment;
@@ -45,7 +44,7 @@ import org.spongycastle.crypto.signers.PSSSigner;
  */
 
 public class VotingActivity extends AppCompatActivity
-        implements RegistrationFormFragment.OnFragmentInteractionListener,
+        implements
         GenerateQRFragment.OnFragmentInteractionListener,
         VoteButtonFragment.OnFragmentInteractionListener,
         SelectCandidateFragment.OnFragmentInteractionListener,

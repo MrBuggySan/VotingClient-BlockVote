@@ -43,32 +43,16 @@ public class GenerateQRFragment extends Fragment implements Step {
         //hide the rest of the layouts
         rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
 
-        //TODO: access the appropriate data from datastore
+        //TODO: get the electionInstance's blindedToken
 
         /*
-        //create a dialog
-        new simpleDialog(getContext(), R.string.dialog_title_Information, R.string.dialog_message_GenQR);
-
-        RSAKeyParameters rsaKeyParameters = new RSAKeyParameters(false,
-                new BigInteger(Base64.decode(keyModulus, Base64.DEFAULT)),
-                new BigInteger(Base64.decode(keyExponent, Base64.DEFAULT)));
-        //Create BlindedToken
-        BlindedToken blindedToken = new BlindedToken( rsaKeyParameters );
-
-
-        Gson gson = new Gson();
-        String jsonBlindedToken = gson.toJson(blindedToken);
-        String jsonRSAKeyParams = gson.toJson(rsaKeyParameters);
-        //store these values in the VotingActivity
-        mListener.store_BlindedKey_RSAKeyParam(jsonBlindedToken, jsonRSAKeyParams);
-
-        //Create tokenRequest
+       //Create tokenRequest
         try{
             TokenRequest tokenRequest = blindedToken.generateTokenRequest();
             byte[] tokenMsg = tokenRequest.getMessage();
 
             //start generating the QR
-            //TODO: Create the background service
+            //Create the background service
 //            Intent mServiceIntent = new Intent(this, QRCreatorService.class);
 //            mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
 //            this.startService(mServiceIntent);

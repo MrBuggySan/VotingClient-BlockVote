@@ -19,6 +19,11 @@ public class FilledForm extends RegistrationFormFragment {
     }
 
     @Override
+    public void stopLoadingAnim(){
+
+    }
+
+    @Override
     public void onError(@NonNull VerificationError error) {
         //handle error inside of the fragment, e.g. show error on EditText
         //editText.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));

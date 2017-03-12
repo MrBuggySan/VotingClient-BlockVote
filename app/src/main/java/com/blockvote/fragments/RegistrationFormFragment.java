@@ -3,6 +3,7 @@ package com.blockvote.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.ElectionInstance;
+import com.blockvote.auxillary.ElectionState;
 import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.crypto.BlindedToken;
 import com.blockvote.interfaces.DefaultInteractions;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.model.MODEL_getRegistrarInfo;
@@ -25,7 +28,9 @@ import com.stepstone.stepper.Step;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.spongycastle.crypto.params.RSAKeyParameters;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +46,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
     private DefaultInteractions defaultInteractions;
     private ElectionInstance electionInstance;
+    protected boolean isReadyForNextStep;
 
     public RegistrationFormFragment() {
         // Required empty public constructor
@@ -60,7 +66,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         electionInstance = new ElectionInstance();
         //make the children determine the components of the UI
         EditUI(defaultInteractions);
-
+        isReadyForNextStep = false;
         return rootView;
     }
 
@@ -229,11 +235,13 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
 
     public void saveElectionInstance(){
+        //TODO: this check can be taken out for the demo at the Olympic Oval.
         //TODO: check if the electionInstance is already in the list
 
+        //setup the state of this electionInstance
+        electionInstance.setElectionState(ElectionState.GEN_QR);
 
         //test if the user has selected a district and a registrar.
-
         Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
         Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_registrar_spinner);
 
@@ -251,6 +259,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             return;
         }
 
+        //save the registrar name and the district name
+        electionInstance.setRegistrarName(registrarName);
+        electionInstance.setDistrictName(districtName);
+
         //extract the registrar key's modulus and exponent
         try{
             JSONArray regisListJSONstr = new JSONArray(respJSONStr);
@@ -266,19 +278,29 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
                 }
             }
-//            Log.v(LOG_TAG, regName + " is the selected registrar");
-//            Log.v(LOG_TAG, keyModulus);
-//            Log.v(LOG_TAG, keyExponent);
-            //TODO: fix this error checking
+
             if(keyModulus == null || keyExponent == null){
                 Log.e(LOG_TAG, "The registrar was not found in the downloaded respJSONStr");
+                return;
             }
+
+            RSAKeyParameters rsaKeyParameters = new RSAKeyParameters(false,
+                    new BigInteger(Base64.decode(keyModulus, Base64.DEFAULT)),
+                    new BigInteger(Base64.decode(keyExponent, Base64.DEFAULT)));
+            BlindedToken blindedToken = new BlindedToken( rsaKeyParameters );
+
+            electionInstance.setBlindedToken(blindedToken);
+            electionInstance.setrSAkeyParams(rsaKeyParameters);
+
+            //TODO: Store the electionInstance inside dataStore
+
             //mListener.onDistrictListNextInteraction( districtName, registrarName, keyModulus, keyExponent);
         }catch(JSONException e){
             Log.e(LOG_TAG, "Could not find the respJSONstr");
         }
 
-
+        //We are now ready for the next step
+        isReadyForNextStep = true;
     }
 
 }

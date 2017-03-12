@@ -11,11 +11,10 @@ import android.widget.TextView;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.interfaces.DefaultInteractions;
 import com.blockvote.votingclient.R;
-import com.blockvote.votingclient.RegistrationActivity;
 import com.stepstone.stepper.VerificationError;
 
 public class ManualForm extends RegistrationFormFragment {
-    private RegistrationActivity registrationActivity;
+
 
     @Override
     public void EditUI(DefaultInteractions defaultInteractions){
@@ -56,16 +55,17 @@ public class ManualForm extends RegistrationFormFragment {
         }
         //TODO: help out the user so they do not have to write https://
 
-
+        //Show the loading animation
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.VISIBLE);
 
         //Download the data
-        getElectionInfo(electionURL);
+//        getElectionInfo(electionURL);
 
-        //Show the loading animation
+
 
     }
 
+    @Override
     public void stopLoadingAnim(){
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
         rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.VISIBLE);
@@ -83,13 +83,11 @@ public class ManualForm extends RegistrationFormFragment {
 
     @Override
     public VerificationError verifyStep() {
-        //return null if the user can go to the next stepper_layout, create a new VerificationError instance otherwise
-        EditText urlEditText = (EditText)rootView.findViewById(R.id.regform_urledittext);
-        if(TextUtils.isEmpty(urlEditText.getText().toString()))
+        if(!isReadyForNextStep)
             return new VerificationError("You must enter the election's URL.");
         else {
             //TODO: Insert the electionInstance to the dataStore
-            saveElectionInstance();
+            //saveElectionInstance();
             return null;
         }
     }

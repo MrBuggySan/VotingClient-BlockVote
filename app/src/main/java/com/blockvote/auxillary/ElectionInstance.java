@@ -1,5 +1,9 @@
 package com.blockvote.auxillary;
 
+import com.blockvote.crypto.BlindedToken;
+
+import org.spongycastle.crypto.params.RSAKeyParameters;
+
 /**
  * Created by Beast Mode on 3/11/2017.
  */
@@ -13,10 +17,8 @@ public class ElectionInstance {
     private String registrarName;
 
     //TODO: determine which ones I can cache, for now I cache all of them
-    private String keyExponent;
-    private String keyModulus;
-    private String jsonBlindedToken;
-    private String jsonRSAkeyParams;
+    private BlindedToken blindedToken;
+    private RSAKeyParameters rSAkeyParams;
     private String signedTokenID;
     private String signedTokenSignature;
 
@@ -64,36 +66,20 @@ public class ElectionInstance {
         this.registrarName = registrarName;
     }
 
-    public String getKeyExponent() {
-        return keyExponent;
+    public BlindedToken getBlindedToken() {
+        return blindedToken;
     }
 
-    public void setKeyExponent(String keyExponent) {
-        this.keyExponent = keyExponent;
+    public void setBlindedToken(BlindedToken blindedToken) {
+        this.blindedToken = blindedToken;
     }
 
-    public String getKeyModulus() {
-        return keyModulus;
+    public RSAKeyParameters getrSAkeyParams() {
+        return rSAkeyParams;
     }
 
-    public void setKeyModulus(String keyModulus) {
-        this.keyModulus = keyModulus;
-    }
-
-    public String getJsonBlindedToken() {
-        return jsonBlindedToken;
-    }
-
-    public void setJsonBlindedToken(String jsonBlindedToken) {
-        this.jsonBlindedToken = jsonBlindedToken;
-    }
-
-    public String getJsonRSAkeyParams() {
-        return jsonRSAkeyParams;
-    }
-
-    public void setJsonRSAkeyParams(String jsonRSAkeyParams) {
-        this.jsonRSAkeyParams = jsonRSAkeyParams;
+    public void setrSAkeyParams(RSAKeyParameters rSAkeyParams) {
+        this.rSAkeyParams = rSAkeyParams;
     }
 
     public String getSignedTokenID() {
