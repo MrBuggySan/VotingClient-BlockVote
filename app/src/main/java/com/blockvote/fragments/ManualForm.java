@@ -41,6 +41,7 @@ public class ManualForm extends RegistrationFormFragment {
     }
 
     public void setupRemainingForm(){
+        rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.GONE);
         EditText urlEditText = (EditText)rootView.findViewById(R.id.regform_urledittext);
         if(TextUtils.isEmpty(urlEditText.getText().toString())){
             ToastWrapper.initiateToast(getContext(), "Please enter the election's URL");
@@ -59,21 +60,26 @@ public class ManualForm extends RegistrationFormFragment {
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.VISIBLE);
 
         //Download the data
-//        getElectionInfo(electionURL);
+        getElectionInfo(electionURL);
 
 
 
     }
 
     @Override
-    public void stopLoadingAnim(){
+    public void stopLoadingAnimOnSuccess(){
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
         rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.VISIBLE);
     }
 
     @Override
+    public void stopLoadingAnimOnFail(){
+        rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
+    }
+
+    @Override
     public void onError(@NonNull VerificationError error) {
-        ToastWrapper.initiateToast(getContext(), error.getErrorMessage());
+        //ToastWrapper.initiateToast(getContext(), error.getErrorMessage());
     }
 
     @Override
@@ -83,13 +89,19 @@ public class ManualForm extends RegistrationFormFragment {
 
     @Override
     public VerificationError verifyStep() {
-        if(!isReadyForNextStep)
+        if(hasValidElectionURL){
+            //Attempt to insert the new electionInstance to the dataStore
+            saveElectionInstance();
+            if(isReadyForNextStep)
+                return null;
+            else {
+                return new VerificationError("You must enter the election's URL.");
+            }
+        }else{
+            ToastWrapper.initiateToast(getContext(), "You must set the election's URL.");
             return new VerificationError("You must enter the election's URL.");
-        else {
-            //TODO: Insert the electionInstance to the dataStore
-            //saveElectionInstance();
-            return null;
         }
+
     }
 
 

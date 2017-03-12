@@ -23,13 +23,15 @@
             android:exported="false" />
 
         <activity android:name=".MainActivity">
+
+        </activity>
+        <activity android:name=".RegistrationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".RegistrationActivity" />
+            </activity>
         <activity android:name=".HelpActivity" />
         <activity android:name=".AboutActivity"></activity>
     </application>

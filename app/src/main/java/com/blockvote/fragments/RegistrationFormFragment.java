@@ -47,6 +47,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     private DefaultInteractions defaultInteractions;
     private ElectionInstance electionInstance;
     protected boolean isReadyForNextStep;
+    protected boolean hasValidElectionURL;
 
     public RegistrationFormFragment() {
         // Required empty public constructor
@@ -67,6 +68,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         //make the children determine the components of the UI
         EditUI(defaultInteractions);
         isReadyForNextStep = false;
+        hasValidElectionURL = false;
         return rootView;
     }
 
@@ -88,9 +90,52 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     }
 
     abstract void EditUI(DefaultInteractions defaultInteractions);
-    abstract void stopLoadingAnim();
+    abstract void stopLoadingAnimOnSuccess();
+    abstract void stopLoadingAnimOnFail();
 
     private String respJSONStr;
+
+    protected void getElectionInfo(final String electionURL){
+        isReadyForNextStep = false;
+        hasValidElectionURL = false;
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
+
+        call.enqueue(new Callback<MODEL_ElectionInfo>() {
+            @Override
+            public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
+                int statusCode = response.code();
+
+                if(statusCode != 200){
+                    ToastWrapper.initiateToast(getContext(), "The election you entered is not available in BlockVote.");
+                    return;
+                }
+                electionInstance.setElectionURL(electionURL);
+                String temp_electionName = response.body().getResponse().getId();
+                electionInstance.setElectionName(temp_electionName);
+                //change the name of the toolbar
+                defaultInteractions.changeTitleBarName(temp_electionName);
+
+                districtList = response.body().getResponse().getElectionData().getDistricts();
+                //download the registrar list
+                hasValidElectionURL = true;
+                getRegistrarInfo(electionURL);
+
+            }
+
+            @Override
+            public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
+                Log.e(LOG_TAG, "Downloading the district list has failed...");
+//                throw new RuntimeException("Could not download the election list");
+                ToastWrapper.initiateToast(getContext(), "The election you entered is not available in BlockVote.");
+                stopLoadingAnimOnFail();
+                return;
+            }
+        });
+
+    }
+
     public void getRegistrarInfo(String electionURL){
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
@@ -105,7 +150,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                     ToastWrapper.initiateToast(getContext(), "failed to get the registrar JSON string");
                 }
                 //TODO: stop the loading
-                stopLoadingAnim();
+                stopLoadingAnimOnSuccess();
 
                 displayDistrictsonSpinner(districtList);
                 Spinner spinner = (Spinner) getView().findViewById(R.id.register_districtspinner);
@@ -129,7 +174,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                                     registrarList.add(registrarName);
                                 }
                             }
-
+                            displayRegistrarSpinner(registrarList);
 
 
                         }catch(JSONException e){
@@ -157,41 +202,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
     private List<String> districtList;
 
-    protected void getElectionInfo(final String electionURL){
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
-        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-        Call<MODEL_ElectionInfo> call = apiService.getElectionInfo();
 
-        call.enqueue(new Callback<MODEL_ElectionInfo>() {
-            @Override
-            public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
-                int statusCode = response.code();
-
-                if(statusCode != 200){
-                    ToastWrapper.initiateToast(getContext(), "The election you entered is not available in BlockVote.");
-                    return;
-                }
-                electionInstance.setElectionURL(electionURL);
-                String temp_electionName = response.body().getResponse().getId();
-                electionInstance.setElectionName(temp_electionName);
-                //change the name of the toolbar
-                defaultInteractions.changeTitleBarName(temp_electionName);
-
-                districtList = response.body().getResponse().getElectionData().getDistricts();
-                //download the registrar list
-                getRegistrarInfo(electionURL);
-
-            }
-
-            @Override
-            public void onFailure(Call<MODEL_ElectionInfo> call, Throwable t) {
-                Log.e(LOG_TAG, "Downloading the district list has failed...");
-                throw new RuntimeException("Could not download the election list");
-                //TODO:Restart the connection if failure
-            }
-        });
-
-    }
 
 
     public void displayDistrictsonSpinner(List<String> districtList){
@@ -216,6 +227,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     }
 
     public void displayRegistrarSpinner(List<String> registrarList){
+        isReadyForNextStep = false;
         ArrayAdapter<String> mRegistrarList = new ArrayAdapter<String>(
                 getActivity(),
                 R.layout.listentry,

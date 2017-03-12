@@ -19,7 +19,12 @@ public class FilledForm extends RegistrationFormFragment {
     }
 
     @Override
-    public void stopLoadingAnim(){
+    public void stopLoadingAnimOnSuccess(){
+
+    }
+
+    @Override
+    public void stopLoadingAnimOnFail(){
 
     }
 
