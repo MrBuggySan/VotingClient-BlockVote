@@ -9,10 +9,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.blockvote.votingclient.R;
 import com.stepstone.stepper.VerificationError;
+
+import java.util.ArrayList;
 
 public class ManualForm extends RegistrationFormFragment {
 
@@ -69,6 +72,7 @@ public class ManualForm extends RegistrationFormFragment {
 
     @Override
     public void stopLoadingAnimOnSuccess(){
+        rootView.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
         rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.VISIBLE);
     }
@@ -76,6 +80,31 @@ public class ManualForm extends RegistrationFormFragment {
     @Override
     public void stopLoadingAnimOnFail(){
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void disableEditableViews(){
+        //Make the fields uneditable.
+        Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+        districtSpinner.setClickable(false);
+        Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_registrar_spinner);
+        registrarSpinner.setClickable(false);
+        EditText urlEditText = (EditText) rootView.findViewById(R.id.regform_urledittext);
+        urlEditText.setClickable(false);
+    }
+
+    @Override
+    public void prefillEditableViews(ElectionInstance electionInstance){
+        ArrayList<String> registrarList = new ArrayList<String>();
+        registrarList.add(electionInstance.getRegistrarName());
+        displayRegistrarSpinner(registrarList);
+
+        ArrayList<String> districtList = new ArrayList<String>();
+        districtList.add(electionInstance.getDistrictName());
+        displayDistrictsonSpinner(districtList);
+
+        EditText urlEditText = (EditText) rootView.findViewById(R.id.regform_urledittext);
+        urlEditText.setText(electionInstance.getElectionURL());
     }
 
     @Override
@@ -94,13 +123,6 @@ public class ManualForm extends RegistrationFormFragment {
             //Attempt to insert the new electionInstance to the dataStore
             saveElectionInstance();
             if(isReadyForNextStep){
-                //Make the fields uneditable.
-                Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
-                districtSpinner.setClickable(false);
-                Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_registrar_spinner);
-                registrarSpinner.setClickable(false);
-                EditText urlEditText = (EditText) rootView.findViewById(R.id.regform_urledittext);
-                urlEditText.setClickable(false);
                 return null;
             }
             else {

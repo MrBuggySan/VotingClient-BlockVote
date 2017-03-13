@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -14,15 +15,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.StepperAdapter;
 import com.blockvote.fragments.ManualForm;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
+import com.google.gson.Gson;
 import com.stepstone.stepper.StepperLayout;
 
 public class RegistrationActivity extends AppCompatActivity implements RegistrationDefaultInteractions {
     private final String LOG_TAG = RegistrationActivity.class.getSimpleName();
     private StepperLayout mStepperLayout;
-    private String activeElection;
+    private ElectionInstance electionInstance;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +44,10 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
         ManualForm manualForm= new ManualForm();
 
+        //TODO: determine the correct position to start with depending on the state of the electionInstance
+        int startingStepPosition = 1;
         mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
-        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this, manualForm));
+        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this, manualForm), startingStepPosition);
 
     }
 
@@ -52,14 +58,25 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
-    public String getActiveElection(){
-        return activeElection;
+    public void savetElectionInstance(ElectionInstance electionInstance_){
+        this.electionInstance = electionInstance_;
+
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        //Store the electionInstance inside dataStore
+        //The key is the election's URL
+        Gson gson = new Gson();
+        String jsonElectionInstance = gson.toJson(this.electionInstance);
+        editor.putString(electionInstance.getElectionURL(), jsonElectionInstance);
+        editor.commit();
+
+        //TODO: Add the electionInstance to the list of Elections
     }
 
     @Override
-    public void setActiveElection(String activeElection){
-        //This is the URL of the election
-        this.activeElection = activeElection;
+    public ElectionInstance getElectionInstance(){
+        return electionInstance;
     }
 
     @Override
@@ -93,6 +110,10 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
             findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
             findViewById(R.id.QR_animation_view).setVisibility(View.GONE);
+
+            // cache the QR for this electionInstance
+            electionInstance.setQR_code(bitmap);
+            savetElectionInstance(electionInstance);
         }
     }
 

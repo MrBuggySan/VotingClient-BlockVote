@@ -24,7 +24,6 @@ import com.blockvote.model.MODEL_getRegistrarInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
 import com.blockvote.networking.BlockVoteServerInstance;
 import com.blockvote.votingclient.R;
-import com.google.gson.Gson;
 import com.stepstone.stepper.Step;
 
 import org.json.JSONArray;
@@ -66,11 +65,24 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_registration_form, container, false);
 
-        electionInstance = new ElectionInstance();
-        //make the children determine the components of the UI
-        EditUI(registrationDefaultInteractions);
-        isReadyForNextStep = false;
-        hasValidElectionURL = false;
+        //Determine if a new electionInstance is to be made or not
+        if(registrationDefaultInteractions.getElectionInstance() != null){
+            stopLoadingAnimOnSuccess();
+            prefillEditableViews(registrationDefaultInteractions.getElectionInstance());
+            disableEditableViews();
+            isReadyForNextStep = true;
+            hasValidElectionURL = true;
+
+        }else{
+            electionInstance = new ElectionInstance();
+            //make the children determine the components of the UI that will show up
+            EditUI(registrationDefaultInteractions);
+            isReadyForNextStep = false;
+            hasValidElectionURL = false;
+        }
+
+
+
         return rootView;
     }
 
@@ -94,6 +106,8 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     abstract void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions);
     abstract void stopLoadingAnimOnSuccess();
     abstract void stopLoadingAnimOnFail();
+    abstract void disableEditableViews();
+    abstract void prefillEditableViews(ElectionInstance electionInstance);
 
     private String respJSONStr;
 
@@ -263,7 +277,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             return;
         }*/
 
-        SharedPreferences.Editor editor = sharedPref.edit();
+
 
         //setup the state of this electionInstance
         electionInstance.setElectionState(ElectionState.GEN_QR);
@@ -319,19 +333,14 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             electionInstance.setBlindedToken(blindedToken);
             electionInstance.setrSAkeyParams(rsaKeyParameters);
 
-            //TODO: Store the electionInstance inside dataStore
-            //The key is the election's URL
-            Gson gson = new Gson();
-            String jsonElectionInstance = gson.toJson(electionInstance);
-            editor.putString(electionInstance.getElectionURL(), jsonElectionInstance);
-            editor.commit();
 
-            //TODO: Add the electionInstance to the list of Elections
+            disableEditableViews();
 
-            //Update the activeElection of RegistrationActivity
-            registrationDefaultInteractions.setActiveElection(electionInstance.getElectionURL());
 
-            //mListener.onDistrictListNextInteraction( districtName, registrarName, keyModulus, keyExponent);
+            //Update the electionInstance of RegistrationActivity
+            registrationDefaultInteractions.savetElectionInstance(electionInstance);
+
+
         }catch(JSONException e){
             Log.e(LOG_TAG, "Could not find the respJSONstr");
         }

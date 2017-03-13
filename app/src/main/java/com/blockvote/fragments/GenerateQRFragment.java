@@ -3,7 +3,6 @@ package com.blockvote.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,6 @@ import com.blockvote.auxillary.QRCreatorService;
 import com.blockvote.crypto.TokenRequest;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.blockvote.votingclient.R;
-import com.google.gson.Gson;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
@@ -45,8 +43,11 @@ public class GenerateQRFragment extends Fragment implements Step {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_generate_qr, container, false);
 
+        //TODO: test if the electionInstance already has a QR code cached
+
         //hide the rest of the layouts
         rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
+
 
 
         return rootView;
@@ -112,40 +113,31 @@ public class GenerateQRFragment extends Fragment implements Step {
 
 
 
-        //TODO: get the electionInstance's blindedToken
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(
-                getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
-        String electionURL = registrationDefaultInteractions.getActiveElection();
-        String jsonElectionInstance = sharedPref.getString(electionURL, null);
+        // get the electionInstance's blindedToken
+        electionInstance = registrationDefaultInteractions.getElectionInstance();
 
-        Gson gson = new Gson();
-        electionInstance = gson.fromJson(jsonElectionInstance, ElectionInstance.class);
+        if(electionInstance == null) return;
 
+        if(electionInstance.getQR_code() == null){
+            //Create tokenRequest
+            try{
+                TokenRequest tokenRequest = electionInstance.getBlindedToken().generateTokenRequest();
+                byte[] tokenMsg = tokenRequest.getMessage();
 
-       //Create tokenRequest
-        try{
-            TokenRequest tokenRequest = electionInstance.getBlindedToken().generateTokenRequest();
-            byte[] tokenMsg = tokenRequest.getMessage();
+                //start generating the QR
+                //Create the background service
+                Intent mServiceIntent = new Intent(getActivity(), QRCreatorService.class);
+                mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
+                getActivity().startService(mServiceIntent);
 
-            //start generating the QR
-            //Create the background service
-            Intent mServiceIntent = new Intent(getActivity(), QRCreatorService.class);
-            mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
-            getActivity().startService(mServiceIntent);
-
-            registrationDefaultInteractions.setupQRReceiver();
-            //TODO: When back is pressed, cancel the IntentService
+                registrationDefaultInteractions.setupQRReceiver();
+                //TODO: When back is pressed, cancel the IntentService
 
 
-        }catch(CryptoException cryptoException){
-            //TODO: handle this
+            }catch(CryptoException cryptoException){
+                //TODO: handle this
+            }
         }
-
-        //TODO: I must somehow cache the QR so I don't have to generate it everytime.
-
-
-
-
     }
 
     @Override

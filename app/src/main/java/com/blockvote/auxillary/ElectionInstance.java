@@ -1,5 +1,7 @@
 package com.blockvote.auxillary;
 
+import android.graphics.Bitmap;
+
 import com.blockvote.crypto.BlindedToken;
 
 import org.spongycastle.crypto.params.RSAKeyParameters;
@@ -21,6 +23,16 @@ public class ElectionInstance {
     private RSAKeyParameters rSAkeyParams;
     private String signedTokenID;
     private String signedTokenSignature;
+
+    private Bitmap QR_code;
+
+    public Bitmap getQR_code() {
+        return QR_code;
+    }
+
+    public void setQR_code(Bitmap QR_code) {
+        this.QR_code = QR_code;
+    }
 
     public ElectionInstance(){
 
