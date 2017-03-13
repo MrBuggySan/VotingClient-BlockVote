@@ -26,20 +26,22 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="16dp"
+                android:paddingLeft="30dp"
                 android:weightSum="1">
 
                 <TextView
                     android:id="@+id/newElection_TextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
+                    android:layout_weight="0.70"
                     android:text="New Election"
                     android:textSize="30sp" />
 
                 <ImageView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.30"
+                    android:src="@drawable/add" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
