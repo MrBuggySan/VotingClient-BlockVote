@@ -16,8 +16,6 @@ import java.util.ArrayList;
 
 public class FinishedElections extends ElectionListFragment {
     public void EditUI(){
-        rootView.findViewById(R.id.newElectionUI).setVisibility(View.GONE);
-
         //Fill some random data, for real this would come from the dataStore
         ElectionInstance sample1 = new ElectionInstance();
         sample1.setElectionName("Sample Election 4");
@@ -36,7 +34,7 @@ public class FinishedElections extends ElectionListFragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
 
-        RVAdapter adapter = new RVAdapter(elections);
+        RVAdapter adapter = new RVAdapter(elections, false);
         rv.setAdapter(adapter);
     }
 }
