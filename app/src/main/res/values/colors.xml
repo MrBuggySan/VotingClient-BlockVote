@@ -5,4 +5,10 @@
     <color name="colorAccent">#E1F5FE</color>
     <color name="QRDarkColor">#0D1522</color>
     <color name="QRWhite">#f7f3f3</color>
+    <color name="AddElectionColor">#ff4444</color>
+
+    <!--The rest of the card colors-->
+    <color name="card1Color">#FFBB33</color>
+    <color name="card2Color">#99CC00</color>
+    <color name="card3Color">#9933CC</color>
 </resources>

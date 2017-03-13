@@ -3,18 +3,33 @@ package com.blockvote.auxillary;
 import java.util.ArrayList;
 
 /**
- * Created by Beast Mode on 3/11/2017.
+ * Created by Beast Mode on 3/13/2017.
  */
 
-public class ElectionList {
-    private ArrayList<String> electionKeysList;
+public abstract class ElectionList {
 
-    public ElectionList(){
-        electionKeysList = new ArrayList<>();
+    protected ArrayList<ElectionInstance> electionList;
+
+    public boolean addElection(ElectionInstance electionInstance){
+        //This check can be taken out for the demos so we can have the same instances
+        if(this.hasElection(electionInstance)){
+            return false;
+        }
+        electionList.add(electionInstance);
+        return true;
     }
 
-    public void addElectionKey(String key){
-        electionKeysList.add(key);
+    private boolean hasElection(ElectionInstance electionInstance){
+        String newURL = electionInstance.getElectionURL();
+        for(ElectionInstance x : electionList){
+            if(newURL.equals(x.getElectionURL())){
+                return true;
+            }
+        }
+        return false;
     }
 
+    public void deleteAllElections(){
+        electionList.clear();
+    }
 }

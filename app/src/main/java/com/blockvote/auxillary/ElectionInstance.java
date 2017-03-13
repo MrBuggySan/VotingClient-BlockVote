@@ -14,6 +14,9 @@ public class ElectionInstance {
     private ElectionState electionState;
     private String electionName;
     private String electionURL;
+    private String timeString;
+    private int startTime;
+    private int endTime;
 
     private String districtName;
     private String registrarName;
@@ -25,6 +28,30 @@ public class ElectionInstance {
     private String signedTokenSignature;
 
     private Bitmap QR_code;
+
+    public String getTimeString() {
+        return timeString;
+    }
+
+    public void setTimeString(String timeString) {
+        this.timeString = timeString;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
+    }
 
     public Bitmap getQR_code() {
         return QR_code;

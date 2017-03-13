@@ -38,7 +38,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ElectionInstanceVi
     @Override
     public void onBindViewHolder(ElectionInstanceViewHolder electionInstanceViewHolder, int i) {
         electionInstanceViewHolder.electionName.setText(elections.get(i).getElectionName());
-        electionInstanceViewHolder.electionURL.setText(elections.get(i).getElectionURL());
+        electionInstanceViewHolder.electionURL.setText(elections.get(i).getTimeString());
+//        electionInstanceViewHolder.cv.setBackgroundColor(R.color.card1Color);
 //        electionInstanceViewHolder.electionPhoto.setImageResource(elections.get(i).);
     }
 
@@ -57,7 +58,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ElectionInstanceVi
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
             electionName = (TextView)itemView.findViewById(R.id.electionName);
-            electionURL = (TextView)itemView.findViewById(R.id.electionURL);
+            electionURL = (TextView)itemView.findViewById(R.id.electionTime);
             //electionPhoto = (ImageView)itemView.findViewById(R.id.electionPhoto);
         }
     }
