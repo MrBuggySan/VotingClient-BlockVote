@@ -111,6 +111,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
                 if(statusCode != 200){
                     ToastWrapper.initiateToast(getContext(), "The election you entered is not available in BlockVote.");
+                    stopLoadingAnimOnFail();
                     return;
                 }
                 electionInstance.setElectionURL(electionURL);

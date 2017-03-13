@@ -6,10 +6,11 @@ import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.interfaces.DefaultInteractions;
+import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.blockvote.votingclient.R;
 import com.stepstone.stepper.VerificationError;
 
@@ -17,7 +18,7 @@ public class ManualForm extends RegistrationFormFragment {
 
 
     @Override
-    public void EditUI(DefaultInteractions defaultInteractions){
+    public void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions){
         //Hide some of the ui components
         rootView.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
@@ -28,7 +29,7 @@ public class ManualForm extends RegistrationFormFragment {
         blurb1.setText("Please fill in the URL and the required fields for the election.");
 
         //TODO: Edit the title name
-        defaultInteractions.changeTitleBarName("New Election");
+        registrationDefaultInteractions.changeTitleBarName("New Election");
 
         //TODO: When Set is pressed, change the title of the tab
         Button setButton = (Button) rootView.findViewById(R.id.regis_setButton);
@@ -92,8 +93,16 @@ public class ManualForm extends RegistrationFormFragment {
         if(hasValidElectionURL){
             //Attempt to insert the new electionInstance to the dataStore
             saveElectionInstance();
-            if(isReadyForNextStep)
+            if(isReadyForNextStep){
+                //Make the fields uneditable.
+                Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+                districtSpinner.setClickable(false);
+                Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_registrar_spinner);
+                registrarSpinner.setClickable(false);
+                EditText urlEditText = (EditText) rootView.findViewById(R.id.regform_urledittext);
+                urlEditText.setClickable(false);
                 return null;
+            }
             else {
                 return new VerificationError("You must enter the election's URL.");
             }

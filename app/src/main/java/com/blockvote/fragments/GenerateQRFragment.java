@@ -12,7 +12,6 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.QRCreatorService;
@@ -111,11 +110,9 @@ public class GenerateQRFragment extends Fragment implements Step {
     public void onSelected() {
         //TODO: Only one QR generation for this electionInstance is allowed
 
-        //TODO: check if I have to cancel the already running QR generation for the election.
 
 
         //TODO: get the electionInstance's blindedToken
-
         SharedPreferences sharedPref = getActivity().getSharedPreferences(
                 getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
         String electionURL = registrationDefaultInteractions.getActiveElection();
@@ -132,12 +129,11 @@ public class GenerateQRFragment extends Fragment implements Step {
 
             //start generating the QR
             //Create the background service
-            Intent mServiceIntent = new Intent(this, QRCreatorService.class);
+            Intent mServiceIntent = new Intent(getActivity(), QRCreatorService.class);
             mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
-            this.startService(mServiceIntent);
+            getActivity().startService(mServiceIntent);
 
-
-
+            registrationDefaultInteractions.setupQRReceiver();
             //TODO: When back is pressed, cancel the IntentService
 
 
@@ -147,28 +143,6 @@ public class GenerateQRFragment extends Fragment implements Step {
 
         //TODO: I must somehow cache the QR so I don't have to generate it everytime.
 
-
-        //Button Events
-
-        Button nextButton = (Button)rootView.findViewById(R.id.generateQR_nextbutton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  confirmNext();
-              }
-          }
-        );
-
-        Button backButton = (Button)rootView.findViewById(R.id.generateQR_backbutton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              //create a dialog
-              mListener.onBackGenQRSelected();
-
-          }
-}
-        );
 
 
 

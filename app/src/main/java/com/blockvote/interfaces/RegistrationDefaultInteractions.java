@@ -7,5 +7,6 @@ package com.blockvote.interfaces;
 public interface RegistrationDefaultInteractions extends DefaultInteractions {
     String getActiveElection();
     void setActiveElection(String activeElection);
+    void setupQRReceiver();
 
 }
