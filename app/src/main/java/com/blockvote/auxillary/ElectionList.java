@@ -8,4 +8,13 @@ import java.util.ArrayList;
 
 public class ElectionList {
     private ArrayList<String> electionKeysList;
+
+    public ElectionList(){
+        electionKeysList = new ArrayList<>();
+    }
+
+    public void addElectionKey(String key){
+        electionKeysList.add(key);
+    }
+
 }
