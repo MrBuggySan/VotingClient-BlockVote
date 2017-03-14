@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 
 import com.blockvote.fragments.GenerateQRFragment;
+import com.blockvote.fragments.RegistrationFinalFragment;
 import com.blockvote.fragments.RegistrationFormFragment;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.adapter.AbstractFragmentStepAdapter;
@@ -30,6 +31,8 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
                 return regisForm;
             case 1:
                 return new GenerateQRFragment();
+            case 2:
+                return new RegistrationFinalFragment();
             default:
                 throw new IllegalArgumentException("Unsupported position: " + position);
         }
@@ -38,7 +41,7 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @NonNull
@@ -53,6 +56,10 @@ public class StepperAdapter extends AbstractFragmentStepAdapter {
             case 1:
                 return new StepViewModel.Builder(context)
                         .setTitle("QR Code")
+                        .create();
+            case 2:
+                return new StepViewModel.Builder(context)
+                        .setTitle("Final Step")
                         .create();
             default:
                 throw new IllegalArgumentException("Unsupported position: " + position);

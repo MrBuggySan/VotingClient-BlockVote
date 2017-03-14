@@ -3,6 +3,7 @@ package com.blockvote.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
@@ -42,40 +45,46 @@ public class GenerateQRFragment extends Fragment implements Step {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_generate_qr, container, false);
 
-        //TODO: test if the electionInstance already has a QR code cached
+        //test if the electionInstance already has a QR code cached or its loading a QR still
+        ElectionInstance electionInstance = registrationDefaultInteractions.getElectionInstance();
+        if(electionInstance != null){
+            ElectionState electionState = electionInstance.getElectionState();
+            //hide the rest of the layouts
 
-        //hide the rest of the layouts
-        rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
+            if(electionState == ElectionState.START_GEN_QR ){
+                //do nothing, we should not get here
+                ToastWrapper.initiateToast(getContext(), "START_GEN_QR inside onCreate of GenerateQRFragment" +
+                        " should not happen!");
+                return rootView;
+            }
+            if(electionState == ElectionState.WORKING_GEN_QR){
+                //do nothing, we are still waiting for the QR generation to finish
+                return rootView;
+            }
+            if(electionState == ElectionState.FIN_GEN_QR){
+                //display the cached QR
+                Bitmap bitmap = electionInstance.getQR_code();
+                Log.v(LOG_TAG, "Displaying the cached QR.");
+                ImageView imageView = (ImageView) rootView.findViewById(R.id.image_QRCode);
+                String registrarName = electionInstance.getRegistrarName();
+                TextView textViewBlurb2 = (TextView) rootView.findViewById(R.id.GenQR_textBlurb2);
+                textViewBlurb2.setText("Please show this QR code to your registrar, " + registrarName +
+                        ". Press next When the registrar is done scanning.");
+                imageView.setImageBitmap(bitmap);
 
+                rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
+                rootView.findViewById(R.id.genQR_loadingQRUI).setVisibility(View.GONE);
+                return rootView;
+            }
 
+        }else{
+            rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
+        }
 
         return rootView;
-    }
-
-    public void confirmNext(){
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage(R.string.dialog_message_scanQR)
-                .setTitle(R.string.dialog_title_WARNING);
-
-        // Add the buttons
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //Scan the registrar's QR code.
-//                mListener.onNextGenQRSelected();
-
-            }
-        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //do nothing
-                    }
-                });
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
 
@@ -96,18 +105,12 @@ public class GenerateQRFragment extends Fragment implements Step {
         registrationDefaultInteractions = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onBackGenQRSelected();
-        void onNextGenQRSelected();
-        void store_BlindedKey_RSAKeyParam(String jsonBlindedToken, String jsonRSAKeyParams);
-    }
-
 
     @Override
     public void onError(@NonNull VerificationError error) {
         //handle error inside of the fragment, e.g. show error on EditText
         //editText.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake_error));
+        ToastWrapper.initiateToast(getContext(), error.getErrorMessage());
     }
 
     @Override
@@ -150,11 +153,14 @@ public class GenerateQRFragment extends Fragment implements Step {
 
     @Override
     public VerificationError verifyStep() {
-        //return null if the user can go to the next stepper_layout, create a new VerificationError instance otherwise
-//        return TextUtils.isEmpty(editText.getText().toString())
-//                ? new VerificationError("Password cannot be empty")
-//                : null;
-        return null;
+        ElectionInstance electionInstance = registrationDefaultInteractions.getElectionInstance();
+        if(electionInstance.getElectionState() == ElectionState.FIN_GEN_QR ||
+                electionInstance.getElectionState() == ElectionState.REGIS_FINAL_STEP){
+            return null;
+        }else{
+            return new VerificationError("Your QR is not finished generating yet.");
+        }
+
     }
 
 }

@@ -24,7 +24,7 @@ public class QRCreatorService extends IntentService {
     }
 
     private final String LOG_TAG = IntentService.class.getSimpleName();
-    private final static int QRcodeWidth = 1000 ;
+    private final static int QRcodeWidth = 500 ;
     @Override
     protected void onHandleIntent(Intent workIntent) {
         Bundle extraData = workIntent.getExtras();

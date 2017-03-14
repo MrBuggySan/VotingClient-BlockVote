@@ -30,6 +30,9 @@ public interface BlockVoteServerAPI {
 //    @POST("writeVote/")
 //    Call<MODEL_writeVote> writeVote(@Body POST_BODY_writeVote body);
 
+    @GET("authping/")
+    Call<String> getAuthPing();
+
     @FormUrlEncoded
     @POST("writeVote/")
     Call<MODEL_writeVote> writeVote(@Field("region") String region, @Field("signedTokenID") String signedTokenID,

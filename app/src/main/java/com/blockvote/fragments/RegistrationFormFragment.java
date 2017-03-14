@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
+import com.blockvote.auxillary.Pinger;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
@@ -115,6 +116,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     private String respJSONStr;
 
     protected void getElectionInfo(final String electionURL){
+        //ping the server
+        Pinger.PingServer(electionURL);
+
+
         isReadyForNextStep = false;
         hasValidElectionURL = false;
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);

@@ -45,7 +45,7 @@ import org.spongycastle.crypto.signers.PSSSigner;
 
 public class VotingActivity extends AppCompatActivity
         implements
-        GenerateQRFragment.OnFragmentInteractionListener,
+
         VoteButtonFragment.OnFragmentInteractionListener,
         SelectCandidateFragment.OnFragmentInteractionListener,
         ReviewBallotFragment.OnFragmentInteractionListener {

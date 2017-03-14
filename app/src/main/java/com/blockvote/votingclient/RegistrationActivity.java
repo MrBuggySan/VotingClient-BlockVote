@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
@@ -84,7 +85,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     public boolean updateElectionInstanceState(ElectionState electionState){
         if(electionInstance != null){
             electionInstance.setElectionState(electionState);
-            //TODO: update the electionInstance in ElectionList
+            //TODO: update the electionInstance in ElectionList as well
             return true;
         }else return false;
     }
@@ -122,10 +123,12 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             ImageView imageView = (ImageView) findViewById(R.id.image_QRCode);
             imageView.setImageBitmap(bitmap);
 
-
             findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
-            findViewById(R.id.QR_animation_view).setVisibility(View.GONE);
-
+            findViewById(R.id.genQR_loadingQRUI).setVisibility(View.GONE);
+            String registrarName = electionInstance.getRegistrarName();
+            TextView textViewBlurb2 = (TextView) findViewById(R.id.GenQR_textBlurb2);
+            textViewBlurb2.setText("Please show this QR code to your registrar, " + registrarName +
+            ". Press next When the registrar is done scanning.");
             // cache the QR for this electionInstance
             electionInstance.setQR_code(bitmap);
             updateElectionInstanceState(ElectionState.FIN_GEN_QR);
