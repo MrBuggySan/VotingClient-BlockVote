@@ -8,12 +8,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.blockvote.auxillary.ElectionInstance;
+import com.blockvote.auxillary.ElectionState;
 import com.blockvote.auxillary.QRCreatorService;
+import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.TokenRequest;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.blockvote.votingclient.R;
@@ -111,14 +114,17 @@ public class GenerateQRFragment extends Fragment implements Step {
     public void onSelected() {
         //TODO: Only one QR generation for this electionInstance is allowed
 
-
-
-        // get the electionInstance's blindedToken
         electionInstance = registrationDefaultInteractions.getElectionInstance();
 
-        if(electionInstance == null) return;
+        if(electionInstance == null){
+            Log.d(LOG_TAG, "By this point we should have had some kind of electionInstance, but it" +
+                    "appreas like we don't. Something went wrong.");
+            ToastWrapper.initiateToast(getContext(),"By this point we should have had some kind of electionInstance, but it" +
+                    "appreas like we don't. Something went wrong.");
+            return;
+        }
 
-        if(electionInstance.getQR_code() == null){
+        if(electionInstance.getQR_code() == null && electionInstance.getElectionState() == ElectionState.START_GEN_QR){
             //Create tokenRequest
             try{
                 TokenRequest tokenRequest = electionInstance.getBlindedToken().generateTokenRequest();
@@ -130,8 +136,10 @@ public class GenerateQRFragment extends Fragment implements Step {
                 mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
                 getActivity().startService(mServiceIntent);
 
+                //TODO: update the electionInstance state
+                registrationDefaultInteractions.updateElectionInstanceState(ElectionState.WORKING_GEN_QR);
                 registrationDefaultInteractions.setupQRReceiver();
-                //TODO: When back is pressed, cancel the IntentService
+
 
 
             }catch(CryptoException cryptoException){

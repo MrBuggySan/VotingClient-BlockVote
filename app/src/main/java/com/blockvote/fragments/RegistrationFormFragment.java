@@ -49,6 +49,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     private ElectionInstance electionInstance;
     protected boolean isReadyForNextStep;
     protected boolean hasValidElectionURL;
+    protected boolean skipChecks;
 
     public RegistrationFormFragment() {
         // Required empty public constructor
@@ -70,10 +71,12 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             stopLoadingAnimOnSuccess();
             prefillEditableViews(registrationDefaultInteractions.getElectionInstance());
             disableEditableViews();
-            isReadyForNextStep = true;
-            hasValidElectionURL = true;
+//            isReadyForNextStep = true;
+//            hasValidElectionURL = true;
+            skipChecks = true;
 
         }else{
+            skipChecks = false;
             electionInstance = new ElectionInstance();
             //make the children determine the components of the UI that will show up
             EditUI(registrationDefaultInteractions);
@@ -264,23 +267,6 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
 
     public void saveElectionInstance(){
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(
-                getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
-
-        //TODO: this check can be taken out for the demo at the Olympic Oval.
-        //TODO: check if the electionInstance is already in the datastore
-        /*
-        if(sharedPref.contains(electionInstance.getElectionURL())){
-            //TODO:Check if the electionInstance is the same as the one already being worked on
-
-            ToastWrapper.initiateToast(getContext(), "This election is already in the app.");
-            return;
-        }*/
-
-
-
-        //setup the state of this electionInstance
-        electionInstance.setElectionState(ElectionState.GEN_QR);
 
         //test if the user has selected a district and a registrar.
         Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
@@ -333,13 +319,18 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             electionInstance.setBlindedToken(blindedToken);
             electionInstance.setrSAkeyParams(rsaKeyParameters);
 
-
+            //The user should not be able to edit their data anymore
             disableEditableViews();
 
 
-            //Update the electionInstance of RegistrationActivity
-            registrationDefaultInteractions.savetElectionInstance(electionInstance);
+            //Add the electionInstance to RegistrationActivity
+            registrationDefaultInteractions.saveElectionInstance(electionInstance);
 
+            //setup the state of this electionInstance
+            registrationDefaultInteractions.updateElectionInstanceState(ElectionState.START_GEN_QR);
+
+            //TODO: skipChecks only if saveElectionInstance is true.
+            skipChecks = true;
 
         }catch(JSONException e){
             Log.e(LOG_TAG, "Could not find the respJSONstr");

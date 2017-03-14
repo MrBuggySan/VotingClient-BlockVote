@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.blockvote.auxillary.ElectionInstance;
+import com.blockvote.auxillary.ElectionState;
 import com.blockvote.auxillary.StepperAdapter;
 import com.blockvote.fragments.ManualForm;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
@@ -45,9 +46,9 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         ManualForm manualForm= new ManualForm();
 
         //TODO: determine the correct position to start with depending on the state of the electionInstance
-        int startingStepPosition = 1;
+//        int startingStepPosition = 1;
         mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
-        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this, manualForm), startingStepPosition);
+        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this, manualForm));
 
     }
 
@@ -58,7 +59,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
-    public void savetElectionInstance(ElectionInstance electionInstance_){
+    public boolean saveElectionInstance(ElectionInstance electionInstance_){
         this.electionInstance = electionInstance_;
 
         SharedPreferences sharedPref = getSharedPreferences(
@@ -71,7 +72,21 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         editor.putString(electionInstance.getElectionURL(), jsonElectionInstance);
         editor.commit();
 
-        //TODO: Add the electionInstance to the list of Elections
+        //TODO: Add the electionInstance to OnGoingElectionList inside the sharedPref
+
+        //TODO: return true if added successfully, or return false if there is already an election with the same name.
+
+        //TODO: return true for now
+        return true;
+
+    }
+
+    public boolean updateElectionInstanceState(ElectionState electionState){
+        if(electionInstance != null){
+            electionInstance.setElectionState(electionState);
+            //TODO: update the electionInstance in ElectionList
+            return true;
+        }else return false;
     }
 
     @Override
@@ -113,7 +128,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
             // cache the QR for this electionInstance
             electionInstance.setQR_code(bitmap);
-            savetElectionInstance(electionInstance);
+            updateElectionInstanceState(ElectionState.FIN_GEN_QR);
         }
     }
 

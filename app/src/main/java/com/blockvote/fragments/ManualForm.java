@@ -2,6 +2,7 @@ package com.blockvote.fragments;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.Button;
@@ -18,7 +19,7 @@ import com.stepstone.stepper.VerificationError;
 import java.util.ArrayList;
 
 public class ManualForm extends RegistrationFormFragment {
-
+    private final String LOG_TAG = ManualForm.class.getSimpleName();
 
     @Override
     public void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions){
@@ -85,12 +86,15 @@ public class ManualForm extends RegistrationFormFragment {
     @Override
     public void disableEditableViews(){
         //Make the fields uneditable.
+        Log.d(LOG_TAG,"the spinners and the url field should be uneditable by now.");
         Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
-        districtSpinner.setClickable(false);
+        districtSpinner.setEnabled(false);
         Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_registrar_spinner);
-        registrarSpinner.setClickable(false);
+        registrarSpinner.setEnabled(false);
         EditText urlEditText = (EditText) rootView.findViewById(R.id.regform_urledittext);
-        urlEditText.setClickable(false);
+        urlEditText.setEnabled(false);
+        Button setButton = (Button) rootView.findViewById(R.id.regis_setButton);
+        setButton.setEnabled(false);
     }
 
     @Override
@@ -119,6 +123,7 @@ public class ManualForm extends RegistrationFormFragment {
 
     @Override
     public VerificationError verifyStep() {
+        if(skipChecks) return null;
         if(hasValidElectionURL){
             //Attempt to insert the new electionInstance to the dataStore
             saveElectionInstance();

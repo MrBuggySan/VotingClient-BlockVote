@@ -5,5 +5,5 @@ package com.blockvote.auxillary;
  */
 
 public enum ElectionState {
-    GEN_QR, REGIS_FINAL_STEP, PRE_VOTING, POST_VOTING
+    START_GEN_QR, WORKING_GEN_QR, FIN_GEN_QR,  REGIS_FINAL_STEP, PRE_VOTING, POST_VOTING
 }
