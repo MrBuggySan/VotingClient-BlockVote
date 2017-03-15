@@ -105,11 +105,11 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
 
     @Override
     public void onNewElectionCardPress(){
-
+        //TODO: Call NewElectionFragment of VotingActivity
     }
 
     @Override
     public void onElectionCardPress(ElectionInstance electionInstance){
-        //TODO: Call NewElectionFragment of VotingActivity
+
     }
 }
