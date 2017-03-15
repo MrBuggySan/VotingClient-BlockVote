@@ -1,6 +1,5 @@
 package com.blockvote.fragments;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -34,7 +33,7 @@ public class OnGoingElections extends ElectionListFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        RVAdapter adapter = new RVAdapter(elections, true);
+        RVAdapter adapter = new RVAdapter(onCardInteraction, elections, true);
         recyclerView.setAdapter(adapter);
 
 //        CardView newElectionCard = (CardView) rootView.findViewById(R.id.newElection_Card);

@@ -2,7 +2,6 @@ package com.blockvote.fragments;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.RVAdapter;
@@ -34,7 +33,7 @@ public class FinishedElections extends ElectionListFragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
 
-        RVAdapter adapter = new RVAdapter(elections, false);
+        RVAdapter adapter = new RVAdapter(onCardInteraction, elections, false);
         rv.setAdapter(adapter);
     }
 }
