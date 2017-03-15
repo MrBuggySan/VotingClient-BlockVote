@@ -12,6 +12,7 @@ import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.fragments.NewElectionFragment;
 import com.blockvote.interfaces.DefaultInteractions;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -75,7 +76,15 @@ NewElectionFragment.NewElectionOnClick{
 
     @Override
     public void onScanQRCodeClick(){
-        ToastWrapper.initiateToast(this, "Scan QR Code has been selected.");
+//        ToastWrapper.initiateToast(this, "Scan QR Code has been selected.");
+        //Call the ScanQRfragment
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setCameraId(0);
+        integrator.setBeepEnabled(false);
+        integrator.setBarcodeImageEnabled(false);
+        integrator.initiateScan();
+
     }
 
     @Override

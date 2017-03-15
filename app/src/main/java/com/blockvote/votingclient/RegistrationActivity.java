@@ -64,8 +64,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
         }else{
             //TODO: determine the step position
-
-
             //always show the manual form
             registrationFormFragment = new ManualForm();
         }

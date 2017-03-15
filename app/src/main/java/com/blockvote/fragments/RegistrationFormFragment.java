@@ -61,11 +61,25 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     }
 
     @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        Log.d(LOG_TAG, "onDestroyView called.");
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy called.");
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_registration_form, container, false);
-
+        if(rootView == null){
+            Log.d(LOG_TAG, "rootView is not supposed to be null");
+        }
+        Log.d(LOG_TAG, "onCreate called.");
         //Determine if a new electionInstance is to be made or not
         if(registrationDefaultInteractions.getElectionInstance() != null){
             stopLoadingAnimOnSuccess();
@@ -198,7 +212,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                 stopLoadingAnimOnSuccess();
 
                 displayDistrictsonSpinner(districtList);
-                Spinner spinner = (Spinner) getView().findViewById(R.id.register_districtspinner);
+                Spinner spinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
 
                 //set up an event to change the registrarlist available when a district is chosen.
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -264,10 +278,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         }
 
         //Setup the spinner showing the different districts available
-        Spinner spinner = (Spinner) getView().findViewById(R.id.register_districtspinner);
+        Spinner spinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
         spinner.setAdapter(mDistrictList);
 
-        getView().findViewById(R.id.regform_UI).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.regform_UI).setVisibility(View.VISIBLE);
 
     }
 
@@ -286,7 +300,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         }
 
         //Setup the spinner showing the different districts available
-        Spinner spinner = (Spinner) getView().findViewById(register_registrar_spinner);
+        Spinner spinner = (Spinner) rootView.findViewById(R.id.register_registrar_spinner);
         spinner.setAdapter(mRegistrarList);
     }
 
