@@ -34,6 +34,6 @@ public class FinishedElections extends ElectionListFragment {
     @Override
     public void onElectionCardPress(int position){
         //Pass off the electionInstance that was selected
-        onCardInterActionActivityLevel.onElectionCardPress(finishedElectionList.getElectionAt(position));
+        onCardInterActionActivityLevel.onElectionCardPress(finishedElectionList.getElectionAt(position).getElectionState(), position);
     }
 }

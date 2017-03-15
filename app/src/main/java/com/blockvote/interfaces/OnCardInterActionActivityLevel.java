@@ -1,6 +1,6 @@
 package com.blockvote.interfaces;
 
-import com.blockvote.auxillary.ElectionInstance;
+import com.blockvote.auxillary.ElectionState;
 
 /**
  * Created by Beast Mode on 3/15/2017.
@@ -8,5 +8,5 @@ import com.blockvote.auxillary.ElectionInstance;
 
 public interface OnCardInterActionActivityLevel {
     void onNewElectionCardPress();
-    void onElectionCardPress(ElectionInstance electionInstance);
+    void onElectionCardPress(ElectionState electionInstance, int indext);
 }

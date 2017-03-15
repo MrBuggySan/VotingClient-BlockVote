@@ -1,5 +1,6 @@
 package com.blockvote.votingclient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.blockvote.auxillary.ElectionInstance;
+import com.blockvote.auxillary.ElectionState;
+import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.fragments.FinishedElections;
 import com.blockvote.fragments.OnGoingElections;
 import com.blockvote.interfaces.OnCardInterActionActivityLevel;
@@ -106,10 +108,34 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
     @Override
     public void onNewElectionCardPress(){
         //TODO: Call NewElectionFragment of VotingActivity
+        Intent intent = new Intent(this, VotingActivity.class);
+        intent.putExtra(getString(R.string.newelectionKey), "s");
+        startActivity(intent);
     }
 
     @Override
-    public void onElectionCardPress(ElectionInstance electionInstance){
+    public void onElectionCardPress(ElectionState electionState, int index){
+        //check if this is an onGoingElection or finishedElection
+        boolean isFinished;
+        if(electionState == ElectionState.START_GEN_QR ||
+                electionState == ElectionState.WORKING_GEN_QR ||
+                electionState == ElectionState.FIN_GEN_QR ||
+                electionState == ElectionState.REGIS_FINAL_STEP){
+            isFinished = false;
+        }else{
+            if (electionState == ElectionState.PRE_VOTING ||
+                    electionState == ElectionState.POST_VOTING){
+                isFinished = true;
+            }else{
+                //We should never get here
+                ToastWrapper.initiateToast(this, "The election selected has undefined state. ERROR");
+                isFinished = false;
+            }
+        }
 
+        Intent intent = new Intent(this, VotingActivity.class);
+        intent.putExtra(getString(R.string.isElectionFinishedKey), isFinished);
+        intent.putExtra(getString(R.string.electionIndexKey), index);
+        startActivity(intent);
     }
 }

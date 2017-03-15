@@ -7,11 +7,5 @@
 
         app:showAsAction="never"
         />
-    <item
-        android:id="@+id/Option_ClearData"
-        android:title="Clear Data"
-
-        app:showAsAction="never"
-        />
 
 </menu>

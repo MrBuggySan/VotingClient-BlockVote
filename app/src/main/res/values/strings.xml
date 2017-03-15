@@ -16,6 +16,11 @@
     <string name="BackgroundQRAction">BackgroundQRAction</string>
     <string name="GeneratedQR_from_background">GeneratedQR_from_background</string>
 
+    <!--Keys for intent-->
+    <string name="isElectionFinishedKey">com.blockvote.intent.isElectionFinished</string>
+    <string name="electionIndexKey">com.blockvote.intent.electionIndex</string>
+    <string name="newelectionKey">com.blockvote.intent.newElection</string>
+
     <!--Keys for SharedPreferences-->
     <string name="globalSharedPrefKey">com.blockvote.GLOBALSTORE</string>
     <string name="onGoingElectionsListKey">com.blockvote.ongoingelections</string>

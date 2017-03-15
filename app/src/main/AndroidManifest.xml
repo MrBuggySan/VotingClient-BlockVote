@@ -15,8 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- VotingActivity is now the main activity -->
-        <activity android:name=".VotingActivity" />
+
 
         <service
             android:name="com.blockvote.auxillary.QRCreatorService"
@@ -29,8 +28,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".VotingActivity"
+            android:parentActivityName=".MainActivity">
 
-        <activity android:name=".RegistrationActivity">
+        </activity>
+
+        <activity android:name=".RegistrationActivity"
+            android:parentActivityName=".MainActivity">
 
         </activity>
 
