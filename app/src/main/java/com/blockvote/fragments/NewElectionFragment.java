@@ -18,6 +18,7 @@ import com.blockvote.votingclient.R;
  */
 public class NewElectionFragment extends Fragment {
     private DefaultInteractions defaultInteractions;
+    private NewElectionOnClick newElectionOnClick;
 
     public NewElectionFragment() {
         // Required empty public constructor
@@ -32,17 +33,36 @@ public class NewElectionFragment extends Fragment {
         defaultInteractions.changeTitleBarName("New Election");
         TextView textView = (TextView) rootView.findViewById(R.id.New_election_manual_add);
         textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               newElectionOnClick.onManualOptionClick();
+            }
+
+        });
+
+        View scanQRCard = rootView.findViewById(R.id.newElection_Card);
+        scanQRCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newElectionOnClick.onScanQRCodeClick();
+            }
+        });
+
+
         return rootView;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof DefaultInteractions) {
+        if (context instanceof DefaultInteractions && context instanceof NewElectionOnClick) {
             defaultInteractions = (DefaultInteractions) context;
+            newElectionOnClick = (NewElectionOnClick) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement DefaultInteractions");
+                    + " must implement DefaultInteractions & NewElectionOnClick ");
         }
     }
 
@@ -50,5 +70,10 @@ public class NewElectionFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         defaultInteractions = null;
+    }
+
+    public interface NewElectionOnClick {
+        void onScanQRCodeClick();
+        void onManualOptionClick();
     }
 }

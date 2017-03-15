@@ -19,7 +19,9 @@ import android.widget.TextView;
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
 import com.blockvote.auxillary.StepperAdapter;
+import com.blockvote.fragments.FilledForm;
 import com.blockvote.fragments.ManualForm;
+import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.google.gson.Gson;
 import com.stepstone.stepper.StepperLayout;
@@ -43,13 +45,33 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.registration_toolbar);
         setSupportActionBar(myToolbar);
+        ActionBar myActionBar = (ActionBar) getSupportActionBar();
+        myActionBar.setDisplayHomeAsUpEnabled(true);
 
-        ManualForm manualForm= new ManualForm();
+        Intent intent = getIntent();
+        RegistrationFormFragment registrationFormFragment;
+        int startingStepPosition = 1;
+        if(intent.getBooleanExtra(getString(R.string.newelectionKey), false)){
+            startingStepPosition = 1;
+            //Either display ManualForm or FilledForm
+            if(intent.getBooleanExtra(getString(R.string.isManualFormKey), false)){
+                //display ManualForm
+                registrationFormFragment = new ManualForm();
+            }else{
+                //display FilledForm
+                registrationFormFragment = new FilledForm();
+            }
 
-        //TODO: determine the correct position to start with depending on the state of the electionInstance
-//        int startingStepPosition = 1;
+        }else{
+            //TODO: determine the step position
+
+
+            //always show the manual form
+            registrationFormFragment = new ManualForm();
+        }
+
         mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
-        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this, manualForm));
+        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this, registrationFormFragment));
 
     }
 

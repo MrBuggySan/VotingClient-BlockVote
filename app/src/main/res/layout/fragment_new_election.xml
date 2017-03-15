@@ -10,12 +10,14 @@
         android:layout_height="match_parent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:layout_alignParentTop="true"
             android:paddingTop="16dp"
-            android:text="To add a new election you may scan the registrar's QR code. The QR code will automatically populate your district and registrar." />
+            android:text="To add a new election you may scan the registrar's QR code. The QR code will automatically populate the district and registrar fields in your registration form."
+            android:textSize="20sp" />
 
         <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/newElection_Card"
@@ -30,24 +32,25 @@
                 android:padding="16dp">
 
                 <TextView
+                    android:id="@+id/newElecton_scanButtonText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/newElecton_scanButtonText"
-                    android:text="Scan QR Code"
-                    android:textSize="30sp"
                     android:layout_centerVertical="true"
-                    />
+                    android:text="Scan QR Code"
+                    android:textSize="30sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/newElecton_scanButtonText"/>
+                    android:layout_toRightOf="@id/newElecton_scanButtonText"
+                    android:src="@drawable/qrsample" />
 
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
 
         <TextView
+            android:id="@+id/New_election_manual_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -58,8 +61,8 @@
             android:text="@string/AddElectionManuallyText"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textSize="20sp"
-            android:id="@+id/New_election_manual_add"/>
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
     </RelativeLayout>
 
 

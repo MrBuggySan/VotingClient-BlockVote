@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
     public void onNewElectionCardPress(){
         //TODO: Call NewElectionFragment of VotingActivity
         Intent intent = new Intent(this, VotingActivity.class);
-        intent.putExtra(getString(R.string.newelectionKey), "s");
+        intent.putExtra(getString(R.string.newelectionKey), true);
         startActivity(intent);
     }
 
