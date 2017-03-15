@@ -12,15 +12,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.fragments.FinishedElections;
 import com.blockvote.fragments.OnGoingElections;
-import com.blockvote.interfaces.OnCardInteraction;
+import com.blockvote.interfaces.OnCardInterActionActivityLevel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnCardInteraction{
+public class MainActivity extends AppCompatActivity implements OnCardInterActionActivityLevel {
 
 
 
@@ -103,10 +103,13 @@ public class MainActivity extends AppCompatActivity implements OnCardInteraction
         }
     }
 
+    @Override
     public void onNewElectionCardPress(){
-        ToastWrapper.initiateToast(this, "You selected to create a new election.");
+
     }
-    public void onElectionCardPress(){
-        ToastWrapper.initiateToast(this, "You selected an election.");
+
+    @Override
+    public void onElectionCardPress(ElectionInstance electionInstance){
+        //TODO: Call NewElectionFragment of VotingActivity
     }
 }

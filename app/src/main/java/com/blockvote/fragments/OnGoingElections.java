@@ -3,39 +3,39 @@ package com.blockvote.fragments;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.blockvote.auxillary.ElectionInstance;
+import com.blockvote.auxillary.DataStore;
+import com.blockvote.auxillary.OngoingElectionList;
 import com.blockvote.auxillary.RVAdapter;
 import com.blockvote.votingclient.R;
 
-import java.util.ArrayList;
-
 /**
- * Created by Beast Mode on 3/11/2017.
+ * Created by Beast Mode on 3/15/2017.
  */
 
 public class OnGoingElections extends ElectionListFragment {
+    private OngoingElectionList ongoingElectionList;
     public void EditUI(){
-//Fill some random data, for real this would come from the dataStore
-        ElectionInstance sample1 = new ElectionInstance();
-        sample1.setElectionName("Sample Election 1");
-        sample1.setTimeString("Opens in 2 hours and 3 minutes");
-        ElectionInstance sample2 = new ElectionInstance();
-        sample2.setElectionName("Sample Election 2");
-        sample2.setTimeString("Voting ends in 25 minutes");
 
-        ArrayList<ElectionInstance> elections = new ArrayList<>();
+        ongoingElectionList = DataStore.getOngoingElectionList(getContext());
 
-        elections.add(sample1);
-        elections.add(sample2);
+        if(ongoingElectionList == null){
+            ongoingElectionList = new OngoingElectionList();
+        }
 
         RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.electionList_recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        RVAdapter adapter = new RVAdapter(onCardInteraction, elections, true);
+        RVAdapter adapter = new RVAdapter(getContext(), this, ongoingElectionList, true);
         recyclerView.setAdapter(adapter);
 
 //        CardView newElectionCard = (CardView) rootView.findViewById(R.id.newElection_Card);
+    }
+
+    @Override
+    public void onElectionCardPress(int position){
+        //Pass off the electionInstance that was selected
+        onCardInterActionActivityLevel.onElectionCardPress(ongoingElectionList.getElectionAt(position));
     }
 }

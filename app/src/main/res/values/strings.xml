@@ -18,6 +18,10 @@
 
     <!--Keys for SharedPreferences-->
     <string name="globalSharedPrefKey">com.blockvote.GLOBALSTORE</string>
+    <string name="onGoingElectionsListKey">com.blockvote.ongoingelections</string>
+    <string name="finishedElectionsListKey">com.blockvote.finishedElections</string>
+
+
     <string name="ElectionActivityStateKey">stateinfo</string>
     <string name="voterNameKey">vnameKey</string>
     <string name="districtKey">distrct</string>

@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Beast Mode on 3/13/2017.
  */
 
-public abstract class ElectionList {
+public class ElectionList {
 
     protected ArrayList<ElectionInstance> electionList;
 
@@ -27,6 +27,14 @@ public abstract class ElectionList {
             }
         }
         return false;
+    }
+
+    public int getSize(){
+        return electionList.size();
+    }
+
+    public ElectionInstance getElectionAt(int i){
+        return electionList.get(i);
     }
 
     public void deleteAllElections(){

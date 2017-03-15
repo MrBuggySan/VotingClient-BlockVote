@@ -8,15 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.blockvote.interfaces.OnCardInteraction;
+import com.blockvote.interfaces.OnCardInterActionActivityLevel;
+import com.blockvote.interfaces.OnCardInteractionFragmentLeve;
 import com.blockvote.votingclient.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class ElectionListFragment extends Fragment  {
+public abstract class ElectionListFragment extends Fragment implements OnCardInteractionFragmentLeve {
     protected View rootView;
-    protected OnCardInteraction onCardInteraction;
+    protected OnCardInterActionActivityLevel onCardInterActionActivityLevel;
 
     public ElectionListFragment() {
         // Required empty public constructor
@@ -38,18 +39,25 @@ public abstract class ElectionListFragment extends Fragment  {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnCardInteraction) {
-            onCardInteraction = (OnCardInteraction) context;
+        if (context instanceof OnCardInterActionActivityLevel) {
+            onCardInterActionActivityLevel = (OnCardInterActionActivityLevel) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnCardInteraction");
+                    + " must implement OnCardInteractionFragmentLeve");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        onCardInteraction = null;
+        onCardInterActionActivityLevel = null;
+    }
+
+
+
+    @Override
+    public void onNewElectionCardPress(){
+        onCardInterActionActivityLevel.onNewElectionCardPress();
     }
 
 }
