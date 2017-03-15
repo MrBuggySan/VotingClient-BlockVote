@@ -2,11 +2,13 @@ package com.blockvote.fragments;
 
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.blockvote.interfaces.DefaultInteractions;
 import com.blockvote.votingclient.R;
@@ -28,6 +30,8 @@ public class NewElectionFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_new_election, container, false);
         defaultInteractions.changeTitleBarName("New Election");
+        TextView textView = (TextView) rootView.findViewById(R.id.New_election_manual_add);
+        textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         return rootView;
     }
 
