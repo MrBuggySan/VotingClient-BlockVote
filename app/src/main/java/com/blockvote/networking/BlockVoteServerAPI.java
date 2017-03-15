@@ -4,6 +4,7 @@ import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.model.MODEL_getRegistrarInfo;
 import com.blockvote.model.MODEL_writeVote;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -31,7 +32,7 @@ public interface BlockVoteServerAPI {
 //    Call<MODEL_writeVote> writeVote(@Body POST_BODY_writeVote body);
 
     @GET("authping/")
-    Call<String> getAuthPing();
+    Call<ResponseBody> getAuthPing();
 
     @FormUrlEncoded
     @POST("writeVote/")

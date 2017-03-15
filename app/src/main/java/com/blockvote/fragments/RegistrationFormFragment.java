@@ -1,7 +1,6 @@
 package com.blockvote.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
-import com.blockvote.auxillary.Pinger;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
@@ -36,6 +34,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -115,11 +114,32 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
     private String respJSONStr;
 
+    protected void PingThenGetElectionInfo(final String electionURL){
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
+        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
+        Call<ResponseBody> call = apiService.getAuthPing();
+        call.enqueue((new Callback<ResponseBody>() {
+
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+               if(response.code() != 200){
+                   ToastWrapper.initiateToast(getContext(), "The election you entered is not available in BlockVote.");
+                   stopLoadingAnimOnFail();
+                   return;
+               }
+               getElectionInfo(electionURL);
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                ToastWrapper.initiateToast(getContext(), "Either you entered the wrong URL or" +
+                        " the Election is not available at this time. ");
+                stopLoadingAnimOnFail();
+            }
+        }));
+
+
+    }
+
     protected void getElectionInfo(final String electionURL){
-        //ping the server
-        Pinger.PingServer(electionURL);
-
-
         isReadyForNextStep = false;
         hasValidElectionURL = false;
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);

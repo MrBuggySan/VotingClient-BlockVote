@@ -128,7 +128,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             String registrarName = electionInstance.getRegistrarName();
             TextView textViewBlurb2 = (TextView) findViewById(R.id.GenQR_textBlurb2);
             textViewBlurb2.setText("Please show this QR code to your registrar, " + registrarName +
-            ". Press next When the registrar is done scanning.");
+            ". Press next when the registrar is done scanning.");
             // cache the QR for this electionInstance
             electionInstance.setQR_code(bitmap);
             updateElectionInstanceState(ElectionState.FIN_GEN_QR);

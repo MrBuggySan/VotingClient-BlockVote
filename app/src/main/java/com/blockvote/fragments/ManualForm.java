@@ -64,11 +64,8 @@ public class ManualForm extends RegistrationFormFragment {
         //Show the loading animation
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.VISIBLE);
 
-        //Download the data
-        getElectionInfo(electionURL);
-
-
-
+        //Ping the server first, then get the electionInfo
+        PingThenGetElectionInfo(electionURL);
     }
 
     @Override

@@ -1,13 +1,11 @@
 package com.blockvote.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -72,7 +70,7 @@ public class GenerateQRFragment extends Fragment implements Step {
                 String registrarName = electionInstance.getRegistrarName();
                 TextView textViewBlurb2 = (TextView) rootView.findViewById(R.id.GenQR_textBlurb2);
                 textViewBlurb2.setText("Please show this QR code to your registrar, " + registrarName +
-                        ". Press next When the registrar is done scanning.");
+                        ". Press next when the registrar is done scanning.");
                 imageView.setImageBitmap(bitmap);
 
                 rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);

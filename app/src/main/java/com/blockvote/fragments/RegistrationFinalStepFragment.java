@@ -15,9 +15,9 @@ import com.stepstone.stepper.VerificationError;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RegistrationFinalFragment extends Fragment implements Step {
+public class RegistrationFinalStepFragment extends Fragment implements Step {
 
-    public RegistrationFinalFragment() {
+    public RegistrationFinalStepFragment() {
         // Required empty public constructor
     }
 
