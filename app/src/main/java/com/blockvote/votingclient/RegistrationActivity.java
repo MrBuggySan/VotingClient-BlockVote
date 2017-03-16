@@ -17,8 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
+import com.blockvote.auxillary.OngoingElectionList;
 import com.blockvote.auxillary.StepperAdapter;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
@@ -97,22 +99,16 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     public boolean saveElectionInstance(ElectionInstance electionInstance_){
         this.electionInstance = electionInstance_;
 
-        SharedPreferences sharedPref = getSharedPreferences(
-                getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        //Store the electionInstance inside dataStore
-        //The key is the election's URL
-        Gson gson = new Gson();
-        String jsonElectionInstance = gson.toJson(this.electionInstance);
-        editor.putString(electionInstance.getElectionURL(), jsonElectionInstance);
-        editor.commit();
-
         //TODO: Add the electionInstance to OnGoingElectionList inside the sharedPref
+        OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
 
-        //TODO: return true if added successfully, or return false if there is already an election with the same name.
-
-        //TODO: return true for now
-        return true;
+        if(ongoingElectionList.addElection(electionInstance)){
+            //the electionInstance has been added succesfully
+            //TODO: save the ongoingElectionList to data store
+            return true;
+        }else{
+            return false;
+        }
 
     }
 
@@ -173,6 +169,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setCameraId(0);
+        integrator.setPrompt("");
         integrator.setBeepEnabled(false);
         integrator.setBarcodeImageEnabled(false);
         integrator.initiateScan();

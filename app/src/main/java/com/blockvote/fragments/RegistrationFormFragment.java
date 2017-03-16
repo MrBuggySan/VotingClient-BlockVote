@@ -363,13 +363,14 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
 
             //Add the electionInstance to RegistrationActivity
-            registrationDefaultInteractions.saveElectionInstance(electionInstance);
-
-            //setup the state of this electionInstance
-            registrationDefaultInteractions.updateElectionInstanceState(ElectionState.START_GEN_QR);
-
-            //TODO: skipChecks only if saveElectionInstance is true.
-            skipChecks = true;
+            if(registrationDefaultInteractions.saveElectionInstance(electionInstance)){
+                //setup the state of this electionInstance
+                registrationDefaultInteractions.updateElectionInstanceState(ElectionState.START_GEN_QR);
+                // skipChecks only if saveElectionInstance is true.
+                skipChecks = true;
+            }else{
+                ToastWrapper.initiateToast(getContext(), "This election is already active.");
+            }
 
         }catch(JSONException e){
             Log.e(LOG_TAG, "Could not find the respJSONstr");

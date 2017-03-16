@@ -30,7 +30,7 @@ public class RegistrationFinalStepFragment extends Fragment implements Step {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_registration_final, container, false);
-        View scanQRCard = rootView.findViewById(R.id.newElection_scanQR);
+        View scanQRCard = rootView.findViewById(R.id.finalreg_scanqr);
         scanQRCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

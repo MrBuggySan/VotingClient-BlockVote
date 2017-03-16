@@ -12,7 +12,7 @@ public class ElectionList {
 
     public boolean addElection(ElectionInstance electionInstance){
         //This check can be taken out for the demos so we can have the same instances
-        if(this.hasElection(electionInstance)){
+        if(!HACKVERSION.forDemo && !electionList.isEmpty() && this.hasElection(electionInstance)){
             return false;
         }
         electionList.add(electionInstance);
