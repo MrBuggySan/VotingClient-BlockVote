@@ -15,18 +15,32 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
 import com.blockvote.auxillary.StepperAdapter;
+import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.crypto.BlindedToken;
+import com.blockvote.crypto.Token;
 import com.blockvote.fragments.FilledForm;
 import com.blockvote.fragments.ManualForm;
+import com.blockvote.fragments.RegistrationFinalStepFragment;
 import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.stepstone.stepper.StepperLayout;
 
-public class RegistrationActivity extends AppCompatActivity implements RegistrationDefaultInteractions {
+import org.spongycastle.crypto.digests.SHA1Digest;
+import org.spongycastle.crypto.engines.RSAEngine;
+import org.spongycastle.crypto.params.RSAKeyParameters;
+import org.spongycastle.crypto.signers.PSSSigner;
+import android.util.Base64;
+
+public class RegistrationActivity extends AppCompatActivity implements RegistrationDefaultInteractions,
+        RegistrationFinalStepFragment.FinalStepQRCode{
     private final String LOG_TAG = RegistrationActivity.class.getSimpleName();
     private StepperLayout mStepperLayout;
     private ElectionInstance electionInstance;
@@ -152,6 +166,66 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             // cache the QR for this electionInstance
             electionInstance.setQR_code(bitmap);
             updateElectionInstanceState(ElectionState.FIN_GEN_QR);
+        }
+    }
+
+    public void onScanQRCodeClickFromFinalStep(){
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setCameraId(0);
+        integrator.setBeepEnabled(false);
+        integrator.setBarcodeImageEnabled(false);
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Log.d("MainActivity", "Cancelled scan");
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                //verify authenticity of signedBlindedToken
+                //Signature from registrar to be verified
+                String signature = result.getContents();
+
+                //get the blindedToken
+                BlindedToken blindedToken = electionInstance.getBlindedToken();
+
+                Token token = blindedToken.unblindToken(Base64.decode(signature, Base64.DEFAULT));
+
+                //get the RSA parameters
+                RSAKeyParameters rsaKeyParameters = electionInstance.getrSAkeyParams();
+
+                byte[] signedTokenID = token.getID();
+                byte[] signedTokenSig = token.getSignature();
+
+
+                PSSSigner signer = new PSSSigner(new RSAEngine(), new SHA1Digest(), 20);
+                signer.init(false, rsaKeyParameters);
+
+                signer.update(signedTokenID, 0, signedTokenID.length);
+
+                // Verify that the coin has a valid signature using our public key.
+                if(signer.verifySignature(signedTokenSig)){
+                    //good signature
+                    Log.v(LOG_TAG, "The QR was from legit registrar");
+                    //Update the state to PRE_VOTING
+                    updateElectionInstanceState(ElectionState.PRE_VOTING);
+                    electionInstance.setSignedTokenID(signedTokenID);
+                    electionInstance.setSignedTokenSignature(signedTokenSig);
+                    //Call the next Activity
+
+                }else{
+                    //badsignature
+                    Log.e(LOG_TAG, "The QR scanned is not valid.");
+                    ToastWrapper.initiateToast(this, "The QR code you scanned is not valid");
+                }
+            }
+        } else {
+            // This is important, otherwise the result will not be passed to the fragment
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

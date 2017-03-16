@@ -1,6 +1,7 @@
 package com.blockvote.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,8 @@ import com.stepstone.stepper.VerificationError;
  */
 public class RegistrationFinalStepFragment extends Fragment implements Step {
 
+    private FinalStepQRCode finalStepQRCode;
+
     public RegistrationFinalStepFragment() {
         // Required empty public constructor
     }
@@ -26,7 +29,15 @@ public class RegistrationFinalStepFragment extends Fragment implements Step {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_registration_final, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_registration_final, container, false);
+        View scanQRCard = rootView.findViewById(R.id.newElection_scanQR);
+        scanQRCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finalStepQRCode.onScanQRCodeClickFromFinalStep();
+            }
+        });
+        return rootView;
     }
 
     @Override
@@ -44,6 +55,27 @@ public class RegistrationFinalStepFragment extends Fragment implements Step {
     public VerificationError verifyStep() {
 
         return null;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FinalStepQRCode) {
+            finalStepQRCode = (FinalStepQRCode) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement FinalStepQRCode");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        finalStepQRCode = null;
+    }
+
+    public interface FinalStepQRCode {
+        void onScanQRCodeClickFromFinalStep();
     }
 
 }

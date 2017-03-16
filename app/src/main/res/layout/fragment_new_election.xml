@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:paddingTop="16dp"
-            android:text="To add a new election you may scan the registrar's QR code. The QR code will automatically populate the district and registrar fields in your registration form."
+            android:text="A registration form needs to be filled. You may scan the registrar's QR code to automatically populate the district and registrar fields in your registration form."
             android:textSize="20sp" />
 
         <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

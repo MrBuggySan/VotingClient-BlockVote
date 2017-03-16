@@ -24,8 +24,8 @@ public class ElectionInstance {
     //TODO: determine which ones I can cache, for now I cache all of them
     private BlindedToken blindedToken;
     private RSAKeyParameters rSAkeyParams;
-    private String signedTokenID;
-    private String signedTokenSignature;
+    private byte[] signedTokenID;
+    private byte[] signedTokenSignature;
 
     private Bitmap QR_code;
 
@@ -121,19 +121,19 @@ public class ElectionInstance {
         this.rSAkeyParams = rSAkeyParams;
     }
 
-    public String getSignedTokenID() {
+    public byte[] getSignedTokenID() {
         return signedTokenID;
     }
 
-    public void setSignedTokenID(String signedTokenID) {
+    public void setSignedTokenID(byte[] signedTokenID) {
         this.signedTokenID = signedTokenID;
     }
 
-    public String getSignedTokenSignature() {
+    public byte[] getSignedTokenSignature() {
         return signedTokenSignature;
     }
 
-    public void setSignedTokenSignature(String signedTokenSignature) {
+    public void setSignedTokenSignature(byte[] signedTokenSignature) {
         this.signedTokenSignature = signedTokenSignature;
     }
 }
