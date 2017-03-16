@@ -102,6 +102,8 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             updateElectionInstanceState(ElectionState.START_GEN_QR);
             Log.d(LOG_TAG, "onPause called, resetting the state of electionInstance");
             //TODO: kill the background service
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mDownloadStateReceiver);
+
         }
 
     }
@@ -152,17 +154,22 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         return electionInstance;
     }
 
+    private RegistrationActivity.DownloadStateReceiver mDownloadStateReceiver;
+
     @Override
     public void setupQRReceiver(){
         // The filter's action is BROADCAST_ACTION
         IntentFilter statusIntentFilter = new IntentFilter(getString(R.string.BackgroundQRAction));
+
         // Instantiates a new DownloadStateReceiver
-        RegistrationActivity.DownloadStateReceiver mDownloadStateReceiver =
+        mDownloadStateReceiver =
                 new DownloadStateReceiver();
+
         // Registers the DownloadStateReceiver and its intent filters
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mDownloadStateReceiver,
                 statusIntentFilter);
+
     }
 
     // Broadcast receiver for receiving status updates from the IntentService
