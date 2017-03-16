@@ -138,7 +138,12 @@ public class GenerateQRFragment extends Fragment implements Step {
                 getActivity().startService(mServiceIntent);
 
                 //TODO: update the electionInstance state
+                long startTime = System.nanoTime();
                 registrationDefaultInteractions.updateElectionInstanceState(ElectionState.WORKING_GEN_QR);
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+                Log.d(LOG_TAG,"it took " + duration );
+
                 registrationDefaultInteractions.setupQRReceiver();
 
 

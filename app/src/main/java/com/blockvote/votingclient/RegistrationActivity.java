@@ -120,6 +120,8 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             electionInstance.setElectionState(electionState);
             //update the electionInstance in ElectionList as well
             ongoingElectionList.updateElection(electionInstance);
+            //save the ongoingElectionList to data store
+            DataStore.saveOngoingElectionList(this, ongoingElectionList);
             return true;
         }else{
             ToastWrapper.initiateToast(this, "It is not possible to update an election that was never in the list.");
@@ -168,7 +170,11 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             ". Press next when the registrar is done scanning.");
             // cache the QR for this electionInstance
             electionInstance.setQR_code(bitmap);
-            updateElectionInstanceState(ElectionState.FIN_GEN_QR);
+            long startTime = System.nanoTime();
+//            updateElectionInstanceState(ElectionState.FIN_GEN_QR);
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+            Log.d(LOG_TAG,"it took " + duration );
         }
     }
 

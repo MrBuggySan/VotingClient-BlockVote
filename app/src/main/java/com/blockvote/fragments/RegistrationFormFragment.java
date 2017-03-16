@@ -363,7 +363,11 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             //Add the electionInstance to RegistrationActivity
             if(registrationDefaultInteractions.saveNewElectionInstance(electionInstance)){
                 //setup the state of this electionInstance
+                long startTime = System.nanoTime();
                 registrationDefaultInteractions.updateElectionInstanceState(ElectionState.START_GEN_QR);
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+                Log.d(LOG_TAG,"it took " + duration );
                 // skipChecks only if saveNewElectionInstance is true.
                 skipChecks = true;
             }else{

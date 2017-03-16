@@ -2,6 +2,7 @@ package com.blockvote.auxillary;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.blockvote.votingclient.R;
 import com.google.gson.Gson;
@@ -11,6 +12,8 @@ import com.google.gson.Gson;
  */
 
 public class DataStore {
+    private static final String LOG_TAG = DataStore.class.getSimpleName();
+
     public static FinishedElectionList getFinishedElectionList(Context context){
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
@@ -46,7 +49,9 @@ public class DataStore {
                 context.getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         Gson gson = new Gson();
+
         String strOnGoingElections = gson.toJson(ongoingElectionList);
+
         editor.putString(context.getString(R.string.onGoingElectionsListKey), strOnGoingElections);
         editor.commit();
     }
