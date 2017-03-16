@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="zxing-android-embedded-3.2.0">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/5e8471590db07355feb487d922612b6804142611/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/5e8471590db07355feb487d922612b6804142611/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/c40a8912c8d9b02d0dc1ca68281375d573f1948e/output/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/c40a8912c8d9b02d0dc1ca68281375d573f1948e/output/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

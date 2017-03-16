@@ -29,6 +29,28 @@ public class ElectionList {
         return false;
     }
 
+    public void updateElection(ElectionInstance electionInstance){
+        if(HACKVERSION.forDemo){
+            int electionID = electionInstance.getId();
+            for(int i = 0; i < getSize(); i++){
+                if(electionList.get(i).getId() == electionID){
+                    electionList.set(i, electionInstance);
+                    break;
+                }
+            }
+        }else{
+            String newURL = electionInstance.getElectionURL();
+            for(int i = 0; i < getSize(); i++){
+                if(electionList.get(i).getElectionURL().equals(newURL)){
+                    electionList.set(i, electionInstance);
+                    break;
+                }
+            }
+        }
+
+
+    }
+
     public int getSize(){
         return electionList.size();
     }

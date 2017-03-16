@@ -21,6 +21,16 @@ public class DataStore {
         return finishedElectionList;
     }
 
+    public static void saveFinishedElectionList(Context context, FinishedElectionList finishedElectionList){
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Gson gson = new Gson();
+        String strFinishedElectionList = gson.toJson(finishedElectionList);
+        editor.putString(context.getString(R.string.finishedElectionsListKey), strFinishedElectionList);
+        editor.commit();
+    }
+
     public static OngoingElectionList getOngoingElectionList(Context context){
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
@@ -29,5 +39,15 @@ public class DataStore {
         Gson gson = new Gson();
         OngoingElectionList ongoingElectionList = gson.fromJson(strOnGoingElections,OngoingElectionList.class);
         return ongoingElectionList;
+    }
+
+    public static void saveOngoingElectionList(Context context, OngoingElectionList ongoingElectionList){
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Gson gson = new Gson();
+        String strOnGoingElections = gson.toJson(ongoingElectionList);
+        editor.putString(context.getString(R.string.onGoingElectionsListKey), strOnGoingElections);
+        editor.commit();
     }
 }

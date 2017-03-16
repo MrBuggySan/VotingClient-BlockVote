@@ -21,6 +21,7 @@ public class FinishedElections extends ElectionListFragment {
 
         if(finishedElectionList == null){
             finishedElectionList = new FinishedElectionList();
+            DataStore.saveFinishedElectionList(getContext(), finishedElectionList);
         }
         RecyclerView rv = (RecyclerView)rootView.findViewById(R.id.electionList_recyclerView);
 

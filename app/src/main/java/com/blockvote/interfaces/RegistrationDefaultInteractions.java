@@ -8,7 +8,7 @@ import com.blockvote.auxillary.ElectionState;
  */
 
 public interface RegistrationDefaultInteractions extends DefaultInteractions {
-    boolean saveElectionInstance(ElectionInstance electionInstance);
+    boolean saveNewElectionInstance(ElectionInstance electionInstance);
     boolean updateElectionInstanceState(ElectionState electionState);
     void setupQRReceiver();
 

@@ -11,6 +11,7 @@ import org.spongycastle.crypto.params.RSAKeyParameters;
  */
 
 public class ElectionInstance {
+    private int id;
     private ElectionState electionState;
     private String electionName;
     private String electionURL;
@@ -26,8 +27,21 @@ public class ElectionInstance {
     private RSAKeyParameters rSAkeyParams;
     private byte[] signedTokenID;
     private byte[] signedTokenSignature;
+    private static int count = 0;
+
+    public static int currentCount(){
+        return count++;
+    }
 
     private Bitmap QR_code;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTimeString() {
         return timeString;

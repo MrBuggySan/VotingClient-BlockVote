@@ -20,6 +20,7 @@ public class OnGoingElections extends ElectionListFragment {
 
         if(ongoingElectionList == null){
             ongoingElectionList = new OngoingElectionList();
+            DataStore.saveOngoingElectionList(getContext(), ongoingElectionList);
         }
 
         RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.electionList_recyclerView);

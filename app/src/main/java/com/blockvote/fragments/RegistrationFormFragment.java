@@ -39,8 +39,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.blockvote.votingclient.R.id.register_registrar_spinner;
-
 public abstract class RegistrationFormFragment extends Fragment implements Step {
     private final String LOG_TAG = RegistrationFormFragment.class.getSimpleName();
     protected View rootView;
@@ -363,10 +361,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
 
             //Add the electionInstance to RegistrationActivity
-            if(registrationDefaultInteractions.saveElectionInstance(electionInstance)){
+            if(registrationDefaultInteractions.saveNewElectionInstance(electionInstance)){
                 //setup the state of this electionInstance
                 registrationDefaultInteractions.updateElectionInstanceState(ElectionState.START_GEN_QR);
-                // skipChecks only if saveElectionInstance is true.
+                // skipChecks only if saveNewElectionInstance is true.
                 skipChecks = true;
             }else{
                 ToastWrapper.initiateToast(getContext(), "This election is already active.");

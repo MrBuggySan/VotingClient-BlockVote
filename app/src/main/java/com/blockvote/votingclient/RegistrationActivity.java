@@ -4,13 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
+import com.blockvote.auxillary.HACKVERSION;
 import com.blockvote.auxillary.OngoingElectionList;
 import com.blockvote.auxillary.StepperAdapter;
 import com.blockvote.auxillary.ToastWrapper;
@@ -30,7 +31,6 @@ import com.blockvote.fragments.ManualForm;
 import com.blockvote.fragments.RegistrationFinalStepFragment;
 import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
-import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.stepstone.stepper.StepperLayout;
@@ -39,7 +39,6 @@ import org.spongycastle.crypto.digests.SHA1Digest;
 import org.spongycastle.crypto.engines.RSAEngine;
 import org.spongycastle.crypto.params.RSAKeyParameters;
 import org.spongycastle.crypto.signers.PSSSigner;
-import android.util.Base64;
 
 public class RegistrationActivity extends AppCompatActivity implements RegistrationDefaultInteractions,
         RegistrationFinalStepFragment.FinalStepQRCode{
@@ -96,15 +95,18 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
-    public boolean saveElectionInstance(ElectionInstance electionInstance_){
+    public boolean saveNewElectionInstance(ElectionInstance electionInstance_){
         this.electionInstance = electionInstance_;
-
-        //TODO: Add the electionInstance to OnGoingElectionList inside the sharedPref
+        //Add the electionInstance to OnGoingElectionList inside the sharedPref
         OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
-
+        if(HACKVERSION.forDemo){
+            electionInstance.setId(ElectionInstance.currentCount());
+        }
         if(ongoingElectionList.addElection(electionInstance)){
             //the electionInstance has been added succesfully
-            //TODO: save the ongoingElectionList to data store
+
+            //save the ongoingElectionList to data store
+            DataStore.saveOngoingElectionList(this, ongoingElectionList);
             return true;
         }else{
             return false;
@@ -113,11 +115,16 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     public boolean updateElectionInstanceState(ElectionState electionState){
-        if(electionInstance != null){
+        OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
+        if(electionInstance != null && ongoingElectionList !=null ){
             electionInstance.setElectionState(electionState);
-            //TODO: update the electionInstance in ElectionList as well
+            //update the electionInstance in ElectionList as well
+            ongoingElectionList.updateElection(electionInstance);
             return true;
-        }else return false;
+        }else{
+            ToastWrapper.initiateToast(this, "It is not possible to update an election that was never in the list.");
+            return false;
+        }
     }
 
     @Override
