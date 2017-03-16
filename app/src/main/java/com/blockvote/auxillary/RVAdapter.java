@@ -79,19 +79,25 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         switch(cardEntryViewHolder.getItemViewType()){
             case 0:
                 if(elections.getSize() == 0) return;
+                ElectionInstance electionInstance = elections.getElectionAt(position);
                 ElectionInstanceViewHolder electionInstanceViewHolder = (ElectionInstanceViewHolder) cardEntryViewHolder;
-                electionInstanceViewHolder.electionName.setText(elections.getElectionAt(position).getElectionName());
-                electionInstanceViewHolder.electionURL.setText(elections.getElectionAt(position).getTimeString());
+                electionInstanceViewHolder.electionName.setText(electionInstance.getElectionName());
+                electionInstanceViewHolder.electionURL.setText(electionInstance.getTimeString());
+                electionInstanceViewHolder.id = electionInstance.getId();
                 //have different colours for the cards
-//                electionInstanceViewHolder.cv.setBackgroundColor(context.getResources(CardColorPicker.NextColor(position)));
+                electionInstanceViewHolder.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(position)));
 //                electionInstanceViewHolder.electionPhoto.setImageResource(elections.get(i).);
                 break;
 
             case 1:
                 if(elections.getSize() == 0) return;
+                ElectionInstance electionInstance2 = elections.getElectionAt(position - 1);
                 ElectionInstanceViewHolder electionInstanceViewHolder2 = (ElectionInstanceViewHolder) cardEntryViewHolder;
-                electionInstanceViewHolder2.electionName.setText(elections.getElectionAt(position - 1).getElectionName());
-                electionInstanceViewHolder2.electionURL.setText(elections.getElectionAt(position - 1).getTimeString());
+                electionInstanceViewHolder2.electionName.setText(electionInstance2.getElectionName());
+                electionInstanceViewHolder2.electionURL.setText(electionInstance2.getTimeString());
+                electionInstanceViewHolder2.id = electionInstance2.getId();
+                electionInstanceViewHolder2.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(position - 1)));
+
                 break;
             case 2:
                 //do nothing since the new election card is already built
@@ -109,6 +115,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         CardView cv;
         TextView electionName;
         TextView electionURL;
+        int id;
         //ImageView electionPhoto;
 
         ElectionInstanceViewHolder(View itemView, final OnCardInteractionFragmentLeve onCardInteractionFragmentLeve, final boolean includeAddElection) {
@@ -120,7 +127,8 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 @Override
                 public void onClick(View view) {
                     int offset = (includeAddElection)? -1 : 0;
-                    onCardInteractionFragmentLeve.onElectionCardPress(getAdapterPosition() + offset);
+//                    onCardInteractionFragmentLeve.onElectionCardPress(getAdapterPosition() + offset);
+                    onCardInteractionFragmentLeve.onElectionCardPress(id);
 
                 }
 

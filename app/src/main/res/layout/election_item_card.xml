@@ -15,21 +15,22 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/electionName"
-                android:layout_alignParentTop="true"
-                android:textSize="30sp"
-                />
 
             <TextView
+                android:id="@+id/electionName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="30sp" />
+
+            <TextView
                 android:id="@+id/electionTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
 
-                />
+                android:textColor="@color/cardview_light_background" />
 
         </RelativeLayout>
 

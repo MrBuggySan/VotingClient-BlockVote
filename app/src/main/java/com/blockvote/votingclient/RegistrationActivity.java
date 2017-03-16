@@ -121,6 +121,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
         if(HACKVERSION.forDemo){
             electionInstance.setId(ElectionInstance.currentCount());
+            Log.d(LOG_TAG, "new election: " + electionInstance.getElectionName() + " id: " + electionInstance.getId());
         }
         if(ongoingElectionList.addElection(electionInstance)){
             //the electionInstance has been added succesfully
@@ -192,7 +193,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             String registrarName = electionInstance.getRegistrarName();
             TextView textViewBlurb2 = (TextView) genQRrootView.findViewById(R.id.GenQR_textBlurb2);
             textViewBlurb2.setText("Please show this QR code to your registrar, " + registrarName +
-            ". Press next when the registrar is done scanning.");
+            ". Press next when the registrar is done scanning the QR.");
 
             updateElectionInstanceState(ElectionState.FIN_GEN_QR);
 

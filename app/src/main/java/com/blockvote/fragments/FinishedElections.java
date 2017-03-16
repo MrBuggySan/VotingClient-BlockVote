@@ -2,8 +2,10 @@ package com.blockvote.fragments;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.blockvote.auxillary.DataStore;
+import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.FinishedElectionList;
 import com.blockvote.auxillary.RVAdapter;
 import com.blockvote.votingclient.R;
@@ -32,9 +34,12 @@ public class FinishedElections extends ElectionListFragment {
         rv.setAdapter(adapter);
     }
 
+    private final String LOG_TAG = FinishedElections.class.getSimpleName();
     @Override
     public void onElectionCardPress(int position){
         //Pass off the electionInstance that was selected
-        onCardInterActionActivityLevel.onElectionCardPress(finishedElectionList.getElectionAt(position).getElectionState(), position);
+        ElectionInstance electionInstance = finishedElectionList.getElectionAt(position);
+        Log.d(LOG_TAG, "Election with id: " +  electionInstance.getId() + " selected.");
+        onCardInterActionActivityLevel.onElectionCardPress(electionInstance.getElectionState(), position);
     }
 }

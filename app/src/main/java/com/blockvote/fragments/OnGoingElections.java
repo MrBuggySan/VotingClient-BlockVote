@@ -41,7 +41,9 @@ public class OnGoingElections extends ElectionListFragment {
     public void onElectionCardPress(int position){
         //Pass off the electionInstance that was selected
         ElectionInstance electionInstance = ongoingElectionList.getElectionAt(position);
-        Log.d(LOG_TAG, electionInstance.getElectionName() + " selected with state " + electionInstance.getElectionState());
+//        Log.d(LOG_TAG, electionInstance.getElectionName() + " selected with state " + electionInstance.getElectionState());
+        Log.d(LOG_TAG, "Election with id: " +  electionInstance.getId() + " selected.");
         onCardInterActionActivityLevel.onElectionCardPress(ongoingElectionList.getElectionAt(position).getElectionState(), position);
+
     }
 }

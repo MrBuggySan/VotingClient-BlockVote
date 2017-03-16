@@ -44,34 +44,6 @@ public class GenerateQRFragment extends Fragment implements Step {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_generate_qr, container, false);
-        /*
-        ElectionInstance electionInstance = registrationDefaultInteractions.getElectionInstance();
-        if(electionInstance != null){
-            ElectionState electionState = electionInstance.getElectionState();
-            //hide the rest of the layouts
-
-            if(electionState == ElectionState.START_GEN_QR ){
-                //do nothing, we should not get here
-                ToastWrapper.initiateToast(getContext(), "START_GEN_QR inside onCreate of GenerateQRFragment" +
-                        " should not happen!");
-                return rootView;
-            }
-            if(electionState == ElectionState.WORKING_GEN_QR){
-                //Start generating the QR again
-                rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
-                generateQR(electionInstance);
-                return rootView;
-            }
-            if(electionState == ElectionState.FIN_GEN_QR){
-                //do nothing
-                return rootView;
-            }
-
-        }else{
-            //a new election
-
-        }
-        */
         rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
         registrationDefaultInteractions.setGenQRrootView(rootView);
         return rootView;
@@ -138,6 +110,8 @@ public class GenerateQRFragment extends Fragment implements Step {
             Log.e(LOG_TAG, "imageView is null?");
         }
         if( electionInstance.getElectionState() == ElectionState.START_GEN_QR){
+            //change the name of the toolbar
+            registrationDefaultInteractions.changeTitleBarName(electionInstance.getElectionName());
             generateQR(electionInstance);
         }
     }
