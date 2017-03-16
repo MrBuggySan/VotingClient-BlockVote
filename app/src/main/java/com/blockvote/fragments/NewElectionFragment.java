@@ -42,7 +42,7 @@ public class NewElectionFragment extends Fragment {
 
         });
 
-        View scanQRCard = rootView.findViewById(R.id.newElection_Card);
+        View scanQRCard = rootView.findViewById(R.id.newElection_scanQR);
         scanQRCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

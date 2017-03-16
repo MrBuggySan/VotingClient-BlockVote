@@ -15,7 +15,8 @@
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-       />
+        app:titleTextColor="@color/ms_white"
+        />
 
     <com.stepstone.stepper.StepperLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"

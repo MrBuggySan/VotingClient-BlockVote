@@ -70,7 +70,7 @@ public class GenerateQRFragment extends Fragment implements Step {
                 String registrarName = electionInstance.getRegistrarName();
                 TextView textViewBlurb2 = (TextView) rootView.findViewById(R.id.GenQR_textBlurb2);
                 textViewBlurb2.setText("Please show this QR code to your registrar, " + registrarName +
-                        ". Press next when the registrar is done scanning.");
+                        ". Press next when the registrar is done scanning it.");
                 imageView.setImageBitmap(bitmap);
 
                 rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
