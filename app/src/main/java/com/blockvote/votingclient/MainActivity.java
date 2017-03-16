@@ -116,26 +116,26 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
     @Override
     public void onElectionCardPress(ElectionState electionState, int index){
         //check if this is an onGoingElection or finishedElection
-        boolean isFinished;
-        if(electionState == ElectionState.START_GEN_QR ||
-                electionState == ElectionState.WORKING_GEN_QR ||
-                electionState == ElectionState.FIN_GEN_QR ||
-                electionState == ElectionState.REGIS_FINAL_STEP){
-            isFinished = false;
+
+        if(electionState == ElectionState.START_GEN_QR){
+            //Call RegistrationActivity
+            Intent intent = new Intent(this, RegistrationActivity.class);
+            intent.putExtra(getString(R.string.newelectionKey), false);
+            intent.putExtra(getString(R.string.electionIndexKey), index);
+            startActivity(intent);
         }else{
             if (electionState == ElectionState.PRE_VOTING ||
                     electionState == ElectionState.POST_VOTING){
-                isFinished = true;
+                //Call VotingActivity
+                Intent intent = new Intent(this, VotingActivity.class);
+                intent.putExtra(getString(R.string.newelectionKey), false);
+                intent.putExtra(getString(R.string.electionIndexKey), index);
+                startActivity(intent);
             }else{
                 //We should never get here
                 ToastWrapper.initiateToast(this, "The election selected has undefined state. ERROR");
-                isFinished = false;
+
             }
         }
-
-        Intent intent = new Intent(this, VotingActivity.class);
-        intent.putExtra(getString(R.string.isElectionFinishedKey), isFinished);
-        intent.putExtra(getString(R.string.electionIndexKey), index);
-        startActivity(intent);
     }
 }

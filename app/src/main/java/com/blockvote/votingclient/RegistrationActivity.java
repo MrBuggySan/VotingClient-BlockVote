@@ -45,18 +45,13 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     private final String LOG_TAG = RegistrationActivity.class.getSimpleName();
     private StepperLayout mStepperLayout;
     private ElectionInstance electionInstance;
+    private View genQRrootView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
-        //TODO: determine how I can manage the activeElection string
-
-        //TODO: determine if I have to use FilledForm or ManualForm for this Election
-
-        //TODO: save the selected RegistrationFormFragment inside datastore
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.registration_toolbar);
         setSupportActionBar(myToolbar);
@@ -65,11 +60,11 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
         Intent intent = getIntent();
         RegistrationFormFragment registrationFormFragment;
-        int startingStepPosition = 1;
-        if(intent.getBooleanExtra(getString(R.string.newelectionKey), false)){
-            startingStepPosition = 1;
+        int startingStepPosition = 0;
+        if(intent.getBooleanExtra(getString(R.string.newelectionKey), true)){
+            startingStepPosition = 0;
             //Either display ManualForm or FilledForm
-            if(intent.getBooleanExtra(getString(R.string.isManualFormKey), false)){
+            if(intent.getBooleanExtra(getString(R.string.isManualFormKey), true)){
                 //display ManualForm
                 registrationFormFragment = new ManualForm();
             }else{
@@ -78,13 +73,36 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             }
 
         }else{
-            //TODO: determine the step position
+            //An electionInstance in the middle of registration is selected
+            int index = intent.getIntExtra(getString(R.string.electionIndexKey), -1);
+            if(index == -1 ){
+                Log.e(LOG_TAG, "There should have been an index here");
+                return;
+            }
+            OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
+            electionInstance = ongoingElectionList.getElectionAt(index);
+            startingStepPosition = 1;
             //always show the manual form
             registrationFormFragment = new ManualForm();
         }
 
         mStepperLayout = (StepperLayout) findViewById(R.id.stepperLayout);
-        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this, registrationFormFragment));
+        mStepperLayout.setAdapter(new StepperAdapter(getSupportFragmentManager(), this, registrationFormFragment),startingStepPosition);
+
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        if(electionInstance !=null &&
+                (electionInstance.getElectionState() == ElectionState.FIN_GEN_QR ||
+                electionInstance.getElectionState() == ElectionState.REGIS_FINAL_STEP ||
+                        electionInstance.getElectionState() == ElectionState.WORKING_GEN_QR)){
+            //Reset the electionInstance to WORKING_GEN_QR
+            updateElectionInstanceState(ElectionState.START_GEN_QR);
+            Log.d(LOG_TAG, "onPause called, resetting the state of electionInstance");
+            //TODO: kill the background service
+        }
 
     }
 
@@ -159,25 +177,22 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         public void onReceive(Context context, Intent intent) {
             Bitmap bitmap = intent.getParcelableExtra(getString(R.string.GeneratedQR_from_background));
             Log.v(LOG_TAG, "Displaying the QR now, this is from the background service.");
-            ImageView imageView = (ImageView) findViewById(R.id.image_QRCode);
+            ImageView imageView = (ImageView) genQRrootView.findViewById(R.id.image_QRCode);
             imageView.setImageBitmap(bitmap);
 
-            findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
-            findViewById(R.id.genQR_loadingQRUI).setVisibility(View.GONE);
+            genQRrootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
+            genQRrootView.findViewById(R.id.genQR_loadingQRUI).setVisibility(View.GONE);
             String registrarName = electionInstance.getRegistrarName();
-            TextView textViewBlurb2 = (TextView) findViewById(R.id.GenQR_textBlurb2);
+            TextView textViewBlurb2 = (TextView) genQRrootView.findViewById(R.id.GenQR_textBlurb2);
             textViewBlurb2.setText("Please show this QR code to your registrar, " + registrarName +
             ". Press next when the registrar is done scanning.");
-            // cache the QR for this electionInstance
-            electionInstance.setQR_code(bitmap);
-            long startTime = System.nanoTime();
-//            updateElectionInstanceState(ElectionState.FIN_GEN_QR);
-            long endTime = System.nanoTime();
-            long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
-            Log.d(LOG_TAG,"it took " + duration );
+
+            updateElectionInstanceState(ElectionState.FIN_GEN_QR);
+
         }
     }
 
+    //Initiate the QR scanner at the final registration step
     public void onScanQRCodeClickFromFinalStep(){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
@@ -189,6 +204,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     }
 
     @Override
+    //Handle the data coming from QR scanner activity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if(result != null) {
@@ -237,6 +253,11 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             // This is important, otherwise the result will not be passed to the fragment
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void setGenQRrootView(View rootView_){
+        this.genQRrootView = rootView_;
     }
 
 

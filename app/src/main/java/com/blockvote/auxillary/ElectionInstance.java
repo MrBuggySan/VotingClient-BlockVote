@@ -33,7 +33,6 @@ public class ElectionInstance {
         return count++;
     }
 
-    private Bitmap QR_code;
 
     public int getId() {
         return id;
@@ -65,14 +64,6 @@ public class ElectionInstance {
 
     public void setEndTime(int endTime) {
         this.endTime = endTime;
-    }
-
-    public Bitmap getQR_code() {
-        return QR_code;
-    }
-
-    public void setQR_code(Bitmap QR_code) {
-        this.QR_code = QR_code;
     }
 
     public ElectionInstance(){

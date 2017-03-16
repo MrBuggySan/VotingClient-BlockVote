@@ -2,8 +2,10 @@ package com.blockvote.fragments;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.blockvote.auxillary.DataStore;
+import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.OngoingElectionList;
 import com.blockvote.auxillary.RVAdapter;
 import com.blockvote.votingclient.R;
@@ -13,9 +15,10 @@ import com.blockvote.votingclient.R;
  */
 
 public class OnGoingElections extends ElectionListFragment {
+    private static String LOG_TAG = ElectionListFragment.class.getSimpleName();
     private OngoingElectionList ongoingElectionList;
     public void EditUI(){
-
+        Log.d(LOG_TAG, "EditUI called");
         ongoingElectionList = DataStore.getOngoingElectionList(getContext());
 
         if(ongoingElectionList == null){
@@ -37,6 +40,8 @@ public class OnGoingElections extends ElectionListFragment {
     @Override
     public void onElectionCardPress(int position){
         //Pass off the electionInstance that was selected
+        ElectionInstance electionInstance = ongoingElectionList.getElectionAt(position);
+        Log.d(LOG_TAG, electionInstance.getElectionName() + " selected with state " + electionInstance.getElectionState());
         onCardInterActionActivityLevel.onElectionCardPress(ongoingElectionList.getElectionAt(position).getElectionState(), position);
     }
 }

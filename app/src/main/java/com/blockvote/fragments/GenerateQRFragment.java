@@ -29,7 +29,6 @@ import org.spongycastle.crypto.CryptoException;
 public class GenerateQRFragment extends Fragment implements Step {
     private RegistrationDefaultInteractions registrationDefaultInteractions;
     private final String LOG_TAG = GenerateQRFragment.class.getSimpleName();
-    private ElectionInstance electionInstance;
 
 
     private View rootView;
@@ -45,8 +44,7 @@ public class GenerateQRFragment extends Fragment implements Step {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_generate_qr, container, false);
-
-        //test if the electionInstance already has a QR code cached or its loading a QR still
+        /*
         ElectionInstance electionInstance = registrationDefaultInteractions.getElectionInstance();
         if(electionInstance != null){
             ElectionState electionState = electionInstance.getElectionState();
@@ -59,29 +57,23 @@ public class GenerateQRFragment extends Fragment implements Step {
                 return rootView;
             }
             if(electionState == ElectionState.WORKING_GEN_QR){
-                //do nothing, we are still waiting for the QR generation to finish
+                //Start generating the QR again
+                rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
+                generateQR(electionInstance);
                 return rootView;
             }
             if(electionState == ElectionState.FIN_GEN_QR){
-                //display the cached QR
-                Bitmap bitmap = electionInstance.getQR_code();
-                Log.v(LOG_TAG, "Displaying the cached QR.");
-                ImageView imageView = (ImageView) rootView.findViewById(R.id.image_QRCode);
-                String registrarName = electionInstance.getRegistrarName();
-                TextView textViewBlurb2 = (TextView) rootView.findViewById(R.id.GenQR_textBlurb2);
-                textViewBlurb2.setText("Please show this QR code to your registrar, " + registrarName +
-                        ". Press next when the registrar is done scanning it.");
-                imageView.setImageBitmap(bitmap);
-
-                rootView.findViewById(R.id.genQR_UI).setVisibility(View.VISIBLE);
-                rootView.findViewById(R.id.genQR_loadingQRUI).setVisibility(View.GONE);
+                //do nothing
                 return rootView;
             }
 
         }else{
-            rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
-        }
+            //a new election
 
+        }
+        */
+        rootView.findViewById(R.id.genQR_UI).setVisibility(View.GONE);
+        registrationDefaultInteractions.setGenQRrootView(rootView);
         return rootView;
     }
 
@@ -111,46 +103,42 @@ public class GenerateQRFragment extends Fragment implements Step {
         ToastWrapper.initiateToast(getContext(), error.getErrorMessage());
     }
 
+    public void generateQR(ElectionInstance electionInstance){
+        //Create tokenRequest
+        try{
+            TokenRequest tokenRequest = electionInstance.getBlindedToken().generateTokenRequest();
+            byte[] tokenMsg = tokenRequest.getMessage();
+
+            //start generating the QR
+            //Create the background service
+            Intent mServiceIntent = new Intent(getActivity(), QRCreatorService.class);
+            mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
+            getActivity().startService(mServiceIntent);
+
+            registrationDefaultInteractions.updateElectionInstanceState(ElectionState.WORKING_GEN_QR);
+
+
+            registrationDefaultInteractions.setupQRReceiver();
+
+
+
+        }catch(CryptoException cryptoException){
+            //TODO: handle this
+        }
+    }
+
     @Override
     public void onSelected() {
-        //TODO: Only one QR generation for this electionInstance is allowed
+        // Only one QR generation for this electionInstance is allowed
+        Log.d(LOG_TAG, "onSelected.");
+        ElectionInstance electionInstance = registrationDefaultInteractions.getElectionInstance();
 
-        electionInstance = registrationDefaultInteractions.getElectionInstance();
-
-        if(electionInstance == null){
-            Log.d(LOG_TAG, "By this point we should have had some kind of electionInstance, but it" +
-                    "appreas like we don't. Something went wrong.");
-            ToastWrapper.initiateToast(getContext(),"By this point we should have had some kind of electionInstance, but it" +
-                    "appreas like we don't. Something went wrong.");
-            return;
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.image_QRCode);
+        if(imageView == null){
+            Log.e(LOG_TAG, "imageView is null?");
         }
-
-        if(electionInstance.getQR_code() == null && electionInstance.getElectionState() == ElectionState.START_GEN_QR){
-            //Create tokenRequest
-            try{
-                TokenRequest tokenRequest = electionInstance.getBlindedToken().generateTokenRequest();
-                byte[] tokenMsg = tokenRequest.getMessage();
-
-                //start generating the QR
-                //Create the background service
-                Intent mServiceIntent = new Intent(getActivity(), QRCreatorService.class);
-                mServiceIntent.putExtra(getString(R.string.QRCreatorServiceString), Base64.encodeToString(tokenMsg, Base64.DEFAULT));
-                getActivity().startService(mServiceIntent);
-
-                //TODO: update the electionInstance state
-                long startTime = System.nanoTime();
-                registrationDefaultInteractions.updateElectionInstanceState(ElectionState.WORKING_GEN_QR);
-                long endTime = System.nanoTime();
-                long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
-                Log.d(LOG_TAG,"it took " + duration );
-
-                registrationDefaultInteractions.setupQRReceiver();
-
-
-
-            }catch(CryptoException cryptoException){
-                //TODO: handle this
-            }
+        if( electionInstance.getElectionState() == ElectionState.START_GEN_QR){
+            generateQR(electionInstance);
         }
     }
 

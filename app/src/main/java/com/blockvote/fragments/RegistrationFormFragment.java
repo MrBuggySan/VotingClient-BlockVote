@@ -61,13 +61,13 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        Log.d(LOG_TAG, "onDestroyView called.");
+//        Log.d(LOG_TAG, "onDestroyView called.");
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Log.d(LOG_TAG, "onDestroy called.");
+//        Log.d(LOG_TAG, "onDestroy called.");
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,9 +79,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         }
         Log.d(LOG_TAG, "onCreate called.");
         //Determine if a new electionInstance is to be made or not
-        if(registrationDefaultInteractions.getElectionInstance() != null){
+        electionInstance = registrationDefaultInteractions.getElectionInstance();
+        if(electionInstance != null){
             stopLoadingAnimOnSuccess();
-            prefillEditableViews(registrationDefaultInteractions.getElectionInstance());
+            prefillEditableViews(electionInstance);
             disableEditableViews();
 //            isReadyForNextStep = true;
 //            hasValidElectionURL = true;
@@ -358,16 +359,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
             //The user should not be able to edit their data anymore
             disableEditableViews();
-
-
             //Add the electionInstance to RegistrationActivity
             if(registrationDefaultInteractions.saveNewElectionInstance(electionInstance)){
                 //setup the state of this electionInstance
-                long startTime = System.nanoTime();
                 registrationDefaultInteractions.updateElectionInstanceState(ElectionState.START_GEN_QR);
-                long endTime = System.nanoTime();
-                long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
-                Log.d(LOG_TAG,"it took " + duration );
                 // skipChecks only if saveNewElectionInstance is true.
                 skipChecks = true;
             }else{

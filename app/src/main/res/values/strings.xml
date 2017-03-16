@@ -6,12 +6,6 @@
     <string name="electionVote">Vote</string>
     <string name="electionHelp">Help</string>
 
-    <!--The possible states of VotingActivity-->
-    <string name="RegistrationState">Regis</string>
-    <string name="GenQRState">genqr</string>
-    <string name="VoteButtonState">VotBut</string>
-    <string name="ReviewBallotState">RevBalot</string>
-
     <!--Constants for Broadcasats-->
     <string name="BackgroundQRAction">BackgroundQRAction</string>
     <string name="GeneratedQR_from_background">GeneratedQR_from_background</string>
