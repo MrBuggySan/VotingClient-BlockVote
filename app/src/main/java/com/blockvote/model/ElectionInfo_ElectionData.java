@@ -11,6 +11,9 @@ import java.util.Map;
 public class ElectionInfo_ElectionData {
     private List<String> districts = null;
     private List<String> voteOptions = null;
+    private String electionStart;
+    private String electionEnd;
+    private String liveResults;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public List<String> getDistricts() {
@@ -27,6 +30,30 @@ public class ElectionInfo_ElectionData {
 
     public void setVoteOptions(List<String> voteOptions) {
         this.voteOptions = voteOptions;
+    }
+
+    public String getElectionStart() {
+        return electionStart;
+    }
+
+    public void setElectionStart(String electionStart) {
+        this.electionStart = electionStart;
+    }
+
+    public String getElectionEnd() {
+        return electionEnd;
+    }
+
+    public void setElectionEnd(String electionEnd) {
+        this.electionEnd = electionEnd;
+    }
+
+    public String getLiveResults() {
+        return liveResults;
+    }
+
+    public void setLiveResults(String liveResults) {
+        this.liveResults = liveResults;
     }
 
     public Map<String, Object> getAdditionalProperties() {

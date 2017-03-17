@@ -18,6 +18,8 @@ import com.blockvote.auxillary.ElectionState;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
+import com.blockvote.model.ElectionInfo_ElectionData;
+import com.blockvote.model.ElectionInfo_Response;
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.model.MODEL_getRegistrarInfo;
 import com.blockvote.networking.BlockVoteServerAPI;
@@ -170,8 +172,15 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                     return;
                 }
                 electionInstance.setElectionURL(electionURL);
-                String temp_electionName = response.body().getResponse().getId();
+                ElectionInfo_Response electionInfo_response = response.body().getResponse();
+                ElectionInfo_ElectionData electionInfo_electionData = electionInfo_response.getElectionData();
+                String temp_electionName = electionInfo_response.getId();
                 electionInstance.setElectionName(temp_electionName);
+
+                //Convert the time to this device's timezone
+
+                electionInstance.setStartTime(electionInfo_electionData.getElectionStart());
+                electionInstance.setEndTime(electionInfo_electionData.getElectionEnd());
                 //change the name of the toolbar
                 registrationDefaultInteractions.changeTitleBarName(temp_electionName);
 

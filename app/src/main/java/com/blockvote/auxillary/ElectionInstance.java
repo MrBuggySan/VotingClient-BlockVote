@@ -15,9 +15,10 @@ public class ElectionInstance {
     private ElectionState electionState;
     private String electionName;
     private String electionURL;
+
     private String timeString;
-    private int startTime;
-    private int endTime;
+    private String startTime;
+    private String endTime;
 
     private String districtName;
     private String registrarName;
@@ -50,19 +51,19 @@ public class ElectionInstance {
         this.timeString = timeString;
     }
 
-    public int getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public int getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

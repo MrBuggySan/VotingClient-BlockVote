@@ -101,7 +101,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             //Reset the electionInstance to WORKING_GEN_QR
             updateElectionInstanceState(ElectionState.START_GEN_QR);
             Log.d(LOG_TAG, "onPause called, resetting the state of electionInstance");
-            //TODO: kill the background service
+            // kill the background service
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mDownloadStateReceiver);
 
         }

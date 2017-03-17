@@ -8,19 +8,18 @@ import java.util.Map;
  */
 
 public class ElectionInfo_Response   {
-    private String _id;
 
+    private String id;
     private ElectionInfo_ElectionData electionData;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public String getId() {
-        return _id;
+        return id;
     }
 
     public void setId(String id) {
-        this._id = id;
+        this.id = id;
     }
-
 
     public ElectionInfo_ElectionData getElectionData() {
         return electionData;
