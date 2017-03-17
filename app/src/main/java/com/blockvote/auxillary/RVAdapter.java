@@ -82,7 +82,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 ElectionInstance electionInstance = elections.getElectionAt(position);
                 ElectionInstanceViewHolder electionInstanceViewHolder = (ElectionInstanceViewHolder) cardEntryViewHolder;
                 electionInstanceViewHolder.electionName.setText(electionInstance.getElectionName());
-                electionInstanceViewHolder.electionURL.setText(electionInstance.getTimeString());
+                electionInstanceViewHolder.timeString.setText(electionInstance.getTimeString());
                 electionInstanceViewHolder.id = electionInstance.getId();
                 //have different colours for the cards
                 electionInstanceViewHolder.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(position)));
@@ -94,7 +94,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 ElectionInstance electionInstance2 = elections.getElectionAt(position - 1);
                 ElectionInstanceViewHolder electionInstanceViewHolder2 = (ElectionInstanceViewHolder) cardEntryViewHolder;
                 electionInstanceViewHolder2.electionName.setText(electionInstance2.getElectionName());
-                electionInstanceViewHolder2.electionURL.setText(electionInstance2.getTimeString());
+                electionInstanceViewHolder2.timeString.setText(electionInstance2.getTimeString());
                 electionInstanceViewHolder2.id = electionInstance2.getId();
                 electionInstanceViewHolder2.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(position - 1)));
 
@@ -114,7 +114,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public class ElectionInstanceViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView electionName;
-        TextView electionURL;
+        TextView timeString;
         int id;
         //ImageView electionPhoto;
 
@@ -122,7 +122,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cv);
             electionName = (TextView) itemView.findViewById(R.id.electionName);
-            electionURL = (TextView) itemView.findViewById(R.id.electionTime);
+            timeString = (TextView) itemView.findViewById(R.id.electionTime);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

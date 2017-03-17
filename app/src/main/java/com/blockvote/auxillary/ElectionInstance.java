@@ -1,9 +1,10 @@
 package com.blockvote.auxillary;
 
-import android.graphics.Bitmap;
-
 import com.blockvote.crypto.BlindedToken;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.format.ISODateTimeFormat;
 import org.spongycastle.crypto.params.RSAKeyParameters;
 
 /**
@@ -12,6 +13,8 @@ import org.spongycastle.crypto.params.RSAKeyParameters;
 
 public class ElectionInstance {
     private int id;
+    private boolean isOpenForVoting;
+    private boolean hasEnded;
     private ElectionState electionState;
     private String electionName;
     private String electionURL;
@@ -43,13 +46,53 @@ public class ElectionInstance {
         this.id = id;
     }
 
+    public void calculateTimeToElection(){
+        isOpenForVoting = false;
+        hasEnded = false;
+        //Get the UTC time now
+        DateTime timeNow = DateTime.now();
+        DateTime electionStart = ISODateTimeFormat.dateTimeParser().parseDateTime(startTime);
+        DateTime electionEnd = ISODateTimeFormat.dateTimeParser().parseDateTime(endTime);
+
+        Duration durBeforeStart = new Duration(timeNow, electionStart);
+        if(durBeforeStart.getStandardSeconds() > 0 ){
+            long days = durBeforeStart.getStandardDays();
+            long hours = durBeforeStart.getStandardHours() % 24;
+            //election has not started yet
+            if(days == 0){
+                timeString = "Opens in " + hours + " hours";
+            }else{
+                timeString = "Opens in " + days + " days and " + hours + " hours";
+            }
+        }else{
+            Duration durBeforeEnd = new Duration(timeNow, electionEnd);
+            if(durBeforeEnd.getStandardSeconds() > 0){
+                //The election is happening now
+                isOpenForVoting = true;
+                long days = durBeforeEnd.getStandardDays();
+                long hours = durBeforeEnd.getStandardHours() % 24;
+                //election has not started yet
+                if(days == 0){
+                    timeString = "Voting ends in " + hours + " hours";
+                }else{
+                    timeString = "Voting ends in " + days + " days and " + hours + " hours";
+                }
+            }else{
+                //The election has ended
+                //TODO: deal with this!
+                isOpenForVoting = false;
+                hasEnded = true;
+            }
+        }
+
+
+    }
+
     public String getTimeString() {
+        calculateTimeToElection();
         return timeString;
     }
 
-    public void setTimeString(String timeString) {
-        this.timeString = timeString;
-    }
 
     public String getStartTime() {
         return startTime;

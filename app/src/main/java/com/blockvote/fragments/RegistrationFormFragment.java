@@ -177,8 +177,6 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                 String temp_electionName = electionInfo_response.getId();
                 electionInstance.setElectionName(temp_electionName);
 
-                //Convert the time to this device's timezone
-
                 electionInstance.setStartTime(electionInfo_electionData.getElectionStart());
                 electionInstance.setEndTime(electionInfo_electionData.getElectionEnd());
                 //change the name of the toolbar

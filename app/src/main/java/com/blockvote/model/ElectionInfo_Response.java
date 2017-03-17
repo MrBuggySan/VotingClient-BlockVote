@@ -9,16 +9,16 @@ import java.util.Map;
 
 public class ElectionInfo_Response   {
 
-    private String id;
+    private String _id;
     private ElectionInfo_ElectionData electionData;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public String getId() {
-        return id;
+        return _id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this._id = id;
     }
 
     public ElectionInfo_ElectionData getElectionData() {
