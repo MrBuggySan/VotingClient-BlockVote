@@ -37,6 +37,17 @@ public class ElectionInstance {
         return count++;
     }
 
+    public boolean isOpenForVoting() {
+        return isOpenForVoting;
+    }
+
+
+
+    public boolean isHasEnded() {
+        return hasEnded;
+    }
+
+
 
     public int getId() {
         return id;
@@ -47,6 +58,7 @@ public class ElectionInstance {
     }
 
     public void calculateTimeToElection(){
+        //TODO: clean this up to cover more scenarios.
         isOpenForVoting = false;
         hasEnded = false;
         //Get the UTC time now

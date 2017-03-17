@@ -246,11 +246,16 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                     //good signature
                     Log.v(LOG_TAG, "The QR was from legit registrar");
                     //Update the state to PRE_VOTING
-                    updateElectionInstanceState(ElectionState.PRE_VOTING);
                     electionInstance.setSignedTokenID(signedTokenID);
                     electionInstance.setSignedTokenSignature(signedTokenSig);
-                    //Call the next Activity
+                    updateElectionInstanceState(ElectionState.PRE_VOTING);
 
+                    //Call the VotingActivity
+                    Intent intent = new Intent(this, VotingActivity.class);
+                    intent.putExtra(getString(R.string.newelectionKey), false);
+                    intent.putExtra(getString(R.string.electionIndexKey), electionInstance.getId());
+                    startActivity(intent);
+                    return;
                 }else{
                     //badsignature
                     Log.e(LOG_TAG, "The QR scanned is not valid.");

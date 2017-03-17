@@ -124,18 +124,21 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
             intent.putExtra(getString(R.string.electionIndexKey), index);
             startActivity(intent);
         }else{
-            if (electionState == ElectionState.PRE_VOTING ||
-                    electionState == ElectionState.POST_VOTING){
+            if (electionState == ElectionState.PRE_VOTING){
                 //Call VotingActivity
                 Intent intent = new Intent(this, VotingActivity.class);
                 intent.putExtra(getString(R.string.newelectionKey), false);
                 intent.putExtra(getString(R.string.electionIndexKey), index);
                 startActivity(intent);
-            }else{
-                //We should never get here
-                ToastWrapper.initiateToast(this, "The election selected has undefined state. ERROR");
-
+                return;
             }
+            if(electionState == ElectionState.POST_VOTING){
+                return;
+            }
+            //We should never get here
+            ToastWrapper.initiateToast(this, "The election selected has undefined state. ERROR");
+
+
         }
     }
 }

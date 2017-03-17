@@ -8,9 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
-import com.blockvote.auxillary.ToastWrapper;
+import com.blockvote.auxillary.OngoingElectionList;
 import com.blockvote.fragments.NewElectionFragment;
+import com.blockvote.fragments.VoteLater;
+import com.blockvote.fragments.VoteNow;
 import com.blockvote.interfaces.DefaultInteractions;
 import com.google.zxing.integration.android.IntentIntegrator;
 
@@ -51,16 +54,26 @@ NewElectionFragment.NewElectionOnClick{
 
         //TODO: determine which fragment to display
         Intent intent = getIntent();
-        if(intent.getBooleanExtra(getString(R.string.newelectionKey), false)){
+        if(intent.getBooleanExtra(getString(R.string.newelectionKey), true)){
             NewElectionFragment newElectionFragment = new NewElectionFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, newElectionFragment).commit();
             return;
+        }else{
+            //Determine if the election is available
+            int index = intent.getIntExtra(getString(R.string.electionIndexKey), -1);
+            OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
+            electionInstance = ongoingElectionList.getElectionAt(index);
+            if(!electionInstance.isOpenForVoting()){
+                VoteLater voteLater = new VoteLater();
+                getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, voteLater).commit();
+                return;
+            }else{
+                VoteNow voteNow = new VoteNow();
+                getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, voteNow).commit();
+                return;
+            }
+
         }
-
-
-
-        //TODO: Get the electionInstance from dataStore and decide which fragment to show
-
     }
 
     @Override

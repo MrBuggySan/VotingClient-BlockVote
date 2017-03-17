@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.blockvote.fragments.VoteNowOrLaterFragment">
+
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <TextView
+            android:text="TEST"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/voteNowOrLater_blurb1"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:paddingTop="@dimen/activity_vertical_margin"  />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/VoteNow"
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                app:cardBackgroundColor="@color/colorPrimary">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/votenowtext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Vote Now"
+                        android:textSize="30sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/votenowtext"
+                        android:src="@drawable/checkmark" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/VoteLater"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                app:cardBackgroundColor="@color/colorPrimary"
+                android:layout_marginTop="16dp"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/newElecton_scanButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Vote Later"
+                        android:textSize="30sp" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:text="TEST"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/voteNowOrLater_blurb2"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:paddingTop="@dimen/activity_vertical_margin"  />
+
+        </LinearLayout>
+
+
+
+
+
+    </RelativeLayout>
+</RelativeLayout>
