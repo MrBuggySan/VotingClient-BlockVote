@@ -13,6 +13,7 @@
     <!--Keys for intent-->
     <string name="isElectionFinishedKey">com.blockvote.intent.isElectionFinished</string>
     <string name="electionIndexKey">com.blockvote.intent.electionIndex</string>
+    <string name="electionIDKey">com.blockvote.intent.electionID</string>
     <string name="newelectionKey">com.blockvote.intent.newElection</string>
     <string name="isManualFormKey">com.blockvote.intent.isManualForm</string>
 

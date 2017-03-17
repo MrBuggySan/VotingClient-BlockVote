@@ -126,7 +126,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int offset = (includeAddElection)? -1 : 0;
+//                    int offset = (includeAddElection)? -1 : 0;
 //                    onCardInteractionFragmentLeve.onElectionCardPress(getAdapterPosition() + offset);
                     onCardInteractionFragmentLeve.onElectionCardPress(id);
 

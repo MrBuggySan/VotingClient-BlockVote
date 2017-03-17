@@ -33,7 +33,8 @@
             android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".HelpActivity" />
         <activity android:name=".AboutActivity" />
-        <activity android:name=".PostVotingActivity"></activity>
+        <activity android:name=".PostVotingActivity"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

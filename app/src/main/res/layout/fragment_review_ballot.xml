@@ -1,45 +1,99 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.blockvote.fragments.ReviewBallotFragment"
     android:gravity="center">
 
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:padding="16dp"
+        >
 
         <TextView
+            android:text="TEST"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/review_textblurb"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:textStyle="normal|bold"
-            android:textSize="24sp"
-            android:textAlignment="center" />
-
-        <Button
-            android:text="Results Website"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/Review_show_results_button"
-            android:textSize="40sp"
+            android:id="@+id/ReviewBallotblurb"
             android:textAlignment="center"
-            android:textStyle="normal|bold|italic"
-            android:paddingBottom="@dimen/fab_margin" />
+            android:textSize="20sp"
+            />
 
-        <Button
-            android:text="Review Ballot"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Review_show_ballot_button"
-            android:textAlignment="textStart"
-            android:textStyle="normal|bold|italic"
-            android:textSize="40sp" />
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center">
 
-    </LinearLayout>
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ReviewBallotCard"
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                app:cardBackgroundColor="@color/colorPrimary">
 
-</FrameLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/reviewballotText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Review Ballot"
+                        android:textSize="25sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/reviewballotText"
+                        android:src="@drawable/viewballot" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ViewResultsCard"
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/colorPrimary">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/votenowtext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="View Results"
+                        android:textSize="25sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/votenowtext"
+                        android:src="@drawable/piechart" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>

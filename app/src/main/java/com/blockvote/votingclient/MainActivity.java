@@ -114,25 +114,28 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
     }
 
     @Override
-    public void onElectionCardPress(ElectionState electionState, int index){
+    public void onElectionCardPress(ElectionState electionState, int id){
         //check if this is an onGoingElection or finishedElection
 
         if(electionState == ElectionState.START_GEN_QR){
             //Call RegistrationActivity
             Intent intent = new Intent(this, RegistrationActivity.class);
             intent.putExtra(getString(R.string.newelectionKey), false);
-            intent.putExtra(getString(R.string.electionIndexKey), index);
+            intent.putExtra(getString(R.string.electionIDKey), id);
             startActivity(intent);
         }else{
             if (electionState == ElectionState.PRE_VOTING){
                 //Call VotingActivity
                 Intent intent = new Intent(this, VotingActivity.class);
                 intent.putExtra(getString(R.string.newelectionKey), false);
-                intent.putExtra(getString(R.string.electionIndexKey), index);
+                intent.putExtra(getString(R.string.electionIDKey), id);
                 startActivity(intent);
                 return;
             }
             if(electionState == ElectionState.POST_VOTING){
+                Intent intent = new Intent(this, PostVotingActivity.class);
+                intent.putExtra(getString(R.string.electionIDKey), id);
+                startActivity(intent);
                 return;
             }
             //We should never get here

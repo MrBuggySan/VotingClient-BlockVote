@@ -14,10 +14,10 @@ public class VoteNow extends VoteNowOrLaterFragment {
     @Override
     public void EditUi(){
         TextView textViewblurb = (TextView) rootView.findViewById(R.id.voteNowOrLater_blurb1);
-        TextView timeRemainingBlurb = (TextView) rootView.findViewById(R.id.voteNowOrLater_blurb1);
+        TextView timeRemainingBlurb = (TextView) rootView.findViewById(R.id.voteNowOrLater_blurb2);
         ElectionInstance electionInstance = defaultInteractions.getElectionInstance();
         textViewblurb.setText("You are now elgible to vote in " + electionInstance.getElectionName() + ". " +
-                "The election is now open and you can choose your choice.");
+                "The election is now open.");
         timeRemainingBlurb.setText(electionInstance.getTimeString());
     }
 }

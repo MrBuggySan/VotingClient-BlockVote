@@ -10,12 +10,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
@@ -24,21 +22,13 @@ import com.blockvote.auxillary.HACKVERSION;
 import com.blockvote.auxillary.OngoingElectionList;
 import com.blockvote.auxillary.StepperAdapter;
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.crypto.BlindedToken;
-import com.blockvote.crypto.Token;
 import com.blockvote.fragments.FilledForm;
 import com.blockvote.fragments.ManualForm;
 import com.blockvote.fragments.RegistrationFinalStepFragment;
 import com.blockvote.fragments.RegistrationFormFragment;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.stepstone.stepper.StepperLayout;
-
-import org.spongycastle.crypto.digests.SHA1Digest;
-import org.spongycastle.crypto.engines.RSAEngine;
-import org.spongycastle.crypto.params.RSAKeyParameters;
-import org.spongycastle.crypto.signers.PSSSigner;
 
 public class RegistrationActivity extends AppCompatActivity implements RegistrationDefaultInteractions,
         RegistrationFinalStepFragment.FinalStepQRCode{
@@ -74,13 +64,13 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
 
         }else{
             //An electionInstance in the middle of registration is selected
-            int index = intent.getIntExtra(getString(R.string.electionIndexKey), -1);
-            if(index == -1 ){
+            int id = intent.getIntExtra(getString(R.string.electionIDKey), -1);
+            if(id == -1 ){
                 Log.e(LOG_TAG, "There should have been an index here");
                 return;
             }
             OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
-            electionInstance = ongoingElectionList.getElectionAt(index);
+            electionInstance = ongoingElectionList.getElectionWithID(id);
             startingStepPosition = 1;
             //always show the manual form
             registrationFormFragment = new ManualForm();
@@ -214,6 +204,17 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
     @Override
     //Handle the data coming from QR scanner activity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        updateElectionInstanceState(ElectionState.PRE_VOTING);
+        //Call the VotingActivity
+        Intent intent = new Intent(this, VotingActivity.class);
+        intent.putExtra(getString(R.string.newelectionKey), false);
+        intent.putExtra(getString(R.string.electionIndexKey), electionInstance.getId());
+        Log.d(LOG_TAG, "election with id " + electionInstance.getId() + " has passed registration");
+        startActivity(intent);
+
+        /*
+
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if(result != null) {
             if(result.getContents() == null) {
@@ -254,6 +255,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                     Intent intent = new Intent(this, VotingActivity.class);
                     intent.putExtra(getString(R.string.newelectionKey), false);
                     intent.putExtra(getString(R.string.electionIndexKey), electionInstance.getId());
+                    Log.d(LOG_TAG, "election with id " + electionInstance.getId() + " has passed registration");
                     startActivity(intent);
                     return;
                 }else{
@@ -266,6 +268,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             // This is important, otherwise the result will not be passed to the fragment
             super.onActivityResult(requestCode, resultCode, data);
         }
+        */
     }
 
     @Override

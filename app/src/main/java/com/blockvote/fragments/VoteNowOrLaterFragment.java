@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.blockvote.interfaces.DefaultInteractions;
 import com.blockvote.votingclient.R;
@@ -43,7 +42,7 @@ public abstract class VoteNowOrLaterFragment extends Fragment {
             }
         });
 
-        final View voteLater = (Button) rootView.findViewById(R.id.VoteLater);
+        final View voteLater = rootView.findViewById(R.id.VoteLater);
         voteLater.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onVoteNowButtonInteraction.onVoteLaterButtonInteraction();

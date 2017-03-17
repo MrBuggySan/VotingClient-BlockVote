@@ -2,6 +2,7 @@ package com.blockvote.votingclient;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,7 +11,10 @@ import android.view.MenuInflater;
 
 import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
+import com.blockvote.auxillary.ElectionState;
+import com.blockvote.auxillary.FinishedElectionList;
 import com.blockvote.auxillary.OngoingElectionList;
+import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.fragments.NewElectionFragment;
 import com.blockvote.fragments.SelectCandidateFragment;
 import com.blockvote.fragments.VoteLater;
@@ -64,9 +68,10 @@ NewElectionFragment.NewElectionOnClick,
             return;
         }else{
             //Determine if the election is available
-            int index = intent.getIntExtra(getString(R.string.electionIndexKey), -1);
+            int id = intent.getIntExtra(getString(R.string.electionIDKey), -1);
             OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
-            electionInstance = ongoingElectionList.getElectionAt(index);
+            electionInstance = ongoingElectionList.getElectionWithID(id);
+            changeTitleBarName(electionInstance.getElectionName());
             //Calculate the time remaining or time to open
             String timeString = electionInstance.getTimeString();
             if(!electionInstance.isOpenForVoting()){
@@ -116,7 +121,13 @@ NewElectionFragment.NewElectionOnClick,
 
     @Override
     public void onVoteNowButtonInteraction(){
-        //TODO:go to the ballots
+        //go to the ballots
+        SelectCandidateFragment selectCandidateFragment = new SelectCandidateFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.ElectionContainer, selectCandidateFragment);
+        //add the transaction to the BackStack
+        transaction.addToBackStack("Transition to SelectCandidateFragment");
+        transaction.commit();
     }
 
     @Override
@@ -126,9 +137,42 @@ NewElectionFragment.NewElectionOnClick,
 
     @Override
     public void onYesConfirmCandidateSelect(){
-        //TODO: call the PostVotingActivity
+        //Change the state to POST_VOTING
+        //TODO:change this directly for finishedElections
+        updateElectionInstanceState(ElectionState.POST_VOTING);
 
-        //TODO: move the electionInstance to finishedElectionsList
+        //move the electionInstance to finishedElectionsList
+        FinishedElectionList finishedElectionList = DataStore.getFinishedElectionList(this);
+        OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
+
+        ongoingElectionList.finishedElection(electionInstance, finishedElectionList);
+
+        DataStore.saveOngoingElectionList(this, ongoingElectionList);
+        DataStore.saveFinishedElectionList(this, finishedElectionList);
+
+
+        // call the PostVotingActivity
+        Intent intent = new Intent(this, PostVotingActivity.class);
+        intent.putExtra(getString(R.string.electionIndexKey), electionInstance.getId());
+        startActivity(intent);
+        return;
+
+
+    }
+
+    public boolean updateElectionInstanceState(ElectionState electionState){
+        OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
+        if(electionInstance != null && ongoingElectionList !=null ){
+            electionInstance.setElectionState(electionState);
+            //update the electionInstance in ElectionList as well
+            ongoingElectionList.updateElection(electionInstance);
+            //save the ongoingElectionList to data store
+            DataStore.saveOngoingElectionList(this, ongoingElectionList);
+            return true;
+        }else{
+            ToastWrapper.initiateToast(this, "It is not possible to update an election that was never in the list.");
+            return false;
+        }
     }
 
 }

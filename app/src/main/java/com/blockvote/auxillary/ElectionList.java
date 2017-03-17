@@ -59,6 +59,15 @@ public class ElectionList {
         return electionList.get(i);
     }
 
+    public ElectionInstance getElectionWithID(int id){
+        for(int i = 0; i < getSize(); i++){
+            if(electionList.get(i).getId() == id){
+                return electionList.get(i);
+            }
+        }
+        return null;
+    }
+
     public void deleteAllElections(){
         electionList.clear();
     }

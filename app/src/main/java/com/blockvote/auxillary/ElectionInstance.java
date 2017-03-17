@@ -39,7 +39,7 @@ public class ElectionInstance {
 
     private List<String> voteOptions;
 
-    public boolean getLiveResults() {
+    public boolean liveResultsAvailable() {
         return liveResultsAvailable;
     }
 
@@ -94,9 +94,9 @@ public class ElectionInstance {
             long hours = durBeforeStart.getStandardHours() % 24;
             //election has not started yet
             if(days == 0){
-                timeString = "Opens in " + hours + " hours";
+                timeString = "Opens in " + hours + " hours.";
             }else{
-                timeString = "Opens in " + days + " days and " + hours + " hours";
+                timeString = "Opens in " + days + " days and " + hours + " hours.";
             }
         }else{
             Duration durBeforeEnd = new Duration(timeNow, electionEnd);
@@ -107,9 +107,9 @@ public class ElectionInstance {
                 long hours = durBeforeEnd.getStandardHours() % 24;
                 //election has not started yet
                 if(days == 0){
-                    timeString = "Voting ends in " + hours + " hours";
+                    timeString = "Voting ends in " + hours + " hours.";
                 }else{
-                    timeString = "Voting ends in " + days + " days and " + hours + " hours";
+                    timeString = "Voting ends in " + days + " days and " + hours + " hours.";
                 }
             }else{
                 //The election has ended

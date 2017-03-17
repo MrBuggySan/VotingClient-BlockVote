@@ -10,10 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ToastWrapper;
@@ -88,18 +88,64 @@ public class SelectCandidateFragment extends Fragment {
     public void setupballotOptions(){
 
         List<String> electionOptions = electionInstance.getVoteOptions();
+        RadioGroup ballotOptionsGroup = (RadioGroup) rootView.findViewById(R.id.choices_radiogrp);
+        for(int i = 0 ; i < electionOptions.size(); i++){
+            RadioButton option = new RadioButton(getContext());
+            option.setId(3000 + i);
+            option.setText(electionOptions.get(i));
+            option.setPadding(16,16,16,16);
+            ballotOptionsGroup.addView(option);
+        }
+
 
         //setup the button event when submit is pressed
         Button submitButton = (Button) rootView.findViewById(R.id.submitButton);
         submitButton.setOnClickListener(
         new View.OnClickListener() {
             public void onClick(View v) {
-                //TODO: get the choice
-                String choice;
+                //Check if a choice is selected
+                RadioGroup ballotOptionsGroup = (RadioGroup) rootView.findViewById(R.id.choices_radiogrp);
+                int selectedID = ballotOptionsGroup.getCheckedRadioButtonId();
+                if(selectedID == -1 ){
+                    //do nothing
+                    return;
+                }
+
+                //get the choice
+                RadioButton selectedRadio = (RadioButton) rootView.findViewById(selectedID);
+                String choice = selectedRadio.getText().toString();
                 confirmVote(choice);
             }
         });
 
+    }
+
+    public void confirmVote(String option){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        String message = "Please confirm that you selected " + option;
+        builder.setMessage(message)
+                .setTitle(R.string.dialog_title_Attention);
+        final String optionFin = option;
+
+
+        // Add the buttons
+        builder.setPositiveButton(R.string.pos_button_SelecCandi, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //submit the vote here
+                ToastWrapper.initiateToast(getContext(),"Submitting your vote...");
+//                submitVote(optionFin);
+                onClickSubmitBallot.onYesConfirmCandidateSelect();
+            }
+        }).setNegativeButton(R.string.neg_button_SelecCandi, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //do nothing
+            }
+        });
+
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void submitVote(String option){
@@ -144,33 +190,7 @@ public class SelectCandidateFragment extends Fragment {
 
     }
 
-    public void confirmVote(String option){
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        String message = "Please confirm that you selected " + option;
-        builder.setMessage(message)
-                .setTitle(R.string.dialog_title_Attention);
-        final String optionFin = option;
-
-
-        // Add the buttons
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                //submit the vote here
-                ToastWrapper.initiateToast(getContext(),"Submitting your vote...");
-                submitVote(optionFin);
-
-            }
-        }).setNegativeButton(R.string.neg_button_SelecCandi, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //do nothing
-                    }
-                });
-
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 
 
 }
