@@ -153,7 +153,7 @@ NewElectionFragment.NewElectionOnClick,
 
         // call the PostVotingActivity
         Intent intent = new Intent(this, PostVotingActivity.class);
-        intent.putExtra(getString(R.string.electionIndexKey), electionInstance.getId());
+        intent.putExtra(getString(R.string.electionIDKey), electionInstance.getId());
         startActivity(intent);
         return;
 

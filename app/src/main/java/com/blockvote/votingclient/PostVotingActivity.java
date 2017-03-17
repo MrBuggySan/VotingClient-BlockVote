@@ -10,10 +10,12 @@ import android.util.Log;
 import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.FinishedElectionList;
+import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.interfaces.DefaultInteractions;
 
-public class PostVotingActivity extends AppCompatActivity implements DefaultInteractions{
+public class PostVotingActivity extends AppCompatActivity implements DefaultInteractions,
+ReviewBallotFragment.OnReviewPress{
     private ElectionInstance electionInstance;
     private final String LOG_TAG = PostVotingActivity.class.getSimpleName();
     @Override
@@ -52,4 +54,11 @@ public class PostVotingActivity extends AppCompatActivity implements DefaultInte
         return electionInstance;
     }
 
+    public void onReviewBallotButtonPress(){
+        ToastWrapper.initiateToast(this, "review ballot pressed.");
+    }
+    public void onReviewResultsButtonPress(){
+        ToastWrapper.initiateToast(this, "review results pressed.");
+
+    }
 }

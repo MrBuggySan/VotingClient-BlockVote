@@ -209,7 +209,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         //Call the VotingActivity
         Intent intent = new Intent(this, VotingActivity.class);
         intent.putExtra(getString(R.string.newelectionKey), false);
-        intent.putExtra(getString(R.string.electionIndexKey), electionInstance.getId());
+        intent.putExtra(getString(R.string.electionIDKey), electionInstance.getId());
         Log.d(LOG_TAG, "election with id " + electionInstance.getId() + " has passed registration");
         startActivity(intent);
 

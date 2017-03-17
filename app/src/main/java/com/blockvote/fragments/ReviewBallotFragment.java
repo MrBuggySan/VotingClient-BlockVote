@@ -57,7 +57,8 @@ public class ReviewBallotFragment extends Fragment {
                     onReviewPress.onReviewResultsButtonPress();
                 }
             });
-        }{
+        }else{
+            rootView.findViewById(R.id.ViewResultsCard).setVisibility(View.GONE);
             TextView textView = (TextView) rootView.findViewById(R.id.ReviewBallotblurb);
             textView.setText("Thank you for voting. You can now review your ballot. The results " +
                     "of the election will be available soon.");
