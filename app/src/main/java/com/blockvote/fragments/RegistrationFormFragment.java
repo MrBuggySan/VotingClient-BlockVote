@@ -179,6 +179,14 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
                 electionInstance.setStartTime(electionInfo_electionData.getElectionStart());
                 electionInstance.setEndTime(electionInfo_electionData.getElectionEnd());
+
+                if(electionInfo_electionData.getLiveResults().equals("yes")){
+                    electionInstance.setLiveResults(true);
+                }else{
+                    electionInstance.setLiveResults(false);
+                }
+                electionInstance.setVoteOptions(electionInfo_electionData.getVoteOptions());
+
                 //change the name of the toolbar
                 registrationDefaultInteractions.changeTitleBarName(temp_electionName);
 

@@ -4,30 +4,44 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:id="@+id/fragment_selectcandidate_container"
 tools:context="com.blockvote.fragments.SelectCandidateFragment"
-    android:background="@color/colorAccent">
+
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:padding="16dp"
+        >
 
         <TextView
-            android:text="TextView"
+            android:text="Choice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/candi_List_blurb"
-            android:paddingTop="@dimen/fab_margin"
             android:clickable="false"
             android:paddingBottom="@dimen/fab_margin"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textAlignment="center" />
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/listview_candidatelist"
-            android:layout_gravity="right|center_vertical">
-        </ListView>
+             />
+
+        <RadioGroup
+            android:id="@+id/choices_radiogrp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </RadioGroup>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="64dp"
+            android:layout_gravity="center"
+            android:id="@+id/submitButton"
+            android:text="Submit" />
     </LinearLayout>
 
 </RelativeLayout>

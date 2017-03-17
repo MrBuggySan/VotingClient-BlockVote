@@ -7,6 +7,8 @@ import org.joda.time.Duration;
 import org.joda.time.format.ISODateTimeFormat;
 import org.spongycastle.crypto.params.RSAKeyParameters;
 
+import java.util.List;
+
 /**
  * Created by Beast Mode on 3/11/2017.
  */
@@ -32,6 +34,26 @@ public class ElectionInstance {
     private byte[] signedTokenID;
     private byte[] signedTokenSignature;
     private static int count = 0;
+
+    private boolean liveResultsAvailable;
+
+    private List<String> voteOptions;
+
+    public boolean getLiveResults() {
+        return liveResultsAvailable;
+    }
+
+    public void setLiveResults(boolean liveResults) {
+        this.liveResultsAvailable = liveResults;
+    }
+
+    public List<String> getVoteOptions() {
+        return voteOptions;
+    }
+
+    public void setVoteOptions(List<String> voteOptions) {
+        this.voteOptions = voteOptions;
+    }
 
     public static int currentCount(){
         return count++;

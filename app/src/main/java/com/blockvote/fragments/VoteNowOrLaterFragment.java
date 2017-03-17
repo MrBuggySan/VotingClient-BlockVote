@@ -7,22 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.blockvote.interfaces.DefaultInteractions;
 import com.blockvote.votingclient.R;
 
-import static com.blockvote.votingclient.R.id.voteButton;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link VoteNowOrLaterFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link VoteNowOrLaterFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public abstract class VoteNowOrLaterFragment extends Fragment {
     private final String LOG_TAG = VoteNowOrLaterFragment.class.getSimpleName();
 

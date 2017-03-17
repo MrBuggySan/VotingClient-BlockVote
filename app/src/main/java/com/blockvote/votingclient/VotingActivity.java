@@ -12,8 +12,10 @@ import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.OngoingElectionList;
 import com.blockvote.fragments.NewElectionFragment;
+import com.blockvote.fragments.SelectCandidateFragment;
 import com.blockvote.fragments.VoteLater;
 import com.blockvote.fragments.VoteNow;
+import com.blockvote.fragments.VoteNowOrLaterFragment;
 import com.blockvote.interfaces.DefaultInteractions;
 import com.google.zxing.integration.android.IntentIntegrator;
 
@@ -22,7 +24,9 @@ import com.google.zxing.integration.android.IntentIntegrator;
  */
 
 public class VotingActivity extends AppCompatActivity implements DefaultInteractions,
-NewElectionFragment.NewElectionOnClick{
+NewElectionFragment.NewElectionOnClick,
+        VoteNowOrLaterFragment.OnVoteNowOrLaterInteractionListener,
+        SelectCandidateFragment.OnClickSubmitBallot{
 
 
     private final String LOG_TAG = VotingActivity.class.getSimpleName();
@@ -52,7 +56,7 @@ NewElectionFragment.NewElectionOnClick{
         ActionBar myActionBar = (ActionBar) getSupportActionBar();
         myActionBar.setDisplayHomeAsUpEnabled(true);
 
-        //TODO: determine which fragment to display
+        //determine which fragment to display
         Intent intent = getIntent();
         if(intent.getBooleanExtra(getString(R.string.newelectionKey), true)){
             NewElectionFragment newElectionFragment = new NewElectionFragment();
@@ -63,6 +67,8 @@ NewElectionFragment.NewElectionOnClick{
             int index = intent.getIntExtra(getString(R.string.electionIndexKey), -1);
             OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
             electionInstance = ongoingElectionList.getElectionAt(index);
+            //Calculate the time remaining or time to open
+            String timeString = electionInstance.getTimeString();
             if(!electionInstance.isOpenForVoting()){
                 VoteLater voteLater = new VoteLater();
                 getSupportFragmentManager().beginTransaction().add(R.id.ElectionContainer, voteLater).commit();
@@ -107,4 +113,22 @@ NewElectionFragment.NewElectionOnClick{
         intent.putExtra(getString(R.string.isManualFormKey), true);
         startActivity(intent);
     }
+
+    @Override
+    public void onVoteNowButtonInteraction(){
+        //TODO:go to the ballots
+    }
+
+    @Override
+    public void onVoteLaterButtonInteraction(){
+        //TODO:go back to main page
+    }
+
+    @Override
+    public void onYesConfirmCandidateSelect(){
+        //TODO: call the PostVotingActivity
+
+        //TODO: move the electionInstance to finishedElectionsList
+    }
+
 }

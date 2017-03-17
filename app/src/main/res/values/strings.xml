@@ -44,11 +44,10 @@
     <string name="dialog_message_scanQR">Only go to the next step if you have been approved by the registrar</string>
     <string name="dialog_title_Information">Information</string>
     CURRENT_STEP_POSITION_KEY
-    <string name="dialog_title_WARNING">ATTENTION</string>
-    <string name="pos_button_SelecCandi">YES</string>
-    <string name="neg_button_SelecCandi">No</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
+    <string name="dialog_title_Attention">Attention</string>
+    <string name="pos_button_SelecCandi">Confirm</string>
+    <string name="neg_button_SelecCandi">Cancel</string>
+
 
     <!--Button text-->
     <string name="BasicNext">Next ➨</string>
