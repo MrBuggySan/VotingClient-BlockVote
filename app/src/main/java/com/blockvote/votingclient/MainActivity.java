@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
 
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         toolbar.setTitle("BlockVote");
-        toolbar.setNavigationIcon(R.drawable.ic_action_name);
+        toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
 
         viewPager = (ViewPager) findViewById(R.id.main_viewpager);

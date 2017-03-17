@@ -134,8 +134,9 @@ public class SelectCandidateFragment extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
                 //submit the vote here
                 ToastWrapper.initiateToast(getContext(),"Submitting your vote...");
-//                submitVote(optionFin);
-                onClickSubmitBallot.onYesConfirmCandidateSelect();
+
+                submitVote(optionFin, electionInstance.getElectionURL());
+//                onClickSubmitBallot.onYesConfirmCandidateSelect();
             }
         }).setNegativeButton(R.string.neg_button_SelecCandi, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -143,13 +144,12 @@ public class SelectCandidateFragment extends Fragment {
             }
         });
 
-
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
-    public void submitVote(String option){
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance("ElectionURL");
+    public void submitVote(String option, String electionURL){
+        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
 
         String region = "US";

@@ -6,8 +6,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.Toast;
 
 import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
@@ -22,6 +24,7 @@ import com.blockvote.fragments.VoteNow;
 import com.blockvote.fragments.VoteNowOrLaterFragment;
 import com.blockvote.interfaces.DefaultInteractions;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -100,15 +103,31 @@ NewElectionFragment.NewElectionOnClick,
 
     @Override
     public void onScanQRCodeClick(){
-//        ToastWrapper.initiateToast(this, "Scan QR Code has been selected.");
+
         //Call the ScanQRfragment
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setCameraId(0);
         integrator.setBeepEnabled(false);
+        integrator.setPrompt("");
         integrator.setBarcodeImageEnabled(false);
         integrator.initiateScan();
 
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Log.d(LOG_TAG, "Cancelled scan");
+                ToastWrapper.initiateToast(this, "Cancelled");
+            } else {
+                String contents = result.getContents();
+                ToastWrapper.initiateToast(this, contents);
+                Log.d(LOG_TAG, contents);
+            }
+        }
     }
 
     @Override
