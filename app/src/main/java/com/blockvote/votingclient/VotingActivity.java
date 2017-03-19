@@ -26,6 +26,8 @@ import com.blockvote.interfaces.DefaultInteractions;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONObject;
+
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 /**
@@ -126,8 +128,15 @@ NewElectionFragment.NewElectionOnClick,
                 ToastWrapper.initiateToast(this, "Cancelled");
             } else {
                 String contents = result.getContents();
-                ToastWrapper.initiateToast(this, contents);
-                Log.d(LOG_TAG, contents);
+                try{
+                    JSONObject jsonTest = new JSONObject(contents);
+                    String msg = jsonTest.getString("Hello");
+                    ToastWrapper.initiateToast(this, msg);
+                    Log.d(LOG_TAG, "Contents: " + contents);
+                    Log.d(LOG_TAG, "Should be parsed: " + msg);
+                }catch(Exception e){
+                    Log.e(LOG_TAG, "fail to read the json from QR ");
+                }
             }
         }
     }
