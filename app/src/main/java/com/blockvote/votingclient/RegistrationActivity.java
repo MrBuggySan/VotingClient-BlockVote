@@ -40,6 +40,9 @@ import org.spongycastle.crypto.engines.RSAEngine;
 import org.spongycastle.crypto.params.RSAKeyParameters;
 import org.spongycastle.crypto.signers.PSSSigner;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
+
 public class RegistrationActivity extends AppCompatActivity implements RegistrationDefaultInteractions,
         RegistrationFinalStepFragment.FinalStepQRCode{
     private final String LOG_TAG = RegistrationActivity.class.getSimpleName();
@@ -287,5 +290,14 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         this.genQRrootView = rootView_;
     }
 
+
+    @Override
+    public void onBackPressed(){
+        Log.d(LOG_TAG, "Back pressed");
+        //Call the MainActivity
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 
 }

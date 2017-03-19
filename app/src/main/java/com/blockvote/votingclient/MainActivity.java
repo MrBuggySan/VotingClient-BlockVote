@@ -22,6 +22,8 @@ import com.blockvote.interfaces.OnCardInterActionActivityLevel;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
+
 public class MainActivity extends AppCompatActivity implements OnCardInterActionActivityLevel {
 
 
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
         //TODO: Call NewElectionFragment of VotingActivity
         Intent intent = new Intent(this, VotingActivity.class);
         intent.putExtra(getString(R.string.newelectionKey), true);
+        intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 
@@ -122,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
             Intent intent = new Intent(this, RegistrationActivity.class);
             intent.putExtra(getString(R.string.newelectionKey), false);
             intent.putExtra(getString(R.string.electionIDKey), id);
+            intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }else{
             if (electionState == ElectionState.PRE_VOTING){
@@ -129,12 +133,14 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
                 Intent intent = new Intent(this, VotingActivity.class);
                 intent.putExtra(getString(R.string.newelectionKey), false);
                 intent.putExtra(getString(R.string.electionIDKey), id);
+                intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 return;
             }
             if(electionState == ElectionState.POST_VOTING){
                 Intent intent = new Intent(this, PostVotingActivity.class);
                 intent.putExtra(getString(R.string.electionIDKey), id);
+                intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 return;
             }

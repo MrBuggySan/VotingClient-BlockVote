@@ -14,6 +14,8 @@ import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.interfaces.DefaultInteractions;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 public class PostVotingActivity extends AppCompatActivity implements DefaultInteractions,
 ReviewBallotFragment.OnReviewPress{
     private ElectionInstance electionInstance;
@@ -60,5 +62,14 @@ ReviewBallotFragment.OnReviewPress{
     public void onReviewResultsButtonPress(){
         ToastWrapper.initiateToast(this, "review results pressed.");
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        Log.d(LOG_TAG, "Back pressed");
+        //Call the MainActivity
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

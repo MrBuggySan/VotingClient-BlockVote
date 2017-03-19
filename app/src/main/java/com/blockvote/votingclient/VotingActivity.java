@@ -26,6 +26,8 @@ import com.blockvote.interfaces.DefaultInteractions;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 /**
  * Created by Beast Mode on 12/26/2016.
  */
@@ -192,6 +194,15 @@ NewElectionFragment.NewElectionOnClick,
             ToastWrapper.initiateToast(this, "It is not possible to update an election that was never in the list.");
             return false;
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        Log.d(LOG_TAG, "Back pressed");
+        //Call the MainActivity
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 }
