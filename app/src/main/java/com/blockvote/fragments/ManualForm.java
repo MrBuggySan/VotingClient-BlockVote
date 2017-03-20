@@ -27,12 +27,14 @@ public class ManualForm extends RegistrationFormFragment {
         rootView.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
         rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.GONE);
+        rootView.findViewById(R.id.regform_blurb2).setVisibility(View.GONE);
+        rootView.findViewById(R.id.regisform_RescanQR).setVisibility(View.GONE);
 
-        //TODO: Display the data from the downloads
+        //Display the data from the downloads
         TextView blurb1 = (TextView) rootView.findViewById(R.id.regform_blurb1);
         blurb1.setText("Please fill in the URL and the required fields for the election.");
 
-        //TODO: Edit the title name
+        //Edit the title name
         registrationDefaultInteractions.changeTitleBarName("New Election");
 
         //TODO: When Set is pressed, change the title of the tab

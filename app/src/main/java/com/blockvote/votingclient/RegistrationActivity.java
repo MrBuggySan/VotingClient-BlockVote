@@ -84,7 +84,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
             electionInstance = ongoingElectionList.getElectionWithID(id);
             startingStepPosition = 1;
-            //always show the manual form
+            //For simplicity, always show the manual form
             registrationFormFragment = new ManualForm();
         }
 

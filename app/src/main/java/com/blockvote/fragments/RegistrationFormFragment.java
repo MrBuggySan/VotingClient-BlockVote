@@ -45,8 +45,8 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     private final String LOG_TAG = RegistrationFormFragment.class.getSimpleName();
     protected View rootView;
 
-    private RegistrationDefaultInteractions registrationDefaultInteractions;
-    private ElectionInstance electionInstance;
+    protected RegistrationDefaultInteractions registrationDefaultInteractions;
+    protected ElectionInstance electionInstance;
     protected boolean isReadyForNextStep;
     protected boolean hasValidElectionURL;
     protected boolean skipChecks;
@@ -126,6 +126,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     abstract void stopLoadingAnimOnFail();
     abstract void disableEditableViews();
     abstract void prefillEditableViews(ElectionInstance electionInstance);
+
 
     private String respJSONStr;
 
@@ -213,6 +214,8 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
     }
 
+    protected ArrayList<JSONObject> registrarInfoList;
+
     public void getRegistrarInfo(String electionURL){
         BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
         BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
@@ -226,11 +229,26 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                     Log.e(LOG_TAG, "failed to get the registrar JSON string");
                     ToastWrapper.initiateToast(getContext(), "failed to get the registrar JSON string");
                 }
-                //stop the loading
-                stopLoadingAnimOnSuccess();
+
 
                 displayDistrictsonSpinner(districtList);
                 Spinner spinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+
+                registrarInfoList = new ArrayList<JSONObject>();
+
+                //get the JSON info of each registrar
+                try{
+                    JSONArray regisListJSONstr = new JSONArray(respJSONStr);
+                    for(int i = 0 ; i < regisListJSONstr.length(); i++){
+                        JSONObject registrarInfo = regisListJSONstr.getJSONObject(i).getJSONObject("Registrar");
+                        registrarInfoList.add(registrarInfo);
+                    }
+                }catch(JSONException e){
+                    Log.e(LOG_TAG, "could not find the JSONObject inside regisListJSONstr");
+                }
+
+                //stop the loading
+                stopLoadingAnimOnSuccess();
 
                 //set up an event to change the registrarlist available when a district is chosen.
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -240,21 +258,23 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                         String selectedDistrict = textView.getText().toString();
                         Log.v(LOG_TAG, "District selected : " + selectedDistrict);
 
-                        ArrayList<String>  registrarList = new ArrayList<String>();
+                        ArrayList<String>  registrarsToDisplay = new ArrayList<String>();
+
                         try{
-                            JSONArray regisListJSONstr = new JSONArray(respJSONStr);
-                            for(int i = 0 ; i < regisListJSONstr.length(); i++){
-                                JSONObject registrarInfo = regisListJSONstr.getJSONObject(i).getJSONObject("Registrar");
+                            for(int i = 0 ; i < registrarInfoList.size(); i++){
+                                JSONObject registrarInfo = registrarInfoList.get(i);
                                 if(registrarInfo.getString("RegistrationDistrict").equals(selectedDistrict)){
                                     String registrarName = registrarInfo.getString("RegistrarName");
                                     Log.v(LOG_TAG, registrarName + " is a registrar in " + selectedDistrict);
-                                    registrarList.add(registrarName);
+                                    registrarsToDisplay.add(registrarName);
                                 }
                             }
-                            displayRegistrarSpinner(registrarList);
+                            displayRegistrarSpinner(registrarsToDisplay);
                         }catch(JSONException e){
-                            Log.e(LOG_TAG, "could not find the JSONObject inside regisListJSONstr");
+                            Log.e(LOG_TAG, "fail to get the registrar name.");
                         }
+
+
                     }
                     @Override
                     public void onNothingSelected(AdapterView<?> parentView) {

@@ -55,4 +55,23 @@ public class DataStore {
         editor.putString(context.getString(R.string.onGoingElectionsListKey), strOnGoingElections);
         editor.commit();
     }
+
+    //This is a band aid solution
+    public static void saveURLandRegistrarFromQR(Context context, String electionURL, String registrarName){
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(context.getString(R.string.electionURLKey), electionURL);
+        editor.putString(context.getString(R.string.regigstrarNameKey), registrarName);
+        editor.commit();
+    }
+
+    public static String[] getURLandRegistrarFromQR(Context context){
+        String[] data = new String[2];
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.globalSharedPrefKey), Context.MODE_PRIVATE);
+        data[0] = sharedPref.getString(context.getString(R.string.electionURLKey), null);
+        data[1] = sharedPref.getString(context.getString(R.string.regigstrarNameKey), null);
+        return data;
+    }
 }

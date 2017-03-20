@@ -1,6 +1,7 @@
 package com.blockvote.votingclient;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -140,9 +141,7 @@ NewElectionFragment.NewElectionOnClick,
                     Intent intent = new Intent(this, RegistrationActivity.class);
                     intent.putExtra(getString(R.string.newelectionKey), true);
                     intent.putExtra(getString(R.string.isManualFormKey), false);
-                    intent.putExtra(getString(R.string.electionURLKey), electionURL);
-                    intent.putExtra(getString(R.string.regigstrarNameKey), registrarName);
-
+                    DataStore.saveURLandRegistrarFromQR(this, electionURL, registrarName);
                     startActivity(intent);
                 }catch(Exception e){
                     ToastWrapper.initiateToast(this, "The QR code scanned is not valid." );

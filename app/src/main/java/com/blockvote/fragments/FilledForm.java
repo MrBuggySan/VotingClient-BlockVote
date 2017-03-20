@@ -1,36 +1,87 @@
 package com.blockvote.fragments;
 
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.stepstone.stepper.VerificationError;
+import com.blockvote.votingclient.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class FilledForm extends RegistrationFormFragment {
+    private final String LOG_TAG = RegistrationFormFragment.class.getSimpleName();
+    private String registrarName;
 
     @Override
     public void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions){
-        //TODO: take away the URL text and edittext
-        //TODO: show the option to scan the QR again
+        // take away the URL text and edittext
+        rootView.findViewById(R.id.regform_URLtext).setVisibility(View.GONE);
+        rootView.findViewById(R.id.regform_setURL).setVisibility(View.GONE);
 
-
-
-        //TODO: validate the URL
+        //TODO: validate the URL if it exists in BlockVote
         //TODO: validate the registrar
-        //TODO: display the name of the Election
 
+        String[] dataFromQR = DataStore.getURLandRegistrarFromQR(getContext());
+        if(dataFromQR[0] == null || dataFromQR[1] == null){
+            Log.e(LOG_TAG, "There was no data from the QR that was saved. Error");
+            return;
+        }
+        String electionURL = dataFromQR[0];
+        registrarName = dataFromQR[1];
+        PingThenGetElectionInfo(electionURL);
     }
 
     @Override
     public void stopLoadingAnimOnSuccess(){
-        //There is no need to do this for FilledForm
+        String districtName = "";
+        //check validity of the registrar
+        try{
+            for(int i = 0 ; i < registrarInfoList.size(); i++){
+                JSONObject registrarInfo = registrarInfoList.get(i);
+                if(registrarInfo.getString("RegistrarName").equals(registrarName)){
+                    districtName = registrarInfo.getString("RegistrationDistrict");
+                    break;
+                }
+            }
+            Log.e(LOG_TAG, "fail to get the registrar name.");
+            return;
+
+        }catch(JSONException e){
+            Log.e(LOG_TAG, "fail to get the registrar name.");
+        }
+        //display the name of the election
+        String electionName = electionInstance.getElectionName();
+        registrationDefaultInteractions.changeTitleBarName( electionName);
+
+        ArrayList<String> registrarList = new ArrayList<String>();
+        registrarList.add(registrarName);
+        displayRegistrarSpinner(registrarList);
+
+        ArrayList<String> districtList = new ArrayList<String>();
+        districtList.add(districtName);
+        displayDistrictsonSpinner(districtList);
+
+        TextView blurb1 = (TextView) rootView. findViewById(R.id.regform_blurb1);
+        blurb1.setText("Below is your " + electionInstance.getDistrictAlias() + " for the " + electionName);
+
+        TextView blurb2 = (TextView) rootView. findViewById(R.id.regform_blurb2);
+        blurb2.setText("If there is a mistake with the above information, please scan the QR again.");
+
     }
 
     @Override
     public void stopLoadingAnimOnFail(){
-        //There is no need to do this for FilledForm
+        getActivity().finish();
     }
 
     @Override
