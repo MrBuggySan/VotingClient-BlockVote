@@ -12,14 +12,14 @@ public class FilledForm extends RegistrationFormFragment {
 
     @Override
     public void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions){
-
-        //TODO: validate the registrar
-
-        //TODO: display the name of the Election
-
         //TODO: take away the URL text and edittext
-
         //TODO: show the option to scan the QR again
+
+
+
+        //TODO: validate the URL
+        //TODO: validate the registrar
+        //TODO: display the name of the Election
 
     }
 

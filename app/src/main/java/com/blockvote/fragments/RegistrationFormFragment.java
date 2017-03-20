@@ -180,6 +180,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                 electionInstance.setStartTime(electionInfo_electionData.getElectionStart());
                 electionInstance.setEndTime(electionInfo_electionData.getElectionEnd());
 
+                electionInstance.setElectionQuestion(electionInfo_electionData.getElectionQuestion());
+                electionInstance.setElectionFlagURL(electionInfo_electionData.getElectionFlagURL());
+                electionInstance.setDistrictAlias(electionInfo_electionData.getDistrictAlias());
+
                 if(electionInfo_electionData.getLiveResults().equals("yes")){
                     electionInstance.setLiveResults(true);
                 }else{

@@ -20,7 +20,7 @@ tools:context="com.blockvote.fragments.SelectCandidateFragment"
             android:text="Choice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/candi_List_blurb"
+            android:id="@+id/question_blurb"
             android:clickable="false"
             android:paddingBottom="@dimen/fab_margin"
 

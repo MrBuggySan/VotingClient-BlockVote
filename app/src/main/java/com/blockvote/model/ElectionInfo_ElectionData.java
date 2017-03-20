@@ -14,6 +14,34 @@ public class ElectionInfo_ElectionData {
     private String electionStart;
     private String electionEnd;
     private String liveResults;
+    private String electionQuestion;
+    private String electionFlagURL;
+    private String districtAlias;
+
+    public String getElectionQuestion() {
+        return electionQuestion;
+    }
+
+    public void setElectionQuestion(String electionQuestion) {
+        this.electionQuestion = electionQuestion;
+    }
+
+    public String getElectionFlagURL() {
+        return electionFlagURL;
+    }
+
+    public void setElectionFlagURL(String electionFlagURL) {
+        this.electionFlagURL = electionFlagURL;
+    }
+
+    public String getDistrictAlias() {
+        return districtAlias;
+    }
+
+    public void setDistrictAlias(String districtAlias) {
+        this.districtAlias = districtAlias;
+    }
+
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public List<String> getDistricts() {

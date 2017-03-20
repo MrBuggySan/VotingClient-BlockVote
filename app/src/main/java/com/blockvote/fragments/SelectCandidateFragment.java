@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ToastWrapper;
@@ -32,7 +33,6 @@ import retrofit2.Response;
 
 public class SelectCandidateFragment extends Fragment {
     private final String LOG_TAG = SelectCandidateFragment.class.getSimpleName();
-    ArrayAdapter<String> mCandidateList;
 
     private OnClickSubmitBallot onClickSubmitBallot;
     private DefaultInteractions defaultInteractions;
@@ -81,11 +81,18 @@ public class SelectCandidateFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_select_candidate, container, false);
         electionInstance = defaultInteractions.getElectionInstance();
 
+        setupElectionQuestion();
         setupballotOptions();
         return rootView;
     }
 
-    public void setupballotOptions(){
+    private void setupElectionQuestion(){
+        TextView qTextView = (TextView) rootView.findViewById(R.id.question_blurb);
+        qTextView.setText(electionInstance.getElectionQuestion());
+    }
+
+
+    private void setupballotOptions(){
 
         List<String> electionOptions = electionInstance.getVoteOptions();
         RadioGroup ballotOptionsGroup = (RadioGroup) rootView.findViewById(R.id.choices_radiogrp);
@@ -113,6 +120,7 @@ public class SelectCandidateFragment extends Fragment {
 
                 //get the choice
                 RadioButton selectedRadio = (RadioButton) rootView.findViewById(selectedID);
+
                 String choice = selectedRadio.getText().toString();
                 confirmVote(choice);
             }
