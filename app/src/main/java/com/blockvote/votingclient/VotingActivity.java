@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.Toast;
+import android.webkit.URLUtil;
 
 import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
@@ -130,11 +130,22 @@ NewElectionFragment.NewElectionOnClick,
                 String contents = result.getContents();
                 try{
                     JSONObject jsonTest = new JSONObject(contents);
-                    String msg = jsonTest.getString("Hello");
-                    ToastWrapper.initiateToast(this, msg);
-                    Log.d(LOG_TAG, "Contents: " + contents);
-                    Log.d(LOG_TAG, "Should be parsed: " + msg);
+                    String electionURL = jsonTest.getString("url");
+                    String registrarName = jsonTest.getString("registrar");
+//                    ToastWrapper.initiateToast(this, electionURL + "\n" + registrarName);
+                    if(!URLUtil.isValidUrl(electionURL)){
+                        ToastWrapper.initiateToast(this, "This QR does not have a valid URL.");
+                        return;
+                    }
+                    Intent intent = new Intent(this, RegistrationActivity.class);
+                    intent.putExtra(getString(R.string.newelectionKey), true);
+                    intent.putExtra(getString(R.string.isManualFormKey), false);
+                    intent.putExtra(getString(R.string.electionURLKey), electionURL);
+                    intent.putExtra(getString(R.string.regigstrarNameKey), registrarName);
+
+                    startActivity(intent);
                 }catch(Exception e){
+                    ToastWrapper.initiateToast(this, "The QR code scanned is not valid." );
                     Log.e(LOG_TAG, "fail to read the json from QR ");
                 }
             }

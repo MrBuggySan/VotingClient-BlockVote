@@ -13,7 +13,7 @@ public class FilledForm extends RegistrationFormFragment {
     @Override
     public void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions){
 
-        //TODO: verify that the information on the QR is valid against what we have
+        //TODO: validate the registrar
 
         //TODO: display the name of the Election
 

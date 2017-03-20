@@ -222,7 +222,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                     Log.e(LOG_TAG, "failed to get the registrar JSON string");
                     ToastWrapper.initiateToast(getContext(), "failed to get the registrar JSON string");
                 }
-                //TODO: stop the loading
+                //stop the loading
                 stopLoadingAnimOnSuccess();
 
                 displayDistrictsonSpinner(districtList);
@@ -248,22 +248,16 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                                 }
                             }
                             displayRegistrarSpinner(registrarList);
-
-
                         }catch(JSONException e){
                             Log.e(LOG_TAG, "could not find the JSONObject inside regisListJSONstr");
                         }
-
                     }
-
                     @Override
                     public void onNothingSelected(AdapterView<?> parentView) {
 
                     }
-
                 });
             }
-
             @Override
             public void onFailure(Call<MODEL_getRegistrarInfo> call, Throwable t) {
                 Log.e(LOG_TAG, "Downloading the registrar information has failed...");

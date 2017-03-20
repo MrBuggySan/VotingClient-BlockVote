@@ -41,7 +41,6 @@ import org.spongycastle.crypto.params.RSAKeyParameters;
 import org.spongycastle.crypto.signers.PSSSigner;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
-import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
 public class RegistrationActivity extends AppCompatActivity implements RegistrationDefaultInteractions,
         RegistrationFinalStepFragment.FinalStepQRCode{

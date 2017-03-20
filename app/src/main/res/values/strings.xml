@@ -22,12 +22,8 @@
     <string name="onGoingElectionsListKey">com.blockvote.ongoingelections</string>
     <string name="finishedElectionsListKey">com.blockvote.finishedElections</string>
 
-
-    <string name="ElectionActivityStateKey">stateinfo</string>
-    <string name="voterNameKey">vnameKey</string>
-    <string name="districtKey">distrct</string>
-    <string name="regigstrarNameKey">regname</string>
-    <string name="registrarListKey">regList</string>
+    <string name="regigstrarNameKey">com.blockvote.regname</string>
+    <string name="electionURLKey">com.blockvote.url</string>
 
     <!--keys for crypto stuff-->
     <string name="keyExpKey">keyExpKey</string>
@@ -40,19 +36,11 @@
     <string name="QRCreatorServiceString">QRservstring</string>
 
     <!--Dialog content-->
-    <string name="dialog_message_DLFrag">This is your registration form, please fill it out!</string>
-    <string name="dialog_message_GenQR">We are now creating your request. This may take some time, so please be patient :)</string>
-    <string name="dialog_message_scanQR">Only go to the next step if you have been approved by the registrar</string>
     <string name="dialog_title_Information">Information</string>
     CURRENT_STEP_POSITION_KEY
     <string name="dialog_title_Attention">Attention</string>
     <string name="pos_button_SelecCandi">Confirm</string>
     <string name="neg_button_SelecCandi">Cancel</string>
-
-
-    <!--Button text-->
-    <string name="BasicNext">Next ➨</string>
-    <string name="GenQRBack">  Edit your information</string>
 
     <!--Toast content-->
     <string name="RegistrationApprove">Contratulations, you can now vote!</string>
@@ -60,10 +48,6 @@
     <!--Misc Text-->
     <string name="GenQR_blurb1">Creating registration QR code...</string>
     <string name="AddElectionManuallyText"><u>Enter election details manually</u></string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
     <!--Stepper stuff-->
     <string name="CURRENT_STEP_POSITION_KEY">CURRENT_STEP_POSITION_KEY</string>
