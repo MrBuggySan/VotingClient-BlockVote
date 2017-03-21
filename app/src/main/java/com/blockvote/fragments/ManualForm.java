@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -12,9 +13,11 @@ import android.widget.TextView;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.blockvote.votingclient.R;
 import com.stepstone.stepper.VerificationError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -27,8 +30,8 @@ public class ManualForm extends RegistrationFormFragment {
         rootView.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
         rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.GONE);
-        rootView.findViewById(R.id.regform_blurb2).setVisibility(View.GONE);
-        rootView.findViewById(R.id.regisform_RescanQR).setVisibility(View.GONE);
+//        rootView.findViewById(R.id.regform_blurb2).setVisibility(View.GONE);
+//        rootView.findViewById(R.id.regisform_RescanQR).setVisibility(View.GONE);
 
         //Display the data from the downloads
         TextView blurb1 = (TextView) rootView.findViewById(R.id.regform_blurb1);
@@ -71,7 +74,47 @@ public class ManualForm extends RegistrationFormFragment {
     }
 
     @Override
+    public void registarSpinnerSetup(){
+        Spinner spinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+        //set up an event to change the registrarlist available when a district is chosen.
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                TextView textView = (TextView) selectedItemView;
+                String selectedDistrict = textView.getText().toString();
+                Log.v(LOG_TAG, "District selected : " + selectedDistrict);
+
+                ArrayList<String>  registrarsToDisplay = new ArrayList<String>();
+
+                try{
+                    for(int i = 0 ; i < registrarInfoList.size(); i++){
+                        JSONObject registrarInfo = registrarInfoList.get(i);
+                        if(registrarInfo.getString("RegistrationDistrict").equals(selectedDistrict)){
+                            String registrarName = registrarInfo.getString("RegistrarName");
+                            Log.v(LOG_TAG, registrarName + " is a registrar in " + selectedDistrict);
+                            registrarsToDisplay.add(registrarName);
+                        }
+                    }
+                    displayRegistrarSpinner(registrarsToDisplay);
+                }catch(JSONException e){
+                    Log.e(LOG_TAG, "fail to get the registrar name.\nstack trace: "  + e.getStackTrace());
+                }
+
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+        });
+
+    }
+
+    @Override
     public void stopLoadingAnimOnSuccess(){
+
+
+
         rootView.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
         rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.VISIBLE);

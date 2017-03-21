@@ -1,19 +1,16 @@
 package com.blockvote.fragments;
 
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ToastWrapper;
-import com.blockvote.interfaces.RegistrationDefaultInteractions;
-import com.stepstone.stepper.VerificationError;
 import com.blockvote.votingclient.R;
+import com.stepstone.stepper.VerificationError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,8 +24,9 @@ public class FilledForm extends RegistrationFormFragment {
     @Override
     public void EditUI(){
         // take away the URL text and edittext
-        rootView.findViewById(R.id.regform_URLtext).setVisibility(View.GONE);
-        rootView.findViewById(R.id.regform_setURL).setVisibility(View.GONE);
+
+        rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
+        rootView.findViewById(R.id.regform_UI).setVisibility(View.GONE);
 
         String[] dataFromQR = DataStore.getURLandRegistrarFromQR(getContext());
         if(dataFromQR[0] == null || dataFromQR[1] == null){
@@ -42,6 +40,11 @@ public class FilledForm extends RegistrationFormFragment {
 
     @Override
     public void stopLoadingAnimOnSuccess(){
+        rootView.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
+        rootView.findViewById(R.id.regform_UI).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.regform_URLtext).setVisibility(View.GONE);
+        rootView.findViewById(R.id.regform_setURL).setVisibility(View.GONE);
+
         String districtName = "";
         //check validity of the registrar
         try{
@@ -54,11 +57,9 @@ public class FilledForm extends RegistrationFormFragment {
                 if(i == registrarInfoList.size() - 1){
                     Log.e(LOG_TAG, "BlockVote does not have this registrar");
                     stopLoadingAnimOnFail();
+                    return;
                 }
             }
-
-            return;
-
         }catch(JSONException e){
             Log.e(LOG_TAG, "fail to get the registrar name.");
         }
@@ -76,10 +77,13 @@ public class FilledForm extends RegistrationFormFragment {
         displayDistrictsonSpinner(districtList);
 
         TextView blurb1 = (TextView) rootView. findViewById(R.id.regform_blurb1);
-        blurb1.setText("Below is your " + electionInstance.getDistrictAlias() + " for the " + electionName);
+        blurb1.setText("Listed is your " + electionInstance.getDistrictAlias().toLowerCase() + " and registrar");
 
-        TextView blurb2 = (TextView) rootView. findViewById(R.id.regform_blurb2);
-        blurb2.setText("If there is a mistake with the above information, please scan the QR again.");
+        TextView districtTextView = (TextView) rootView. findViewById(R.id.regform_districttext);
+        districtTextView.setText(electionInstance.getDistrictAlias());
+
+//        TextView blurb2 = (TextView) rootView. findViewById(R.id.regform_blurb2);
+//        blurb2.setText("If there is a mistake with the above information, please scan the QR again.");
 
         Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
         districtSpinner.setEnabled(false);
@@ -90,6 +94,11 @@ public class FilledForm extends RegistrationFormFragment {
     }
 
     @Override
+    public void registarSpinnerSetup(){
+        //no need to do anything
+    }
+
+    @Override
     public void stopLoadingAnimOnFail(){
         ToastWrapper.initiateToast(getContext(), "The QR code you scanned is not valid");
         getActivity().finish();
@@ -97,7 +106,7 @@ public class FilledForm extends RegistrationFormFragment {
 
     @Override
     public void disableEditableViews(){
-        //There is no need to do this for FilledForm
+        //There is no need to do this for FilledForm since it is already disabled!
     }
 
     @Override
@@ -125,10 +134,9 @@ public class FilledForm extends RegistrationFormFragment {
 
     @Override
     public VerificationError verifyStep() {
-        //return null if the user can go to the next stepper_layout, create a new VerificationError instance otherwise
-//        return TextUtils.isEmpty(editText.getText().toString())
-//                ? new VerificationError("Password cannot be empty")
-//                : null;
+        if(skipChecks) return null;
+        saveElectionInstance();
+
         return null;
     }
 

@@ -8,10 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
@@ -126,7 +124,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     abstract void stopLoadingAnimOnFail();
     abstract void disableEditableViews();
     abstract void prefillEditableViews(ElectionInstance electionInstance);
-
+    abstract void registarSpinnerSetup();
 
     private String respJSONStr;
 
@@ -232,7 +230,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
 
                 displayDistrictsonSpinner(districtList);
-                Spinner spinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+
 
                 registrarInfoList = new ArrayList<JSONObject>();
 
@@ -247,41 +245,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                     Log.e(LOG_TAG, "could not find the JSONObject inside regisListJSONstr");
                 }
 
-                //stop the loading
+                registarSpinnerSetup();
+                //stop the loading & setup the specifics
                 stopLoadingAnimOnSuccess();
 
-                //set up an event to change the registrarlist available when a district is chosen.
-
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                        TextView textView = (TextView) selectedItemView;
-                        String selectedDistrict = textView.getText().toString();
-                        Log.v(LOG_TAG, "District selected : " + selectedDistrict);
-
-                        ArrayList<String>  registrarsToDisplay = new ArrayList<String>();
-
-                        try{
-                            for(int i = 0 ; i < registrarInfoList.size(); i++){
-                                JSONObject registrarInfo = registrarInfoList.get(i);
-                                if(registrarInfo.getString("RegistrationDistrict").equals(selectedDistrict)){
-                                    String registrarName = registrarInfo.getString("RegistrarName");
-                                    Log.v(LOG_TAG, registrarName + " is a registrar in " + selectedDistrict);
-                                    registrarsToDisplay.add(registrarName);
-                                }
-                            }
-                            displayRegistrarSpinner(registrarsToDisplay);
-                        }catch(JSONException e){
-                            Log.e(LOG_TAG, "fail to get the registrar name.\nstack trace: "  + e.getStackTrace());
-                        }
-
-
-                    }
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parentView) {
-
-                    }
-                });
             }
             @Override
             public void onFailure(Call<MODEL_getRegistrarInfo> call, Throwable t) {
