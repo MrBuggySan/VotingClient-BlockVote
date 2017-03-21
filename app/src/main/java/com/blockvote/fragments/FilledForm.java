@@ -41,6 +41,7 @@ public class FilledForm extends RegistrationFormFragment {
     @Override
     public void stopLoadingAnimOnSuccess(){
         rootView.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
+        rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
         rootView.findViewById(R.id.regform_UI).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.regform_URLtext).setVisibility(View.GONE);
         rootView.findViewById(R.id.regform_setURL).setVisibility(View.GONE);
