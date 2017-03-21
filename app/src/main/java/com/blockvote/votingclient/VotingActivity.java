@@ -141,6 +141,8 @@ NewElectionFragment.NewElectionOnClick,
                     Intent intent = new Intent(this, RegistrationActivity.class);
                     intent.putExtra(getString(R.string.newelectionKey), true);
                     intent.putExtra(getString(R.string.isManualFormKey), false);
+                    Log.d(LOG_TAG, "From QR code election url: " + electionURL);
+                    Log.d(LOG_TAG, "From QR code registrar: " + registrarName);
                     DataStore.saveURLandRegistrarFromQR(this, electionURL, registrarName);
                     startActivity(intent);
                 }catch(Exception e){

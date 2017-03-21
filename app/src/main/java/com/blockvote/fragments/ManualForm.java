@@ -22,7 +22,7 @@ public class ManualForm extends RegistrationFormFragment {
     private final String LOG_TAG = ManualForm.class.getSimpleName();
 
     @Override
-    public void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions){
+    public void EditUI(){
         //Hide some of the ui components
         rootView.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);

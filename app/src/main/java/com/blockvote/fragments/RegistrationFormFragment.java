@@ -94,7 +94,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             skipChecks = false;
             electionInstance = new ElectionInstance();
             //make the children determine the components of the UI that will show up
-            EditUI(registrationDefaultInteractions);
+            EditUI();
             isReadyForNextStep = false;
             hasValidElectionURL = false;
         }
@@ -121,7 +121,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
         registrationDefaultInteractions = null;
     }
 
-    abstract void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions);
+    abstract void EditUI();
     abstract void stopLoadingAnimOnSuccess();
     abstract void stopLoadingAnimOnFail();
     abstract void disableEditableViews();
@@ -225,7 +225,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             @Override
             public void onResponse(Call<MODEL_getRegistrarInfo> call, Response<MODEL_getRegistrarInfo> response) {
                 respJSONStr = response.body().getResponse();
-                if(respJSONStr.equals(null)){
+                if(respJSONStr == null){
                     Log.e(LOG_TAG, "failed to get the registrar JSON string");
                     ToastWrapper.initiateToast(getContext(), "failed to get the registrar JSON string");
                 }
@@ -251,6 +251,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                 stopLoadingAnimOnSuccess();
 
                 //set up an event to change the registrarlist available when a district is chosen.
+
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -271,7 +272,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                             }
                             displayRegistrarSpinner(registrarsToDisplay);
                         }catch(JSONException e){
-                            Log.e(LOG_TAG, "fail to get the registrar name.");
+                            Log.e(LOG_TAG, "fail to get the registrar name.\nstack trace: "  + e.getStackTrace());
                         }
 
 

@@ -5,10 +5,12 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
+import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
 import com.stepstone.stepper.VerificationError;
 import com.blockvote.votingclient.R;
@@ -19,17 +21,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class FilledForm extends RegistrationFormFragment {
-    private final String LOG_TAG = RegistrationFormFragment.class.getSimpleName();
+    private final String LOG_TAG = FilledForm.class.getSimpleName();
     private String registrarName;
 
     @Override
-    public void EditUI(RegistrationDefaultInteractions registrationDefaultInteractions){
+    public void EditUI(){
         // take away the URL text and edittext
         rootView.findViewById(R.id.regform_URLtext).setVisibility(View.GONE);
         rootView.findViewById(R.id.regform_setURL).setVisibility(View.GONE);
-
-        //TODO: validate the URL if it exists in BlockVote
-        //TODO: validate the registrar
 
         String[] dataFromQR = DataStore.getURLandRegistrarFromQR(getContext());
         if(dataFromQR[0] == null || dataFromQR[1] == null){
@@ -52,8 +51,12 @@ public class FilledForm extends RegistrationFormFragment {
                     districtName = registrarInfo.getString("RegistrationDistrict");
                     break;
                 }
+                if(i == registrarInfoList.size() - 1){
+                    Log.e(LOG_TAG, "BlockVote does not have this registrar");
+                    stopLoadingAnimOnFail();
+                }
             }
-            Log.e(LOG_TAG, "fail to get the registrar name.");
+
             return;
 
         }catch(JSONException e){
@@ -61,8 +64,9 @@ public class FilledForm extends RegistrationFormFragment {
         }
         //display the name of the election
         String electionName = electionInstance.getElectionName();
-        registrationDefaultInteractions.changeTitleBarName( electionName);
+        registrationDefaultInteractions.changeTitleBarName(electionName);
 
+        Log.d(LOG_TAG, "Displaying " + registrarName + " in Spinner");
         ArrayList<String> registrarList = new ArrayList<String>();
         registrarList.add(registrarName);
         displayRegistrarSpinner(registrarList);
@@ -77,10 +81,17 @@ public class FilledForm extends RegistrationFormFragment {
         TextView blurb2 = (TextView) rootView. findViewById(R.id.regform_blurb2);
         blurb2.setText("If there is a mistake with the above information, please scan the QR again.");
 
+        Spinner districtSpinner = (Spinner) rootView.findViewById(R.id.register_districtspinner);
+        districtSpinner.setEnabled(false);
+        Spinner registrarSpinner = (Spinner) rootView.findViewById(R.id.register_registrar_spinner);
+        registrarSpinner.setEnabled(false);
+
+
     }
 
     @Override
     public void stopLoadingAnimOnFail(){
+        ToastWrapper.initiateToast(getContext(), "The QR code you scanned is not valid");
         getActivity().finish();
     }
 
