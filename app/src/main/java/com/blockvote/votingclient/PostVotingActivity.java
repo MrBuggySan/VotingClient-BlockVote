@@ -15,6 +15,7 @@ import com.blockvote.fragments.ReviewBallotFragment;
 import com.blockvote.interfaces.DefaultInteractions;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
 public class PostVotingActivity extends AppCompatActivity implements DefaultInteractions,
 ReviewBallotFragment.OnReviewPress{
@@ -69,6 +70,7 @@ ReviewBallotFragment.OnReviewPress{
         Log.d(LOG_TAG, "Back pressed");
         //Call the MainActivity
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);
         intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }

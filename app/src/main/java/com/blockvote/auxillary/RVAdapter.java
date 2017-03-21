@@ -6,10 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blockvote.interfaces.OnCardInteractionFragmentLeve;
 import com.blockvote.votingclient.R;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Beast Mode on 3/12/2017.
@@ -20,7 +22,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private boolean includeAddElection;
     private OnCardInteractionFragmentLeve onCardInteractionFragmentLeve;
-    private Context context;
+    private final Context context;
 
     private ElectionList elections;
 
@@ -32,9 +34,9 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     /*
-     0 - New election Card
+     2 - New election Card
      1 - Card in Ongoing list
-     2 - Card in Finished list
+     0 - Card in Finished list
      */
     @Override
     public int getItemViewType(int position) {
@@ -97,7 +99,13 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 electionInstanceViewHolder2.timeString.setText(electionInstance2.getTimeString());
                 electionInstanceViewHolder2.id = electionInstance2.getId();
                 electionInstanceViewHolder2.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(position - 1)));
-
+                ImageView imageView = electionInstanceViewHolder2.electionImg;
+                Picasso.with(context)
+                        .load("https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Flag_of_Scotland.svg/1280px-Flag_of_Scotland.svg.png")
+//                        .placeholder(R.drawable.dog_placeholder)
+//                        .error(R.drawable.dog_error)
+//                        .resize(0,(int) (imageView.getWidth()*1.5) )
+                        .into(imageView);
                 break;
             case 2:
                 //do nothing since the new election card is already built
@@ -115,6 +123,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         CardView cv;
         TextView electionName;
         TextView timeString;
+        ImageView electionImg;
         int id;
         //ImageView electionPhoto;
 
@@ -123,11 +132,10 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             cv = (CardView) itemView.findViewById(R.id.cv);
             electionName = (TextView) itemView.findViewById(R.id.electionName);
             timeString = (TextView) itemView.findViewById(R.id.electionTime);
+            electionImg = (ImageView) itemView.findViewById(R.id.electionImage);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    int offset = (includeAddElection)? -1 : 0;
-//                    onCardInteractionFragmentLeve.onElectionCardPress(getAdapterPosition() + offset);
                     onCardInteractionFragmentLeve.onElectionCardPress(id);
 
                 }

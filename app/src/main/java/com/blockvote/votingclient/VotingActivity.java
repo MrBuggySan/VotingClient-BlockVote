@@ -30,6 +30,7 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONObject;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
 /**
  * Created by Beast Mode on 12/26/2016.
@@ -158,6 +159,7 @@ NewElectionFragment.NewElectionOnClick,
         Intent intent = new Intent(this, RegistrationActivity.class);
         intent.putExtra(getString(R.string.newelectionKey), true);
         intent.putExtra(getString(R.string.isManualFormKey), true);
+        intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 
@@ -196,6 +198,7 @@ NewElectionFragment.NewElectionOnClick,
         // call the PostVotingActivity
         Intent intent = new Intent(this, PostVotingActivity.class);
         intent.putExtra(getString(R.string.electionIDKey), electionInstance.getId());
+        intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         return;
 
@@ -222,6 +225,7 @@ NewElectionFragment.NewElectionOnClick,
         Log.d(LOG_TAG, "Back pressed");
         //Call the MainActivity
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);
         intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }

@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
         switch (item.getItemId()) {
             case R.id.Main_Option_Help:
                 //TODO: Start the HelpActivity
+                Intent intent = new Intent(this, HelpActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.Main_Option_About:
                 //TODO: Start the HelpActivity
