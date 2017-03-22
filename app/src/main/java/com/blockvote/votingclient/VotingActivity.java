@@ -1,7 +1,6 @@
 package com.blockvote.votingclient;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -180,9 +179,9 @@ NewElectionFragment.NewElectionOnClick,
     }
 
     @Override
-    public void onYesConfirmCandidateSelect(){
+    public void onSuccesfullSubmission(){
         //Change the state to POST_VOTING
-        //TODO:change this directly for finishedElections
+        //change this directly for finishedElections
         updateElectionInstanceState(ElectionState.POST_VOTING);
 
         //move the electionInstance to finishedElectionsList

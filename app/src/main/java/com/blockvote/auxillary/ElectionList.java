@@ -11,10 +11,10 @@ public class ElectionList {
     protected ArrayList<ElectionInstance> electionList;
 
     public boolean addElection(ElectionInstance electionInstance){
-        //This check can be taken out for the demos so we can have the same instances
         if(!HACKVERSION.forDemo && !electionList.isEmpty() && this.hasElection(electionInstance)){
             return false;
         }
+        //try to add the election
         electionList.add(electionInstance);
         return true;
     }
@@ -30,7 +30,7 @@ public class ElectionList {
     }
 
     public void updateElection(ElectionInstance electionInstance){
-        if(HACKVERSION.forDemo){
+
             int electionID = electionInstance.getId();
             for(int i = 0; i < getSize(); i++){
                 if(electionList.get(i).getId() == electionID){
@@ -38,17 +38,6 @@ public class ElectionList {
                     break;
                 }
             }
-        }else{
-            String newURL = electionInstance.getElectionURL();
-            for(int i = 0; i < getSize(); i++){
-                if(electionList.get(i).getElectionURL().equals(newURL)){
-                    electionList.set(i, electionInstance);
-                    break;
-                }
-            }
-        }
-
-
     }
 
     public int getSize(){

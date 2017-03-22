@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -71,7 +70,7 @@ public class SelectCandidateFragment extends Fragment {
     }
 
     public interface OnClickSubmitBallot {
-        void onYesConfirmCandidateSelect();
+        void onSuccesfullSubmission();
     }
 
     @Override
@@ -99,7 +98,7 @@ public class SelectCandidateFragment extends Fragment {
         for(int i = 0 ; i < electionOptions.size(); i++){
             RadioButton option = new RadioButton(getContext());
             option.setId(3000 + i);
-            option.setText(electionOptions.get(i));
+            option.setText(electionOptions.get(i).toUpperCase());
             option.setPadding(16,16,16,16);
             ballotOptionsGroup.addView(option);
         }
@@ -185,7 +184,7 @@ public class SelectCandidateFragment extends Fragment {
                 ToastWrapper.initiateToast(getContext(), disclaimer);
 
 
-                onClickSubmitBallot.onYesConfirmCandidateSelect();
+                onClickSubmitBallot.onSuccesfullSubmission();
             }
 
             @Override
