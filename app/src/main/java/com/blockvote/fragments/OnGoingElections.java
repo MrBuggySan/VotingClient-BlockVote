@@ -34,7 +34,7 @@ public class OnGoingElections extends ElectionListFragment {
         RVAdapter adapter = new RVAdapter(getContext(), this, ongoingElectionList, true);
         recyclerView.setAdapter(adapter);
 
-//        CardView newElectionCard = (CardView) rootView.findViewById(R.id.newElection_Card);
+
     }
 
     @Override

@@ -40,4 +40,9 @@ public interface BlockVoteServerAPI {
                                     @Field("signedTokenSig") String signedTokenSig ,
                                     @Field("vote") String vote,
                                     @Field("registrarName") String registrarName);
+
+    @FormUrlEncoded
+    @POST("readVote/")
+    Call<MODEL_readVote> readVote(@Field("region") String region, @Field("signedTokenID") String signedTokenID,
+                                  @Field("signedTokenSig") String signedTokenSig);
 }

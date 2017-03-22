@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#01579b</color>
     <color name="colorAccent">#F50057</color>
     <color name="QRDarkColor">#0D1522</color>
-    <color name="QRWhite">#f7f3f3</color>
+    <color name="QRWhite">#ffffff</color>
     <color name="AddElectionColor">#ff4444</color>
 
     <!--The rest of the card colors-->

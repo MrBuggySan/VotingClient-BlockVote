@@ -1,11 +1,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:id="@+id/fragment_selectcandidate_container"
-tools:context="com.blockvote.fragments.SelectCandidateFragment"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_selectcandidate_container"
+    tools:context="com.blockvote.fragments.SelectCandidateFragment"
 
     >
+
+    <RelativeLayout
+        android:id="@+id/select_candidate_loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorName="BallClipRotateIndicator"
+            app:indicatorColor="@color/colorPrimary"
+            />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +30,12 @@ tools:context="com.blockvote.fragments.SelectCandidateFragment"
         android:layout_gravity="center_vertical"
         android:layout_centerVertical="true"
         android:padding="16dp"
+        android:id="@+id/select_candidate_UI"
         >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/showBallotBlurb"/>
 
         <TextView
             android:text="Choice"

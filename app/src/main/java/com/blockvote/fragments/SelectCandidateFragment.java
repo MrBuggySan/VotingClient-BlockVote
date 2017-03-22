@@ -79,7 +79,8 @@ public class SelectCandidateFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_select_candidate, container, false);
         electionInstance = defaultInteractions.getElectionInstance();
-
+        rootView.findViewById(R.id.select_candidate_loadingPanel).setVisibility(View.GONE);
+        rootView.findViewById(R.id.showBallotBlurb).setVisibility(View.GONE);
         setupElectionQuestion();
         setupballotOptions();
         return rootView;
