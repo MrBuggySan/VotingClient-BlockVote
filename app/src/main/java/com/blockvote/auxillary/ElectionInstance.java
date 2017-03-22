@@ -124,7 +124,7 @@ public class ElectionInstance {
             if(days == 0){
                 timeString = "Opens in " + hours + " hours.";
             }else{
-                timeString = "Opens in " + days + " days and " + hours + " hours.";
+                timeString = "Opens in " + days + " days and " + hours + " hours";
             }
         }else{
             Duration durBeforeEnd = new Duration(timeNow, electionEnd);
@@ -137,7 +137,7 @@ public class ElectionInstance {
                 if(days == 0){
                     timeString = "Voting ends in " + hours + " hours.";
                 }else{
-                    timeString = "Voting ends in " + days + " days and " + hours + " hours.";
+                    timeString = "Voting ends in " + days + " days and " + hours + " hours";
                 }
             }else{
                 //The election has ended

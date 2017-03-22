@@ -87,8 +87,11 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 electionInstanceViewHolder.timeString.setText(electionInstance.getTimeString());
                 electionInstanceViewHolder.id = electionInstance.getId();
                 //have different colours for the cards
+                ImageView imageView = electionInstanceViewHolder.electionImg;
                 electionInstanceViewHolder.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(position)));
-//                electionInstanceViewHolder.electionPhoto.setImageResource(elections.get(i).);
+                Picasso.with(context)
+                        .load(electionInstance.getElectionFlagURL())
+                        .into(imageView);
                 break;
 
             case 1:
@@ -99,13 +102,10 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 electionInstanceViewHolder2.timeString.setText(electionInstance2.getTimeString());
                 electionInstanceViewHolder2.id = electionInstance2.getId();
                 electionInstanceViewHolder2.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(position - 1)));
-                ImageView imageView = electionInstanceViewHolder2.electionImg;
+                ImageView imageView2 = electionInstanceViewHolder2.electionImg;
                 Picasso.with(context)
-                        .load("https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Flag_of_Scotland.svg/1280px-Flag_of_Scotland.svg.png")
-//                        .placeholder(R.drawable.dog_placeholder)
-//                        .error(R.drawable.dog_error)
-//                        .resize(0,(int) (imageView.getWidth()*1.5) )
-                        .into(imageView);
+                        .load(electionInstance2.getElectionFlagURL())
+                        .into(imageView2);
                 break;
             case 2:
                 //do nothing since the new election card is already built
