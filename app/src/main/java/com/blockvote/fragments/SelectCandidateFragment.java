@@ -191,7 +191,7 @@ public class SelectCandidateFragment extends Fragment {
                     Log.e(LOG_TAG, "Submitting your vote has failed");
                     return;
                 }
-                Log.v(LOG_TAG, "Response code" + statusCode);
+                Log.v(LOG_TAG, "Response code " + statusCode);
 
                 onClickSubmitBallot.onSuccesfullSubmission();
             }

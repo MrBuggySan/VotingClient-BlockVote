@@ -19,7 +19,7 @@ public class ElectionList {
         return true;
     }
 
-    private boolean hasElection(ElectionInstance electionInstance){
+    public boolean hasElection(ElectionInstance electionInstance){
         String newURL = electionInstance.getElectionURL();
         for(ElectionInstance x : electionList){
             if(newURL.equals(x.getElectionURL())){

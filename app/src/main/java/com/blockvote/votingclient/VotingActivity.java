@@ -175,7 +175,13 @@ NewElectionFragment.NewElectionOnClick,
 
     @Override
     public void onVoteLaterButtonInteraction(){
-        //TODO:go back to main page
+        //go back to main page
+        Log.d(LOG_TAG, "Back pressed");
+        //Call the MainActivity
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);
+        intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override

@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
+import com.blockvote.auxillary.FinishedElectionList;
 import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.crypto.BlindedToken;
 import com.blockvote.interfaces.RegistrationDefaultInteractions;
@@ -360,14 +362,20 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
 
             //The user should not be able to edit their data anymore
             disableEditableViews();
+
+            //get the finishedElectionList
+            FinishedElectionList finishedElectionList = DataStore.getFinishedElectionList(getContext());
+
             //Add the electionInstance to RegistrationActivity
-            if(registrationDefaultInteractions.saveNewElectionInstance(electionInstance)){
+            if(!finishedElectionList.hasElection(electionInstance) && registrationDefaultInteractions.saveNewElectionInstance(electionInstance) ){
                 //setup the state of this electionInstance
                 registrationDefaultInteractions.updateElectionInstanceState(ElectionState.START_GEN_QR);
                 // skipChecks only if saveNewElectionInstance is true.
                 skipChecks = true;
             }else{
-                ToastWrapper.initiateToast(getContext(), "This election is already active.");
+                ToastWrapper.initiateToast(getContext(), "This election already exists");
+                getActivity().onBackPressed();
+                return;
             }
 
         }catch(JSONException e){
