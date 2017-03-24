@@ -173,7 +173,6 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mDownloadStateReceiver,
                 statusIntentFilter);
-
     }
 
     // Broadcast receiver for receiving status updates from the IntentService

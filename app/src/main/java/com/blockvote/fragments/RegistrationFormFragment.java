@@ -167,11 +167,19 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             public void onResponse(Call<MODEL_ElectionInfo> call, Response<MODEL_ElectionInfo> response) {
                 int statusCode = response.code();
 
-                if(statusCode != 200){
+                if(statusCode != 200 ){
                     ToastWrapper.initiateToast(getContext(), "The election you entered is not available in BlockVote.");
                     stopLoadingAnimOnFail();
                     return;
                 }
+
+                if(response.body().getResponse() == null){
+                    ToastWrapper.initiateToast(getContext(), "Failed to get the election from the URL. Please try again.");
+                    getActivity().onBackPressed();
+                    return;
+                }
+
+
                 electionInstance.setElectionURL(electionURL);
                 ElectionInfo_Response electionInfo_response = response.body().getResponse();
                 ElectionInfo_ElectionData electionInfo_electionData = electionInfo_response.getElectionData();
@@ -227,13 +235,11 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
                 respJSONStr = response.body().getResponse();
                 if(respJSONStr == null){
                     Log.e(LOG_TAG, "failed to get the registrar JSON string");
-                    ToastWrapper.initiateToast(getContext(), "failed to get the registrar JSON string");
+                    ToastWrapper.initiateToast(getContext(), "Failed to get the election from the URL. Please try again.");
+                    getActivity().onBackPressed();
+                    return;
                 }
-
-
                 displayDistrictsonSpinner(districtList);
-
-
                 registrarInfoList = new ArrayList<JSONObject>();
 
                 //get the JSON info of each registrar
