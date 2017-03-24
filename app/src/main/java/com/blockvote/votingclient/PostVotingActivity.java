@@ -2,6 +2,7 @@ package com.blockvote.votingclient;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,8 +11,8 @@ import android.util.Log;
 import com.blockvote.auxillary.DataStore;
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.FinishedElectionList;
-import com.blockvote.auxillary.ToastWrapper;
 import com.blockvote.fragments.ReviewBallotFragment;
+import com.blockvote.fragments.ShowBallotFragment;
 import com.blockvote.interfaces.DefaultInteractions;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
@@ -58,10 +59,16 @@ ReviewBallotFragment.OnReviewPress{
     }
 
     public void onReviewBallotButtonPress(){
-        ToastWrapper.initiateToast(this, "review ballot pressed.");
+        ShowBallotFragment showBallotFragment = new ShowBallotFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.PostVoting_container, showBallotFragment);
+        //add the transaction to the BackStack
+        transaction.addToBackStack("Transition to ShowBallotFragment");
+        transaction.commit();
     }
     public void onReviewResultsButtonPress(){
-        ToastWrapper.initiateToast(this, "review results pressed.");
+        Intent intent = new Intent(this, WebViewActivity.class);
+        startActivity(intent);
 
     }
 

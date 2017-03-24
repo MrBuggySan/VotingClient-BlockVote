@@ -36,8 +36,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="Scan QR Code"
-                    android:textSize="30sp" />
+                    android:text="Scan Election's QR Code"
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"

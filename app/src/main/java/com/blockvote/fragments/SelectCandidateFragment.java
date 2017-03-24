@@ -164,6 +164,13 @@ public class SelectCandidateFragment extends Fragment {
         String signedTokenID = Base64.encodeToString(electionInstance.getSignedTokenID(), Base64.DEFAULT);
         String signedTokenSig = Base64.encodeToString(electionInstance.getSignedTokenSignature(), Base64.DEFAULT);
         String registrarName =  electionInstance.getRegistrarName();
+
+        Log.d(LOG_TAG, "region: " + region);
+        Log.d(LOG_TAG, "signedTokenID: " + signedTokenID);
+        Log.d(LOG_TAG, "signedTokenSig: " + signedTokenSig);
+        Log.d(LOG_TAG, "vote: " + option);
+        Log.d(LOG_TAG, "registrarName: " + registrarName);
+
         if(signedTokenID == null || signedTokenSig == null){
             Log.e(LOG_TAG, "failed to get the tokenID and tokenSig from datastore.");
             throw new RuntimeException("failed to get the tokenID and tokenSig from datastore.");
@@ -180,10 +187,11 @@ public class SelectCandidateFragment extends Fragment {
             @Override
             public void onResponse(Call<MODEL_writeVote> call, Response<MODEL_writeVote> response) {
                 int statusCode = response.code();
+                if(statusCode!= 200){
+                    Log.e(LOG_TAG, "Submitting your vote has failed");
+                    return;
+                }
                 Log.v(LOG_TAG, "Response code" + statusCode);
-                String disclaimer = response.body().getResponse().getDisclaimer();
-                ToastWrapper.initiateToast(getContext(), disclaimer);
-
 
                 onClickSubmitBallot.onSuccesfullSubmission();
             }
