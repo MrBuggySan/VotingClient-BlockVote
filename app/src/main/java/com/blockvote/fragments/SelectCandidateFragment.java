@@ -180,6 +180,9 @@ public class SelectCandidateFragment extends Fragment {
             throw new RuntimeException("failed to get the registrar's namefrom datastore");
         }
 
+        rootView.findViewById(R.id.select_candidate_loadingPanel).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.select_candidate_UI).setVisibility(View.GONE);
+
         Call<MODEL_writeVote> call = apiService.writeVote(region, signedTokenID, signedTokenSig,
                 option ,registrarName);
 

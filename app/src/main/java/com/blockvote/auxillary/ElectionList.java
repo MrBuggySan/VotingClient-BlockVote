@@ -20,6 +20,7 @@ public class ElectionList {
     }
 
     public boolean hasElection(ElectionInstance electionInstance){
+        if(HACKVERSION.forDemo) return false;
         String newURL = electionInstance.getElectionURL();
         for(ElectionInstance x : electionList){
             if(newURL.equals(x.getElectionURL())){

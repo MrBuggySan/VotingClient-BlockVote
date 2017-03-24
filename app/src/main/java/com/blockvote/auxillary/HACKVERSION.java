@@ -5,5 +5,5 @@ package com.blockvote.auxillary;
  */
 
 public class HACKVERSION {
-    public static final boolean forDemo = false;
+    public static final boolean forDemo = true;
 }
