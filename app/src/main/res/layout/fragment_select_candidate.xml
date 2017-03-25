@@ -28,48 +28,57 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical"
-            android:layout_centerVertical="true"
-            android:padding="16dp"
-            android:id="@+id/select_candidate_UI"
-            >
-            <TextView
+            android:layout_height="match_parent">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/showBallotBlurb"/>
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:padding="16dp"
+                android:id="@+id/select_candidate_UI"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/showBallotBlurb"/>
 
-            <TextView
-                android:text="Choice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/question_blurb"
-                android:clickable="false"
-                android:paddingBottom="@dimen/fab_margin"
+                <TextView
+                    android:text="Choice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/question_blurb"
+                    android:clickable="false"
+                    android:paddingBottom="@dimen/fab_margin"
+                    android:textSize="20sp"
 
-                />
+                    />
 
-            <RadioGroup
-                android:id="@+id/choices_radiogrp"
-                android:layout_marginTop="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                <RadioGroup
+                    android:id="@+id/choices_radiogrp"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            </RadioGroup>
+                </RadioGroup>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:layout_marginTop="64dp"
-                android:layout_gravity="center"
-                android:id="@+id/submitButton"
-                android:text="Submit" />
-        </LinearLayout>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="50dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/submitButton"
+                    android:text="Submit" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
 
     </ScrollView>
 

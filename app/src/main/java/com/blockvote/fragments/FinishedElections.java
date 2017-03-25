@@ -17,8 +17,6 @@ import com.blockvote.votingclient.R;
 public class FinishedElections extends ElectionListFragment {
     private FinishedElectionList finishedElectionList;
     public void EditUI(){
-        //TODO: handle the refreshing since we might come back from...
-
         finishedElectionList = DataStore.getFinishedElectionList(getContext());
 
         if(finishedElectionList == null){
