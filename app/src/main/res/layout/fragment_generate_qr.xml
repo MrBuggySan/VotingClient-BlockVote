@@ -27,8 +27,8 @@
             app:lottie_fileName="possibleLoading.json"
             app:lottie_loop="true"
             app:lottie_autoPlay="true"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_gravity="center"
+            />
 
     </LinearLayout>
 
