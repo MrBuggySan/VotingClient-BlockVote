@@ -3,9 +3,11 @@ package com.blockvote.auxillary;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -85,10 +87,11 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 ElectionInstanceViewHolder electionInstanceViewHolder = (ElectionInstanceViewHolder) cardEntryViewHolder;
                 electionInstanceViewHolder.electionName.setText(electionInstance.getElectionName());
                 electionInstanceViewHolder.timeString.setText(electionInstance.getTimeString());
-                electionInstanceViewHolder.id = electionInstance.getId();
+                int id = electionInstance.getId();
+                electionInstanceViewHolder.id = id;
                 //have different colours for the cards
                 ImageView imageView = electionInstanceViewHolder.electionImg;
-                electionInstanceViewHolder.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(position)));
+                electionInstanceViewHolder.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(id)));
                 Picasso.with(context)
                         .load(electionInstance.getElectionFlagURL())
                         .into(imageView);
@@ -100,8 +103,9 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 ElectionInstanceViewHolder electionInstanceViewHolder2 = (ElectionInstanceViewHolder) cardEntryViewHolder;
                 electionInstanceViewHolder2.electionName.setText(electionInstance2.getElectionName());
                 electionInstanceViewHolder2.timeString.setText(electionInstance2.getTimeString());
-                electionInstanceViewHolder2.id = electionInstance2.getId();
-                electionInstanceViewHolder2.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(position - 1)));
+                int id2 = electionInstance2.getId();
+                electionInstanceViewHolder2.id = id2;
+                electionInstanceViewHolder2.cv.setBackgroundColor(context.getResources().getColor(CardColorPicker.NextColor(id2)));
                 ImageView imageView2 = electionInstanceViewHolder2.electionImg;
                 Picasso.with(context)
                         .load(electionInstance2.getElectionFlagURL())
@@ -119,13 +123,26 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public class ElectionInstanceViewHolder extends RecyclerView.ViewHolder {
+    public void removeAt(int id, int position) {
+        int realposition = (includeAddElection)? position - 1: position;
+        Log.d(LOG_TAG, "item with id " + id + " and position " + realposition + " needs to be removed");
+        elections.deleteElection(id);
+        notifyItemRemoved(realposition);
+        notifyItemRangeChanged(realposition, elections.getSize());
+
+        //Update the electionlist in dataStore
+        onCardInteractionFragmentLeve.onElectionDelete(id);
+
+    }
+
+    public class ElectionInstanceViewHolder extends RecyclerView.ViewHolder implements
+            View.OnClickListener{
         CardView cv;
         TextView electionName;
         TextView timeString;
         ImageView electionImg;
+        ImageButton deleteButton;
         int id;
-        //ImageView electionPhoto;
 
         ElectionInstanceViewHolder(View itemView, final OnCardInteractionFragmentLeve onCardInteractionFragmentLeve, final boolean includeAddElection) {
             super(itemView);
@@ -137,12 +154,20 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 @Override
                 public void onClick(View view) {
                     onCardInteractionFragmentLeve.onElectionCardPress(id);
-
                 }
 
             });
+
+            deleteButton = (ImageButton) itemView.findViewById(R.id.deleteButton);
+            deleteButton.setOnClickListener(this);
         }
-            //electionPhoto = (ImageView)itemView.findViewById(R.id.electionPhoto);
+
+        @Override
+        public void onClick(View v){
+            if(v.equals(deleteButton)){
+                removeAt(id, getAdapterPosition());
+            }
+        }
     }
 
     public class NewElectionViewHolder extends RecyclerView.ViewHolder {

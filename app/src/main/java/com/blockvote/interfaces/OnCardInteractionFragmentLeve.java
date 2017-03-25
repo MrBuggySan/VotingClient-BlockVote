@@ -7,5 +7,5 @@ package com.blockvote.interfaces;
 public interface OnCardInteractionFragmentLeve {
     void onNewElectionCardPress();
     void onElectionCardPress(int position);
-    void onElectionDelete(int position, int id);
+    void onElectionDelete(int id);
 }

@@ -11,10 +11,11 @@ public class ElectionList {
     protected ArrayList<ElectionInstance> electionList;
 
     public boolean addElection(ElectionInstance electionInstance){
+        //try to add the election
         if(!HACKVERSION.forDemo && !electionList.isEmpty() && this.hasElection(electionInstance)){
             return false;
         }
-        //try to add the election
+        //add the election
         electionList.add(electionInstance);
         return true;
     }
@@ -60,5 +61,13 @@ public class ElectionList {
 
     public void deleteAllElections(){
         electionList.clear();
+    }
+
+    public void deleteElection(int id){
+        for(int i = 0; i < getSize(); i++){
+            if(electionList.get(i).getId() == id){
+                electionList.remove(i);
+            }
+        }
     }
 }

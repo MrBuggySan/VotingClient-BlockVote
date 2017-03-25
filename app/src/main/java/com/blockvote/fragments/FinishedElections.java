@@ -35,11 +35,18 @@ public class FinishedElections extends ElectionListFragment {
     }
 
     private final String LOG_TAG = FinishedElections.class.getSimpleName();
+
     @Override
     public void onElectionCardPress(int id){
         //Pass off the electionInstance that was selected
         ElectionInstance electionInstance = finishedElectionList.getElectionWithID(id);
         Log.d(LOG_TAG, "Election with id: " +  electionInstance.getId() + " selected.");
         onCardInterActionActivityLevel.onElectionCardPress(electionInstance.getElectionState(), id);
+    }
+
+    @Override
+    public void onElectionDelete(int id){
+        finishedElectionList.deleteElection(id);
+        DataStore.saveFinishedElectionList(getContext(), finishedElectionList);
     }
 }

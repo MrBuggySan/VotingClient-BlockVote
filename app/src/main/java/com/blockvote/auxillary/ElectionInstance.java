@@ -185,7 +185,12 @@ public class ElectionInstance {
     }
 
     public String getElectionName() {
-        return electionName;
+
+        if (HACKVERSION.forDemo) {
+            return electionName + " " + id;
+        } else {
+            return electionName;
+        }
     }
 
     public void setElectionName(String electionName) {

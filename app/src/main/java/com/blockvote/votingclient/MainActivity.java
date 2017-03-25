@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
 
     @Override
     public void onNewElectionCardPress(){
-        //TODO: Call NewElectionFragment of VotingActivity
         Intent intent = new Intent(this, VotingActivity.class);
         intent.putExtra(getString(R.string.newelectionKey), true);
         intent.setFlags(FLAG_ACTIVITY_NO_ANIMATION);

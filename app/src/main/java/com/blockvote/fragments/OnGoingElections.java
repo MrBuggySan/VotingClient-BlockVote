@@ -35,6 +35,7 @@ public class OnGoingElections extends ElectionListFragment {
         recyclerView.setAdapter(adapter);
 
 
+
     }
 
     @Override
@@ -45,5 +46,11 @@ public class OnGoingElections extends ElectionListFragment {
         Log.d(LOG_TAG, "Election with id: " +  electionInstance.getId() + " selected.");
         onCardInterActionActivityLevel.onElectionCardPress(electionInstance.getElectionState(), id);
 
+    }
+
+    @Override
+    public void onElectionDelete(int id){
+        ongoingElectionList.deleteElection(id);
+        DataStore.saveOngoingElectionList(getContext(), ongoingElectionList);
     }
 }

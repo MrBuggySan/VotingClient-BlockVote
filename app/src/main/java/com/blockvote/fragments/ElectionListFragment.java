@@ -58,8 +58,5 @@ public abstract class ElectionListFragment extends Fragment implements OnCardInt
         onCardInterActionActivityLevel.onNewElectionCardPress();
     }
 
-    @Override
-    public void onElectionDelete(int position, int id){
 
-    }
 }

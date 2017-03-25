@@ -55,18 +55,18 @@
                 <ImageView
                     android:id="@+id/electionImage"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="75dp"
                     android:layout_alignParentTop="true"
-
+                    android:layout_margin="8dp"
                     />
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/deleteButton"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentBottom="true"
                     android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="15dp"
                     android:background="@null"
                     android:layout_centerHorizontal="true"
                     app:srcCompat="@drawable/ic_action_delete" />
