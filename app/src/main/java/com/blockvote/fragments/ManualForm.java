@@ -40,7 +40,7 @@ public class ManualForm extends RegistrationFormFragment {
         //Edit the title name
         registrationDefaultInteractions.changeTitleBarName("New Election");
 
-        //TODO: When Set is pressed, change the title of the tab
+        //When Set is pressed, change the title of the tab
         Button setButton = (Button) rootView.findViewById(R.id.regis_setButton);
         setButton.setOnClickListener( new View.OnClickListener(){
             @Override
@@ -112,12 +112,12 @@ public class ManualForm extends RegistrationFormFragment {
 
     @Override
     public void stopLoadingAnimOnSuccess(){
-
-
-
         rootView.findViewById(R.id.registration_loadingPanel1).setVisibility(View.GONE);
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
         rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.VISIBLE);
+
+        TextView districtAliasTextView = (TextView) rootView.findViewById(R.id.regform_districttext);
+        districtAliasTextView.setText("2 - Select " + electionInstance.getDistrictAlias().toLowerCase());
     }
 
     @Override

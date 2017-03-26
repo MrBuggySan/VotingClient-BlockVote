@@ -77,11 +77,12 @@ public class FilledForm extends RegistrationFormFragment {
         districtList.add(districtName);
         displayDistrictsonSpinner(districtList);
 
+        String districtAlias = electionInstance.getDistrictAlias();
         TextView blurb1 = (TextView) rootView. findViewById(R.id.regform_blurb1);
-        blurb1.setText("Listed is your " + electionInstance.getDistrictAlias().toLowerCase() + " and registrar");
+        blurb1.setText("Listed is your " + districtAlias.toLowerCase() + " and registrar");
 
         TextView districtTextView = (TextView) rootView. findViewById(R.id.regform_districttext);
-        districtTextView.setText(electionInstance.getDistrictAlias());
+        districtTextView.setText(districtAlias);
 
 //        TextView blurb2 = (TextView) rootView. findViewById(R.id.regform_blurb2);
 //        blurb2.setText("If there is a mistake with the above information, please scan the QR again.");

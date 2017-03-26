@@ -57,7 +57,7 @@
                     android:layout_weight="1"
                     android:paddingBottom="@dimen/ms_nav_bar_button_padding_vertical"
                     android:paddingTop="@dimen/activity_vertical_margin"
-                    android:text="Election URL"
+                    android:text="1 - Enter the election's URL"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="12sp" />
 
@@ -74,7 +74,7 @@
                         android:id="@+id/regform_urledittext"
                         android:textSize="14sp"/>
                     <Button
-                        android:text="Set"
+                        android:text="Enter"
                         android:id="@+id/regis_setButton"
                         android:layout_weight="0.5"
                         android:layout_width="0dp"
@@ -118,7 +118,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/fab_margin"
-                        android:textSize="12sp" />
+                        />
+
+
+
 
                     <TextView
                         android:id="@+id/regform_registrartext"
@@ -128,16 +131,20 @@
                         android:fontFamily="sans-serif"
                         android:paddingBottom="@dimen/ms_material_button_padding_vertical"
                         android:paddingTop="@dimen/activity_vertical_margin"
-                        android:text="Registrar"
+                        android:text="3 - Select registrar"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="12sp" />
 
-                    <Spinner
-                        android:id="@+id/register_registrar_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/activity_vertical_margin"
-                        android:textSize="12sp" />
+
+
+                        <Spinner
+                            android:id="@+id/register_registrar_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/activity_vertical_margin"
+                            android:textSize="12sp" />
+
+
 
 
                 </LinearLayout>
@@ -145,43 +152,7 @@
 
             </LinearLayout>
 
-            <!--<TextView-->
-                <!--android:id="@+id/regform_blurb2"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:paddingTop="@dimen/ms_error_drawable_padding"-->
-                <!--android:textSize="20sp" />-->
 
-            <!--<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
-                <!--android:id="@+id/regisform_RescanQR"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="100dp"-->
-                <!--android:layout_centerInParent="true"-->
-                <!--app:cardBackgroundColor="@color/colorPrimary">-->
-
-                <!--<RelativeLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:padding="16dp">-->
-
-                    <!--<TextView-->
-                        <!--android:id="@+id/scanQR_again"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:text="Scan QR Code"-->
-                        <!--android:textSize="30sp" />-->
-
-                    <!--<ImageView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_toRightOf="@id/scanQR_again"-->
-                        <!--android:src="@drawable/qrsample" />-->
-
-                <!--</RelativeLayout>-->
-
-            <!--</android.support.v7.widget.CardView>-->
 
         </LinearLayout>
 

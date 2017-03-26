@@ -80,7 +80,6 @@ public class SelectCandidateFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_select_candidate, container, false);
         electionInstance = defaultInteractions.getElectionInstance();
         rootView.findViewById(R.id.select_candidate_loadingPanel).setVisibility(View.GONE);
-        rootView.findViewById(R.id.showBallotBlurb).setVisibility(View.GONE);
         setupElectionQuestion();
         setupballotOptions();
         return rootView;
@@ -99,7 +98,7 @@ public class SelectCandidateFragment extends Fragment {
         for(int i = 0 ; i < electionOptions.size(); i++){
             RadioButton option = new RadioButton(getContext());
             option.setId(3000 + i);
-            option.setText(electionOptions.get(i).toUpperCase());
+            option.setText(electionOptions.get(i));
             option.setPadding(16,16,16,16);
             ballotOptionsGroup.addView(option);
         }
@@ -183,6 +182,7 @@ public class SelectCandidateFragment extends Fragment {
         rootView.findViewById(R.id.select_candidate_loadingPanel).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.select_candidate_UI).setVisibility(View.GONE);
 
+
         Call<MODEL_writeVote> call = apiService.writeVote(region, signedTokenID, signedTokenSig,
                 option ,registrarName);
 
@@ -191,11 +191,22 @@ public class SelectCandidateFragment extends Fragment {
             public void onResponse(Call<MODEL_writeVote> call, Response<MODEL_writeVote> response) {
                 int statusCode = response.code();
                 if(statusCode!= 200){
-                    Log.e(LOG_TAG, "Submitting your vote has failed");
+                    Log.e(LOG_TAG, "Submitting your vote has failed, response code: " + statusCode);
+                    ToastWrapper.initiateToast(getContext(),"Submitting your vote has failed, response code: " + statusCode );
                     return;
                 }
-                Log.v(LOG_TAG, "Response code " + statusCode);
 
+
+                if(response.body().getResponse() == null){
+                    //something went wrong
+                    Log.e(LOG_TAG, response.body().getError().getMessage());
+                    Log.e(LOG_TAG, "Submitting your vote has failed, there was an error");
+                    ToastWrapper.initiateToast(getContext(),"Submitting your vote has failed, there was an error");
+                    return;
+                }
+
+                Log.v(LOG_TAG, response.body().getResponse().getDisclaimer());
+//                Log.v(LOG_TAG, "Response code " + response.body().getResponse().getResult());
                 onClickSubmitBallot.onSuccesfullSubmission();
             }
 
@@ -206,6 +217,7 @@ public class SelectCandidateFragment extends Fragment {
                 //TODO:Restart the connection if failure
             }
         });
+
 
     }
 

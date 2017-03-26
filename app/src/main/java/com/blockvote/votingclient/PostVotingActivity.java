@@ -59,6 +59,8 @@ ReviewBallotFragment.OnReviewPress{
     }
 
     public void onReviewBallotButtonPress(){
+        Log.d(LOG_TAG, "opening ShowBallotFragment");
+
         ShowBallotFragment showBallotFragment = new ShowBallotFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.PostVoting_container, showBallotFragment);

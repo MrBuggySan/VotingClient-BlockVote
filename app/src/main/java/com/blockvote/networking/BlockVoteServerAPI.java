@@ -2,6 +2,7 @@ package com.blockvote.networking;
 
 import com.blockvote.model.MODEL_ElectionInfo;
 import com.blockvote.model.MODEL_getRegistrarInfo;
+import com.blockvote.model.MODEL_readVote;
 import com.blockvote.model.MODEL_writeVote;
 
 import okhttp3.ResponseBody;
@@ -35,14 +36,14 @@ public interface BlockVoteServerAPI {
     Call<ResponseBody> getAuthPing();
 
     @FormUrlEncoded
-    @POST("writeVote/")
+    @POST("WriteVote/")
     Call<MODEL_writeVote> writeVote(@Field("region") String region, @Field("signedTokenID") String signedTokenID,
                                     @Field("signedTokenSig") String signedTokenSig ,
                                     @Field("vote") String vote,
                                     @Field("registrarName") String registrarName);
 
-//    @FormUrlEncoded
-//    @POST("readVote/")
-//    Call<MODEL_readVote> readVote(@Field("region") String region, @Field("signedTokenID") String signedTokenID,
-//                                  @Field("signedTokenSig") String signedTokenSig);
+    @FormUrlEncoded
+    @POST("readVote/")
+    Call<MODEL_readVote> readVote(@Field("region") String region, @Field("signedTokenID") String signedTokenID,
+                                  @Field("signedTokenSig") String signedTokenSig);
 }

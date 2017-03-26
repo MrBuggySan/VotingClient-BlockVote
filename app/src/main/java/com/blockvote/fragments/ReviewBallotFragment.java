@@ -3,6 +3,7 @@ package com.blockvote.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ public class ReviewBallotFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    private final String LOG_TAG = ReviewBallotFragment.class.getSimpleName();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class ReviewBallotFragment extends Fragment {
         reviewBallotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(LOG_TAG, "opening ShowBallotFragment");
                 onReviewPress.onReviewBallotButtonPress();
             }
         });
