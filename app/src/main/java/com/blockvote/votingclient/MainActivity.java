@@ -58,15 +58,20 @@ public class MainActivity extends AppCompatActivity implements OnCardInterAction
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.Main_Option_Help:
                 //TODO: Start the HelpActivity
-                Intent intent = new Intent(this, HelpActivity.class);
+                intent = new Intent(this, HelpActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.Main_Option_About:
                 //TODO: Start the HelpActivity
+                return true;
+            case R.id.Main_Option_Credits:
+                intent = new Intent(this, CreditsActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

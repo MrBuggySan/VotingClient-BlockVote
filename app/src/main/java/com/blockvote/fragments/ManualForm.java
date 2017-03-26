@@ -1,9 +1,11 @@
 package com.blockvote.fragments;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -51,6 +53,13 @@ public class ManualForm extends RegistrationFormFragment {
     }
 
     public void setupRemainingForm(){
+        // Check if no view has focus:
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         rootView.findViewById(R.id.regis_districtregistrar_ui).setVisibility(View.GONE);
         EditText urlEditText = (EditText)rootView.findViewById(R.id.regform_urledittext);
         if(TextUtils.isEmpty(urlEditText.getText().toString())){

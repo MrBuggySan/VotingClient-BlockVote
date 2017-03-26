@@ -12,5 +12,10 @@
         android:title="About"
         app:showAsAction="never"
         />
+    <item
+        android:id="@+id/Main_Option_Credits"
+        android:title="Credits"
+        app:showAsAction="never"
+        />
 
 </menu>
