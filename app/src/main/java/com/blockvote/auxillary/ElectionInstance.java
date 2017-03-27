@@ -184,6 +184,10 @@ public class ElectionInstance {
         this.electionState = electionState;
     }
 
+    public String getElectionNameRaw(){
+        return electionName;
+    }
+
     public String getElectionName() {
 
         if (HACKVERSION.forDemo) {

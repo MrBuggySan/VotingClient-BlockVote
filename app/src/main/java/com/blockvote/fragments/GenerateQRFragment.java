@@ -2,7 +2,6 @@ package com.blockvote.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.blockvote.auxillary.ElectionInstance;
 import com.blockvote.auxillary.ElectionState;
@@ -111,7 +109,7 @@ public class GenerateQRFragment extends Fragment implements Step {
         }
         if( electionInstance.getElectionState() == ElectionState.START_GEN_QR){
             //change the name of the toolbar
-            registrationDefaultInteractions.changeTitleBarName(electionInstance.getElectionName());
+            registrationDefaultInteractions.changeTitleBarName(electionInstance.getElectionNameRaw());
             generateQR(electionInstance);
         }
     }

@@ -65,7 +65,7 @@ public class FilledForm extends RegistrationFormFragment {
             Log.e(LOG_TAG, "fail to get the registrar name.");
         }
         //display the name of the election
-        String electionName = electionInstance.getElectionName();
+        String electionName = electionInstance.getElectionNameRaw();
         registrationDefaultInteractions.changeTitleBarName(electionName);
 
         Log.d(LOG_TAG, "Displaying " + registrarName + " in Spinner");

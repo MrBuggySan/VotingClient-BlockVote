@@ -41,7 +41,7 @@ ReviewBallotFragment.OnReviewPress{
             Log.e(LOG_TAG, "electionInstance is null, this should not have happened");
         }
 
-        changeTitleBarName(electionInstance.getElectionName());
+        changeTitleBarName(electionInstance.getElectionNameRaw());
 
         ReviewBallotFragment reviewBallotFragment = new ReviewBallotFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.PostVoting_container, reviewBallotFragment).commit();

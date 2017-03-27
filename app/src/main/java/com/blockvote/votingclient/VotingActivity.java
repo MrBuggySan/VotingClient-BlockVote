@@ -79,7 +79,7 @@ NewElectionFragment.NewElectionOnClick,
             int id = intent.getIntExtra(getString(R.string.electionIDKey), -1);
             OngoingElectionList ongoingElectionList = DataStore.getOngoingElectionList(this);
             electionInstance = ongoingElectionList.getElectionWithID(id);
-            changeTitleBarName(electionInstance.getElectionName());
+            changeTitleBarName(electionInstance.getElectionNameRaw());
             //Calculate the time remaining or time to open
             String timeString = electionInstance.getTimeString();
             if(!electionInstance.isOpenForVoting()){
