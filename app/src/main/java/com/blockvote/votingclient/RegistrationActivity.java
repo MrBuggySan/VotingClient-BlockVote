@@ -232,6 +232,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
             if(result.getContents() == null) {
                 Log.d("MainActivity", "Cancelled scan");
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                onBackPressed();
             } else {
                 //verify authenticity of signedBlindedToken
                 //Signature from registrar to be verified
@@ -275,6 +276,7 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                     //badsignature
                     Log.e(LOG_TAG, "The QR scanned is not valid.");
                     ToastWrapper.initiateToast(this, "The QR code you scanned is not valid");
+                    onBackPressed();
                 }
             }
         } else {
