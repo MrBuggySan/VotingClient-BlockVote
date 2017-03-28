@@ -53,6 +53,10 @@ public class ManualForm extends RegistrationFormFragment {
     }
 
     public void setupRemainingForm(){
+        //disable the Set button
+        Button setButton = (Button) rootView.findViewById(R.id.regis_setButton);
+        setButton.setEnabled(false);
+
         // Check if no view has focus:
         View view = getActivity().getCurrentFocus();
         if (view != null) {
@@ -127,11 +131,16 @@ public class ManualForm extends RegistrationFormFragment {
 
         TextView districtAliasTextView = (TextView) rootView.findViewById(R.id.regform_districttext);
         districtAliasTextView.setText("2 - Select " + electionInstance.getDistrictAlias().toLowerCase());
+
+        Button setButton = (Button) rootView.findViewById(R.id.regis_setButton);
+        setButton.setEnabled(true);
     }
 
     @Override
     public void stopLoadingAnimOnFail(){
         rootView.findViewById(R.id.registration_loadingPanel2).setVisibility(View.GONE);
+        Button setButton = (Button) rootView.findViewById(R.id.regis_setButton);
+        setButton.setEnabled(true);
     }
 
     @Override
