@@ -14,6 +14,7 @@ import java.util.List;
  */
 
 public class ElectionInstance {
+
     private int id;
     private boolean isOpenForVoting;
     private boolean hasEnded;

@@ -139,8 +139,7 @@ public class SelectCandidateFragment extends Fragment {
         // Add the buttons
         builder.setPositiveButton(R.string.pos_button_SelecCandi, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                //submit the vote here
-                ToastWrapper.initiateToast(getContext(),"Submitting your vote...");
+
 
                 submitVote(optionFin, electionInstance.getElectionURL());
 //                onClickSubmitBallot.onYesConfirmCandidateSelect();
@@ -205,6 +204,9 @@ public class SelectCandidateFragment extends Fragment {
                     return;
                 }
 
+                //submit the vote here
+                ToastWrapper.initiateToast(getContext(),"Submitting your vote...");
+
                 Log.v(LOG_TAG, response.body().getResponse().getDisclaimer());
 //                Log.v(LOG_TAG, "Response code " + response.body().getResponse().getResult());
                 onClickSubmitBallot.onSuccesfullSubmission();
@@ -213,8 +215,9 @@ public class SelectCandidateFragment extends Fragment {
             @Override
             public void onFailure(Call<MODEL_writeVote> call, Throwable t) {
                 Log.e(LOG_TAG, "Submitting vote has failed");
-                throw new RuntimeException("Could not submit vote do to network issues.");
-                //TODO:Restart the connection if failure
+//                throw new RuntimeException("Could not submit vote do to network issues.");
+                ToastWrapper.initiateToast(getContext(), "Could not connect to the internet ");
+                getActivity().onBackPressed();
             }
         });
 

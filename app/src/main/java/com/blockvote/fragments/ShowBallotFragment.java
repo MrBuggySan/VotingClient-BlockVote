@@ -124,8 +124,8 @@ public class ShowBallotFragment extends Fragment {
             @Override
             public void onFailure(Call<MODEL_readVote> call, Throwable t) {
                 Log.e(LOG_TAG, "Submitting vote has failed");
-                throw new RuntimeException("Could not submit vote do to network issues.");
-                //TODO:Restart the connection if failure
+                ToastWrapper.initiateToast(getContext(), "Could not connect to the internet ");
+                getActivity().onBackPressed();
             }
         });
     }

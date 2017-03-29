@@ -242,42 +242,53 @@ public class RegistrationActivity extends AppCompatActivity implements Registrat
                 BlindedToken blindedToken = electionInstance.getBlindedToken();
 
                 //TODO: catch the error when I scan an invalid QR code
-                Token token = blindedToken.unblindToken(Base64.decode(signature, Base64.DEFAULT));
+                try{
+                    Token token = blindedToken.unblindToken(Base64.decode(signature, Base64.DEFAULT));
 
-                //get the RSA parameters
-                RSAKeyParameters rsaKeyParameters = electionInstance.getrSAkeyParams();
+                    //get the RSA parameters
+                    RSAKeyParameters rsaKeyParameters = electionInstance.getrSAkeyParams();
 
-                byte[] signedTokenID = token.getID();
-                byte[] signedTokenSig = token.getSignature();
+                    byte[] signedTokenID = token.getID();
+                    byte[] signedTokenSig = token.getSignature();
 
 
-                PSSSigner signer = new PSSSigner(new RSAEngine(), new SHA1Digest(), 20);
-                signer.init(false, rsaKeyParameters);
+                    PSSSigner signer = new PSSSigner(new RSAEngine(), new SHA1Digest(), 20);
+                    signer.init(false, rsaKeyParameters);
 
-                signer.update(signedTokenID, 0, signedTokenID.length);
+                    signer.update(signedTokenID, 0, signedTokenID.length);
 
-                // Verify that the coin has a valid signature using our public key.
-                if(signer.verifySignature(signedTokenSig)){
-                    //good signature
-                    Log.v(LOG_TAG, "The QR was from legit registrar");
-                    //Update the state to PRE_VOTING
-                    electionInstance.setSignedTokenID(signedTokenID);
-                    electionInstance.setSignedTokenSignature(signedTokenSig);
-                    updateElectionInstanceState(ElectionState.PRE_VOTING);
+                    // Verify that the coin has a valid signature using our public key.
+                    if(signer.verifySignature(signedTokenSig)) {
+                        //good signature
+                        Log.v(LOG_TAG, "The QR was from legit registrar");
+                        //Update the state to PRE_VOTING
+                        electionInstance.setSignedTokenID(signedTokenID);
+                        electionInstance.setSignedTokenSignature(signedTokenSig);
+                        updateElectionInstanceState(ElectionState.PRE_VOTING);
 
-                    //Call the VotingActivity
-                    Intent intent = new Intent(this, VotingActivity.class);
-                    intent.putExtra(getString(R.string.newelectionKey), false);
-                    intent.putExtra(getString(R.string.electionIDKey), electionInstance.getId());
-                    Log.d(LOG_TAG, "election with id " + electionInstance.getId() + " has passed registration");
-                    startActivity(intent);
-                    return;
-                }else{
-                    //badsignature
-                    Log.e(LOG_TAG, "The QR scanned is not valid.");
-                    ToastWrapper.initiateToast(this, "The QR code you scanned is not valid");
+                        //Call the VotingActivity
+                        Intent intent = new Intent(this, VotingActivity.class);
+                        intent.putExtra(getString(R.string.newelectionKey), false);
+                        intent.putExtra(getString(R.string.electionIDKey), electionInstance.getId());
+                        Log.d(LOG_TAG, "election with id " + electionInstance.getId() + " has passed registration");
+                        startActivity(intent);
+                        return;
+                    }
+
+                    else{
+                        //badsignature
+                        Log.e(LOG_TAG, "The QR scanned is not valid.");
+                        ToastWrapper.initiateToast(this, "The QR code you scanned is not valid");
+                        onBackPressed();
+                    }
+                }catch(Exception err){
+                    Toast.makeText(this, "Invalid QR Code", Toast.LENGTH_LONG).show();
                     onBackPressed();
                 }
+
+
+
+
             }
         } else {
             // This is important, otherwise the result will not be passed to the fragment
