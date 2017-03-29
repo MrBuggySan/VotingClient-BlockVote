@@ -131,27 +131,7 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
     private String respJSONStr;
 
     protected void PingThenGetElectionInfo(final String electionURL){
-        BlockVoteServerInstance blockVoteServerInstance = new BlockVoteServerInstance(electionURL);
-        BlockVoteServerAPI apiService = blockVoteServerInstance.getAPI();
-        Call<ResponseBody> call = apiService.getAuthPing();
-        call.enqueue((new Callback<ResponseBody>() {
-
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-               if(response.code() != 200){
-                   ToastWrapper.initiateToast(getContext(), "The election you entered is not available in BlockVote.");
-                   stopLoadingAnimOnFail();
-                   return;
-               }
                getElectionInfo(electionURL);
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                ToastWrapper.initiateToast(getContext(), "Either you entered the wrong URL or" +
-                        " the Election is not available at this time. ");
-                stopLoadingAnimOnFail();
-            }
-        }));
-
 
     }
 
