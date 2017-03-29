@@ -241,8 +241,10 @@ public abstract class RegistrationFormFragment extends Fragment implements Step 
             @Override
             public void onFailure(Call<MODEL_getRegistrarInfo> call, Throwable t) {
                 Log.e(LOG_TAG, "Downloading the registrar information has failed...");
-                throw new RuntimeException("Could not download the registrar list");
-                //TODO:Restart the connection if failure
+                ToastWrapper.initiateToast(getContext(), "Could not download the registrar list");
+                getActivity().onBackPressed();
+//                throw new RuntimeException("Could not download the registrar list");
+//
             }
         });
     }
